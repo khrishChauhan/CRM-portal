@@ -5,21 +5,21 @@ const {
     verifyAdminOTP,
     staffLogin,
     googleLogin,
-    createStaff
+    getMe,
 } = require('../controllers/authController');
-const { protect, authorize } = require('../middleware/authMiddleware');
+const { protect } = require('../middleware/authMiddleware');
 
-// Admin Auth
+// ── Admin Auth ──
 router.post('/admin/send-otp', sendAdminOTP);
 router.post('/admin/verify-otp', verifyAdminOTP);
 
-// Staff Auth
+// ── Staff Auth (email + password) ──
 router.post('/staff/login', staffLogin);
 
-// Client Auth
+// ── Client Auth ──
 router.post('/client/google-login', googleLogin);
 
-// System Management (Admin Only)
-router.post('/admin/create-staff', protect, authorize('admin'), createStaff);
+// ── Protected: Get current logged-in user ──
+router.get('/me', protect, getMe);
 
 module.exports = router;
