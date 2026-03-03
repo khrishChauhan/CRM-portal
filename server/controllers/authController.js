@@ -10,8 +10,11 @@ const { sendSuccess, sendError } = require('../utils/response');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// Strict single admin email configuration
-const ALLOWED_ADMIN_EMAIL = 'rj9852107631@gmail.com';
+// Authorized admin emails
+const ALLOWED_ADMINS = [
+    "khrishchauhan@gmail.com",
+    "rj9852107631@gmail.com"
+];
 
 // Generate a secure 6-digit numeric OTP
 const generateOTP = () => {
@@ -44,10 +47,10 @@ exports.sendAdminOTP = async (req, res) => {
 
     const normalizedEmail = email.trim().toLowerCase();
 
-    // ── Strict Single Admin Email Validation ──
+    // ── Admin Email Validation ──
     console.log("Admin OTP requested for:", normalizedEmail);
 
-    if (normalizedEmail !== ALLOWED_ADMIN_EMAIL) {
+    if (!ALLOWED_ADMINS.includes(normalizedEmail)) {
         return sendError(res, 'Unauthorized admin email', 403);
     }
 
