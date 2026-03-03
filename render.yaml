@@ -1,0 +1,47 @@
+services:
+  # 🌐 Backend Service (Node.js)
+  - type: web
+    name: crm-api
+    env: node
+    plan: free
+    region: singapore
+    rootContext: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false # Set this in Render Dashboard
+      - key: JWT_SECRET
+        generateValue: true # Render will generate a random secret for you
+      - key: ADMIN_EMAIL
+        sync: false # Set this in Render Dashboard (comma-separated)
+      - key: CLIENT_URL
+        fromService:
+          name: crm-frontend
+          type: static
+          property: url
+      - key: ADMIN_GMAIL_USER
+        sync: false
+      - key: ADMIN_GMAIL_PASS
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+
+  # 🎨 Frontend Service (Static Site)
+  - type: static
+    name: crm-frontend
+    env: static
+    rootContext: client
+    buildCommand: npm install && npm run build
+    publishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: crm-api
+          type: web
+          property: url
+        suffix: /api
