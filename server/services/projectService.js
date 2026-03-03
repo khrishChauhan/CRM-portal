@@ -1,5 +1,6 @@
 const { Project } = require('../models/Project');
 const User = require('../models/User');
+const ActivityLogService = require('./activityLogService');
 
 /**
  * ProjectService — encapsulates all project management business logic.
@@ -115,6 +116,18 @@ class ProjectService {
             createdBy: createdById,
         });
 
+        // 📝 Log Activity
+        const creator = await User.findById(createdById);
+        await ActivityLogService.logEvent({
+            actorId: createdById,
+            actorRole: creator.role,
+            actionType: 'PROJECT_CREATED',
+            entityType: 'project',
+            entityId: project._id,
+            message: `${creator.role.charAt(0).toUpperCase() + creator.role.slice(1)} ${creator.name} created project ${project.projectName}`,
+            metadata: { projectCode: project.projectCode }
+        });
+
         return Project.findById(project._id)
             .populate('projectManager', 'name email designation')
             .populate('assignedStaff', 'name email designation')
@@ -123,11 +136,9 @@ class ProjectService {
 
     /**
      * Update a project (Admin only)
-     *
-     * Cannot change projectCode or createdBy.
-     * Setting actualCompletion auto-marks Completed (via pre-save hook).
+     * Modified to accept updaterId for logging
      */
-    static async update(id, data) {
+    static async update(id, data, updaterId) {
         const project = await Project.findOne({ _id: id, isDeleted: false });
         if (!project) {
             const error = new Error('Project not found');
@@ -156,13 +167,32 @@ class ProjectService {
             'startDate', 'expectedCompletion', 'actualCompletion',
             'projectStatus', 'priority', 'riskLevel', 'delayReason',
         ];
+
+        const changes = [];
         for (const field of allowed) {
             if (data[field] !== undefined) {
+                if (project[field]?.toString() !== data[field]?.toString()) {
+                    changes.push(field);
+                }
                 project[field] = typeof data[field] === 'string' ? data[field].trim() : data[field];
             }
         }
 
         await project.save(); // Triggers pre-save auto-status logic
+
+        // 📝 Log Activity
+        const updater = await User.findById(updaterId);
+        if (updater && changes.length > 0) {
+            await ActivityLogService.logEvent({
+                actorId: updaterId,
+                actorRole: updater.role,
+                actionType: 'PROJECT_UPDATED',
+                entityType: 'project',
+                entityId: project._id,
+                message: `${updater.role.charAt(0).toUpperCase() + updater.role.slice(1)} ${updater.name} updated project ${project.projectName}`,
+                metadata: { projectCode: project.projectCode, changes }
+            });
+        }
 
         return Project.findById(project._id)
             .populate('projectManager', 'name email designation')
@@ -194,6 +224,18 @@ class ProjectService {
         }
 
         await project.save();
+
+        // 📝 Log Activity
+        const staff = await User.findById(staffId);
+        await ActivityLogService.logEvent({
+            actorId: staffId,
+            actorRole: staff.role,
+            actionType: 'PROJECT_UPDATED',
+            entityType: 'project',
+            entityId: project._id,
+            message: `Staff ${staff.name} updated progress for ${project.projectName}`,
+            metadata: { status: project.projectStatus }
+        });
 
         return Project.findById(project._id)
             .populate('projectManager', 'name email designation')

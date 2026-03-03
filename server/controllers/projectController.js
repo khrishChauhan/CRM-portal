@@ -62,7 +62,7 @@ exports.createProject = async (req, res) => {
 // PUT /api/projects/:id — Update project (admin)
 exports.updateProject = async (req, res) => {
     try {
-        const project = await ProjectService.update(req.params.id, req.body);
+        const project = await ProjectService.update(req.params.id, req.body, req.user.id);
         return sendSuccess(res, project, 'Project updated successfully');
     } catch (error) {
         return sendError(res, error.message, error.statusCode || 400);

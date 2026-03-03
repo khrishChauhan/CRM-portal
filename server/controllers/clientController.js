@@ -38,7 +38,7 @@ exports.getClientById = async (req, res) => {
 // PATCH /api/clients/:id/status — Change status
 exports.changeClientStatus = async (req, res) => {
     try {
-        const result = await ClientService.changeStatus(req.params.id, req.body.status);
+        const result = await ClientService.changeStatus(req.params.id, req.body.status, req.user.id);
         return sendSuccess(res, result, `Client status changed to ${result.clientStatus}`);
     } catch (error) {
         return sendError(res, error.message, error.statusCode || 400);

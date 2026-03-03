@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const OTP = require('../models/OTP');
+const ActivityLogService = require('../services/activityLogService');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
@@ -213,6 +214,17 @@ exports.googleLogin = async (req, res) => {
                     role: 'client',
                 });
                 console.log(`👤 New client created: ${name} (${email})`);
+
+                // 📝 Log Activity
+                await ActivityLogService.logEvent({
+                    actorId: user._id,
+                    actorRole: 'client',
+                    actionType: 'CLIENT_ADDED',
+                    entityType: 'user',
+                    entityId: user._id,
+                    message: `New client ${name} registered via Google OAuth`,
+                    metadata: { email }
+                });
             }
         }
 

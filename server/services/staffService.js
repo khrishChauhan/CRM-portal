@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
+const ActivityLogService = require('./activityLogService');
 
 /**
  * StaffService — encapsulates all staff-related business logic.
@@ -84,9 +85,10 @@ class StaffService {
     }
 
     /**
-     * Create a new staff member
+     * Create a new staff member (Admin only)
+     * Modified to accept adminId
      */
-    static async create(data) {
+    static async create(data, adminId) {
         // Check email uniqueness
         const existing = await User.findOne({ email: data.email.trim().toLowerCase() });
         if (existing) {
@@ -124,6 +126,20 @@ class StaffService {
             isActive: true,
             isDeleted: false,
         });
+
+        // 📝 Log Activity
+        const admin = await User.findById(adminId);
+        if (admin) {
+            await ActivityLogService.logEvent({
+                actorId: adminId,
+                actorRole: 'admin',
+                actionType: 'STAFF_ADDED',
+                entityType: 'user',
+                entityId: staff._id,
+                message: `Admin ${admin.name} added new staff member ${staff.name}`,
+                metadata: { email: staff.email, department: staff.department }
+            });
+        }
 
         return User.findById(staff._id)
             .select('-password -googleId -__v')
@@ -198,8 +214,9 @@ class StaffService {
 
     /**
      * Toggle staff active/inactive status
+     * Modified to accept adminId
      */
-    static async toggleStatus(id) {
+    static async toggleStatus(id, adminId) {
         const staff = await User.findOne({ _id: id, role: 'staff', isDeleted: false });
         if (!staff) {
             const error = new Error('Staff member not found');
@@ -209,6 +226,20 @@ class StaffService {
 
         staff.isActive = !staff.isActive;
         await staff.save();
+
+        // 📝 Log Activity
+        const admin = await User.findById(adminId);
+        if (admin) {
+            await ActivityLogService.logEvent({
+                actorId: adminId,
+                actorRole: 'admin',
+                actionType: 'STAFF_STATUS_CHANGED',
+                entityType: 'user',
+                entityId: staff._id,
+                message: `Admin ${admin.name} ${staff.isActive ? 'activated' : 'deactivated'} staff member ${staff.name}`,
+                metadata: { isActive: staff.isActive }
+            });
+        }
 
         return {
             id: staff._id,

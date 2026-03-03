@@ -73,6 +73,18 @@ class AccessRequestService {
 
         // Create new request
         const request = await AccessRequest.create({ clientId, projectId, message });
+
+        // 📝 Log Activity
+        await ActivityLogService.logEvent({
+            actorId: clientId,
+            actorRole: 'client',
+            actionType: 'ACCESS_REQUEST_CREATED',
+            entityType: 'accessRequest',
+            entityId: request._id,
+            message: `Client ${client.name} requested access to project ${project.projectName}`,
+            metadata: { projectCode: project.projectCode }
+        });
+
         return request;
     }
 
@@ -225,12 +237,14 @@ class AccessRequestService {
         await request.save();
 
         // 📝 Log Activity
-        await ActivityLogService.log({
-            user: adminId,
-            action: 'APPROVE_ACCESS',
-            entityType: 'AccessRequest',
+        const admin = await User.findById(adminId);
+        await ActivityLogService.logEvent({
+            actorId: adminId,
+            actorRole: 'admin',
+            actionType: 'ACCESS_REQUEST_APPROVED',
+            entityType: 'accessRequest',
             entityId: requestId,
-            description: `Approved access for ${client.name} to project ${project.projectName} (${project.projectCode})`,
+            message: `Admin ${admin.name} approved access for ${client.name} to ${project.projectName}`,
             metadata: { clientId: request.clientId, projectId: request.projectId }
         });
 
@@ -265,12 +279,14 @@ class AccessRequestService {
         await request.save();
 
         // 📝 Log Activity
-        await ActivityLogService.log({
-            user: adminId,
-            action: 'REJECT_ACCESS',
-            entityType: 'AccessRequest',
+        const admin = await User.findById(adminId);
+        await ActivityLogService.logEvent({
+            actorId: adminId,
+            actorRole: 'admin',
+            actionType: 'ACCESS_REQUEST_REJECTED',
+            entityType: 'accessRequest',
             entityId: requestId,
-            description: `Rejected access for ${client.name} to project ${project.projectName} (${project.projectCode})`,
+            message: `Admin ${admin.name} rejected access for ${client.name} to ${project.projectName}`,
             metadata: { clientId: request.clientId, projectId: request.projectId, reason }
         });
 

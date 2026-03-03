@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const { Project } = require('../models/Project');
 const AccessRequest = require('../models/AccessRequest');
+const ActivityLogService = require('./activityLogService');
 const mongoose = require('mongoose');
 
 /**
@@ -10,22 +11,31 @@ const mongoose = require('mongoose');
 class DashboardService {
 
     /**
-     * Admin: Global statistics
+     * Admin: Global statistics and recent activities
      */
     static async getAdminStats() {
-        const stats = await User.aggregate([
-            { $match: { isDeleted: false } },
-            {
-                $group: {
-                    _id: null,
-                    totalUsers: { $sum: 1 },
-                    totalStaff: { $sum: { $cond: [{ $eq: ['$role', 'staff'] }, 1, 0] } },
-                    totalClients: { $sum: { $cond: [{ $eq: ['$role', 'client'] }, 1, 0] } },
+        // Fetch stats and recent activities concurrently for performance
+        const [statsResult, recentActivities] = await Promise.all([
+            User.aggregate([
+                { $match: { isDeleted: false } },
+                {
+                    $group: {
+                        _id: null,
+                        totalUsers: { $sum: 1 },
+                        totalStaff: { $sum: { $cond: [{ $eq: ['$role', 'staff'] }, 1, 0] } },
+                        totalClients: { $sum: { $cond: [{ $eq: ['$role', 'client'] }, 1, 0] } },
+                    }
                 }
-            }
+            ]),
+            ActivityLogService.getRecentActivities(15)
         ]);
 
-        return stats[0] || { totalUsers: 0, totalStaff: 0, totalClients: 0 };
+        const stats = statsResult[0] || { totalUsers: 0, totalStaff: 0, totalClients: 0 };
+
+        return {
+            ...stats,
+            recentActivities
+        };
     }
 
     /**
@@ -33,11 +43,14 @@ class DashboardService {
      */
     static async getStaffStats(staffId) {
         const stats = await Project.aggregate([
-            { 
-                $match: { 
-                    assignedStaff: new mongoose.Types.ObjectId(staffId),
-                    isDeleted: false 
-                } 
+            {
+                $match: {
+                    $or: [
+                        { projectManager: new mongoose.Types.ObjectId(staffId) },
+                        { assignedStaff: new mongoose.Types.ObjectId(staffId) }
+                    ],
+                    isDeleted: false
+                }
             },
             {
                 $group: {

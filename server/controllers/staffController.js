@@ -65,7 +65,7 @@ exports.getStaffById = async (req, res) => {
 exports.createStaff = async (req, res) => {
     try {
         console.log(`👤 Admin creating staff: ${req.body.name} (${req.body.email})`);
-        const staff = await StaffService.create(req.body);
+        const staff = await StaffService.create(req.body, req.user.id);
         console.log(`✅ Staff created: ${staff.name}`);
         return sendSuccess(res, staff, 'Staff member created successfully', 201);
     } catch (error) {
@@ -90,7 +90,7 @@ exports.updateStaff = async (req, res) => {
 // PATCH /api/staff/:id/toggle-status — Activate/deactivate
 exports.toggleStaffStatus = async (req, res) => {
     try {
-        const result = await StaffService.toggleStatus(req.params.id);
+        const result = await StaffService.toggleStatus(req.params.id, req.user.id);
         const status = result.isActive ? 'activated' : 'deactivated';
         console.log(`🔄 Staff ${status}: ${result.name}`);
         return sendSuccess(res, result, `Staff member ${status} successfully`);

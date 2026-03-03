@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const AccessRequest = require('../models/AccessRequest');
+const ActivityLogService = require('./activityLogService');
 
 /**
  * ClientService — encapsulates all client management business logic.
@@ -101,7 +102,11 @@ class ClientService {
      * - 'active' sets isActive = true (allowing login)
      * - 'inactive' or 'suspended' sets isActive = false (blocking login)
      */
-    static async changeStatus(id, status) {
+    /**
+     * Change client status (active / inactive / suspended)
+     * Modified to accept adminId
+     */
+    static async changeStatus(id, status, adminId) {
         const validStatuses = ['active', 'inactive', 'suspended'];
         if (!validStatuses.includes(status)) {
             const error = new Error(`Invalid status. Must be one of: ${validStatuses.join(', ')}`);
@@ -116,11 +121,25 @@ class ClientService {
             throw error;
         }
 
+        const oldStatus = client.clientStatus;
         client.clientStatus = status;
-        // Block login for inactive/suspended
         client.isActive = (status === 'active');
 
         await client.save();
+
+        // 📝 Log Activity
+        const admin = await User.findById(adminId);
+        if (admin && oldStatus !== status) {
+            await ActivityLogService.logEvent({
+                actorId: adminId,
+                actorRole: 'admin',
+                actionType: 'CLIENT_STATUS_CHANGED',
+                entityType: 'user',
+                entityId: client._id,
+                message: `Admin ${admin.name} changed status of ${client.name} to ${status.toUpperCase()}`,
+                metadata: { oldStatus, newStatus: status }
+            });
+        }
 
         return { id: client._id, name: client.name, clientStatus: client.clientStatus, isActive: client.isActive };
     }
