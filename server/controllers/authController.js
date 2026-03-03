@@ -10,11 +10,19 @@ const { sendSuccess, sendError } = require('../utils/response');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// Parse comma-separated admin emails into an array
-const ADMIN_EMAILS = (process.env.ADMIN_EMAIL || '')
-    .split(',')
-    .map(e => e.trim().toLowerCase())
-    .filter(Boolean);
+// Parse comma-separated admin emails into an array (defensive parsing)
+const getAdminEmails = () => {
+    const raw = process.env.ADMIN_EMAIL || '';
+    return raw
+        .split(/[,;|]/)          // Support comma, semicolon, or pipe as separator
+        .map(e => e.trim().toLowerCase().replace(/\s+/g, '')) // Remove ALL whitespace
+        .filter(e => e.length > 0 && e.includes('@'));        // Must look like an email
+};
+
+// Log parsed admin emails at startup for debugging
+const adminEmails = getAdminEmails();
+console.log(`[Auth] Raw ADMIN_EMAIL env: "${process.env.ADMIN_EMAIL}"`);
+console.log(`[Auth] Parsed admin emails (${adminEmails.length}):`, adminEmails);
 
 // Generate a secure 6-digit numeric OTP
 const generateOTP = () => {
@@ -47,7 +55,7 @@ exports.sendAdminOTP = async (req, res) => {
 
     const normalizedEmail = email.trim().toLowerCase();
 
-    if (!ADMIN_EMAILS.includes(normalizedEmail)) {
+    if (!getAdminEmails().includes(normalizedEmail)) {
         return sendError(res, 'Access denied: Not an admin email', 403);
     }
 
