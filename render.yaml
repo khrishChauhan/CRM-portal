@@ -22,9 +22,7 @@ services:
         sync: false
       - key: CLIENT_URL
         sync: false
-      - key: ADMIN_GMAIL_USER
-        sync: false
-      - key: ADMIN_GMAIL_PASS
+      - key: RESEND_API_KEY
         sync: false
       - key: GOOGLE_CLIENT_ID
         sync: false

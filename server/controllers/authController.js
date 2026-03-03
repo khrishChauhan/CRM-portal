@@ -1,10 +1,10 @@
 const User = require('../models/User');
 const OTP = require('../models/OTP');
 const ActivityLogService = require('../services/activityLogService');
+const emailService = require('../services/emailService');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const nodemailer = require('nodemailer');
-const otpGenerator = require('otp-generator');
+const crypto = require('crypto');
 const { OAuth2Client } = require('google-auth-library');
 const { sendSuccess, sendError } = require('../utils/response');
 
@@ -16,20 +16,13 @@ const ADMIN_EMAILS = (process.env.ADMIN_EMAIL || '')
     .map(e => e.trim().toLowerCase())
     .filter(Boolean);
 
-console.log(`📧 Admin emails loaded: [${ADMIN_EMAILS.join(', ')}]`);
-
-// Transporter for Nodemailer
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.ADMIN_GMAIL_USER,
-        pass: process.env.ADMIN_GMAIL_PASS,
-    },
-});
+// Generate a secure 6-digit numeric OTP
+const generateOTP = () => {
+    return crypto.randomInt(100000, 999999).toString();
+};
 
 // Generate JWT with consistent payload
 const generateToken = (id, role, name) => {
-    console.log(`🔐 Generating JWT for: ${name} (${role}) [ID: ${id}]`);
     return jwt.sign({ id, role, name }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
@@ -48,82 +41,96 @@ const buildUserResponse = (user) => ({
 exports.sendAdminOTP = async (req, res) => {
     const { email } = req.body;
 
-    console.log(`📨 Admin OTP request for: ${email}`);
-    console.log(`📋 Checking against admin list: [${ADMIN_EMAILS.join(', ')}]`);
-
     if (!email) {
         return sendError(res, 'Email is required', 400);
     }
 
-    if (!ADMIN_EMAILS.includes(email.trim().toLowerCase())) {
-        console.log(`🚫 Rejected: ${email} is NOT in admin email list`);
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!ADMIN_EMAILS.includes(normalizedEmail)) {
         return sendError(res, 'Access denied: Not an admin email', 403);
     }
 
     try {
-        const otp = otpGenerator.generate(6, {
-            upperCaseAlphabets: false,
-            specialChars: false,
-            lowerCaseAlphabets: false,
+        // ── Cooldown check: prevent OTP spam (60 seconds) ──
+        const existing = await OTP.findOne({ email: normalizedEmail });
+        if (existing) {
+            const elapsed = (Date.now() - existing.createdAt.getTime()) / 1000;
+            if (elapsed < OTP.COOLDOWN_SECONDS) {
+                const wait = Math.ceil(OTP.COOLDOWN_SECONDS - elapsed);
+                return sendError(res, `Please wait ${wait} seconds before requesting another OTP`, 429);
+            }
+            // Delete stale record
+            await OTP.deleteOne({ _id: existing._id });
+        }
+
+        // ── Generate and hash OTP ──
+        const plainOtp = generateOTP();
+        const salt = await bcrypt.genSalt(10);
+        const hashedOtp = await bcrypt.hash(plainOtp, salt);
+
+        // ── Store hashed OTP with expiry ──
+        await OTP.create({
+            email: normalizedEmail,
+            hashedOtp,
+            expiresAt: new Date(Date.now() + OTP.EXPIRY_MINUTES * 60 * 1000),
         });
 
-        console.log(`🔢 OTP generated for ${email}: ${otp}`);
+        // ── Send via Resend ──
+        await emailService.sendAdminOTP(normalizedEmail, plainOtp);
 
-        await OTP.findOneAndUpdate(
-            { email: email.trim().toLowerCase() },
-            { otp, createdAt: Date.now() },
-            { upsert: true, new: true }
-        );
-
-        await transporter.sendMail({
-            from: process.env.ADMIN_GMAIL_USER,
-            to: email,
-            subject: 'Your CRM Admin Login OTP',
-            text: `Your OTP is: ${otp}. It expires in 5 minutes.`,
-        });
-
-        console.log(`✅ OTP sent to ${email}`);
         return sendSuccess(res, null, 'OTP sent successfully');
     } catch (error) {
-        console.error('❌ Send OTP Error:', error.message);
-        return sendError(res, 'Error sending OTP: ' + error.message, 500);
+        console.error('[Auth] Send OTP failed:', error.message);
+        return sendError(res, 'Email service unavailable. Please try again later.', 500);
     }
 };
 
 exports.verifyAdminOTP = async (req, res) => {
     const { email, otp } = req.body;
 
-    console.log(`🔑 Admin OTP verification: ${email} → ${otp}`);
-
     if (!email || !otp) {
         return sendError(res, 'Email and OTP are required', 400);
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+
     try {
-        const record = await OTP.findOne({ email: email.trim().toLowerCase(), otp });
+        const record = await OTP.findOne({ email: normalizedEmail });
 
         if (!record) {
-            console.log(`🚫 OTP invalid or expired for ${email}`);
             return sendError(res, 'Invalid or expired OTP', 400);
         }
 
-        // Find or create admin user in DB
-        let user = await User.findOne({ email: email.trim().toLowerCase(), role: 'admin' });
-        if (!user) {
-            console.log(`👤 Creating admin user for: ${email}`);
-            user = await User.create({ name: 'System Admin', email: email.trim().toLowerCase(), role: 'admin' });
+        // ── Check attempt limit ──
+        if (record.attemptCount >= OTP.MAX_ATTEMPTS) {
+            await OTP.deleteOne({ _id: record._id });
+            return sendError(res, 'Too many failed attempts. Please request a new OTP.', 429);
         }
 
-        // Delete OTP after use
+        // ── Verify OTP using bcrypt comparison ──
+        const isValid = await record.compareOtp(otp);
+        if (!isValid) {
+            await record.incrementAttempts();
+            const remaining = OTP.MAX_ATTEMPTS - record.attemptCount;
+            return sendError(res, `Invalid OTP. ${remaining} attempt(s) remaining.`, 400);
+        }
+
+        // ── OTP is valid — find or create admin user ──
+        let user = await User.findOne({ email: normalizedEmail, role: 'admin' });
+        if (!user) {
+            user = await User.create({ name: 'System Admin', email: normalizedEmail, role: 'admin' });
+        }
+
+        // Delete OTP after successful verification
         await OTP.deleteOne({ _id: record._id });
 
         const token = generateToken(user._id, user.role, user.name);
-        console.log(`✅ Admin logged in: ${user.name} (${user.email})`);
 
         return sendSuccess(res, { user: buildUserResponse(user), token }, 'Admin login successful');
     } catch (error) {
-        console.error('❌ OTP Verify Error:', error.message, error);
-        return sendError(res, 'Verification error: ' + error.message, 500);
+        console.error('[Auth] OTP verification failed:', error.message);
+        return sendError(res, 'Verification failed. Please try again.', 500);
     }
 };
 
@@ -133,8 +140,6 @@ exports.verifyAdminOTP = async (req, res) => {
 
 exports.staffLogin = async (req, res) => {
     const { email, password } = req.body;
-
-    console.log(`👔 Staff login attempt: ${email}`);
 
     if (!email || !password) {
         return sendError(res, 'Email and password are required', 400);
@@ -146,25 +151,21 @@ exports.staffLogin = async (req, res) => {
             .select('+password');
 
         if (!user) {
-            console.log(`🚫 Staff not found: ${email}`);
             return sendError(res, 'Invalid email or password', 401);
         }
 
         // Check if account is active
         if (!user.isActive) {
-            console.log(`🚫 Staff account deactivated: ${email}`);
             return sendError(res, 'Account is deactivated. Contact your administrator.', 403);
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
-        console.log(`🔐 Password match for ${email}: ${isMatch}`);
 
         if (!isMatch) {
             return sendError(res, 'Invalid email or password', 401);
         }
 
         const token = generateToken(user._id, user.role, user.name);
-        console.log(`✅ Staff logged in: ${user.name} (${email})`);
 
         return sendSuccess(res, { user: buildUserResponse(user), token }, 'Staff login successful');
     } catch (error) {
@@ -180,7 +181,7 @@ exports.staffLogin = async (req, res) => {
 exports.googleLogin = async (req, res) => {
     const { tokenId } = req.body;
 
-    console.log('🌐 Google OAuth login attempt');
+
 
     if (!tokenId) {
         return sendError(res, 'Google token is required', 400);
@@ -193,7 +194,7 @@ exports.googleLogin = async (req, res) => {
         });
 
         const { name, email, sub: googleId } = ticket.getPayload();
-        console.log(`🌐 Google token verified: ${name} (${email})`);
+
 
         let user = await User.findOne({ googleId });
 
@@ -204,7 +205,7 @@ exports.googleLogin = async (req, res) => {
                 // Link Google ID to existing user
                 user.googleId = googleId;
                 await user.save();
-                console.log(`🔗 Linked Google ID to existing user: ${email}`);
+
             } else {
                 // Create new client user
                 user = await User.create({
@@ -213,7 +214,7 @@ exports.googleLogin = async (req, res) => {
                     googleId,
                     role: 'client',
                 });
-                console.log(`👤 New client created: ${name} (${email})`);
+
 
                 // 📝 Log Activity
                 await ActivityLogService.logEvent({
@@ -229,12 +230,10 @@ exports.googleLogin = async (req, res) => {
         }
 
         if (!user.isActive) {
-            console.log(`🚫 Client account deactivated/suspended: ${email}`);
             return sendError(res, 'Your account is currently suspended or inactive. Please contact support.', 403);
         }
 
         const token = generateToken(user._id, user.role, user.name);
-        console.log(`✅ Client logged in via Google: ${user.name}`);
 
         return sendSuccess(res, { user: buildUserResponse(user), token }, 'Google login successful');
     } catch (error) {
