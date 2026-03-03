@@ -1,14 +1,28 @@
 const nodemailer = require('nodemailer');
 
 /**
- * Handle Gmail SMTP using Nodemailer
+ * Handle Gmail SMTP using explicit host and port configuration
  */
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // true for 465
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
+    tls: {
+        rejectUnauthorized: false
+    }
+});
+
+// Verify connection configuration on startup
+transporter.verify((error, success) => {
+    if (error) {
+        console.error("SMTP Connection Failed:", error);
+    } else {
+        console.log("SMTP Server is ready");
+    }
 });
 
 /**
@@ -44,8 +58,8 @@ const sendOTPEmail = async (toEmail, otp) => {
         });
         return { success: true };
     } catch (error) {
-        console.error('Nodemailer Error:', error.message);
-        throw new Error('Email delivery failed');
+        console.error("SMTP ERROR:", error);
+        throw error;
     }
 };
 
