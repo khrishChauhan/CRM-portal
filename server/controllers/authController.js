@@ -70,7 +70,7 @@ exports.sendAdminOTP = async (req, res) => {
             expiresAt: new Date(Date.now() + OTP.EXPIRY_MINUTES * 60 * 1000),
         });
 
-        // ── Send via Gmail SMTP (Nodemailer) ──
+        // ── Send via Brevo API (HTTPS) ──
         await emailService.sendOTPEmail(normalizedEmail, plainOtp);
 
         return sendSuccess(res, null, 'OTP sent successfully');
