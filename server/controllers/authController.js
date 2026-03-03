@@ -52,17 +52,8 @@ exports.sendAdminOTP = async (req, res) => {
     }
 
     try {
-        // ── Cooldown check: prevent OTP spam (60 seconds) ──
-        const existing = await OTP.findOne({ email: normalizedEmail });
-        if (existing) {
-            const elapsed = (Date.now() - existing.createdAt.getTime()) / 1000;
-            if (elapsed < OTP.COOLDOWN_SECONDS) {
-                const wait = Math.ceil(OTP.COOLDOWN_SECONDS - elapsed);
-                return sendError(res, `Please wait ${wait} seconds before requesting another OTP`, 429);
-            }
-            // Delete stale record
-            await OTP.deleteOne({ _id: existing._id });
-        }
+        // ── Delete any existing OTP for this email ──
+        await OTP.deleteMany({ email: normalizedEmail });
 
         // ── Generate and hash OTP ──
         const plainOtp = generateOTP();
