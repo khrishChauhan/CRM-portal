@@ -216,6 +216,11 @@ exports.googleLogin = async (req, res) => {
             }
         }
 
+        if (!user.isActive) {
+            console.log(`🚫 Client account deactivated/suspended: ${email}`);
+            return sendError(res, 'Your account is currently suspended or inactive. Please contact support.', 403);
+        }
+
         const token = generateToken(user._id, user.role, user.name);
         console.log(`✅ Client logged in via Google: ${user.name}`);
 

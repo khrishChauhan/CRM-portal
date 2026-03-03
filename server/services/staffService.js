@@ -11,7 +11,12 @@ class StaffService {
      * Build query filters from request query params
      */
     static buildFilters(query) {
-        const filters = { role: 'staff' };
+        // Base filter: only non-deleted staff
+        const filters = { role: 'staff', isDeleted: false };
+
+        if (query.showDeleted === 'true') {
+            delete filters.isDeleted;
+        }
 
         if (query.status === 'active') filters.isActive = true;
         if (query.status === 'inactive') filters.isActive = false;
@@ -65,7 +70,7 @@ class StaffService {
      * Get single staff by ID with populated manager
      */
     static async getById(id) {
-        const staff = await User.findOne({ _id: id, role: 'staff' })
+        const staff = await User.findOne({ _id: id, role: 'staff', isDeleted: false })
             .select('-password -googleId -__v')
             .populate('reportingManager', 'name email designation department');
 
@@ -80,11 +85,6 @@ class StaffService {
 
     /**
      * Create a new staff member
-     * Business rules:
-     *   - Email must be unique across ALL roles
-     *   - Password is always hashed
-     *   - reportingManager must be an active staff member
-     *   - Cannot assign reportingManager to self (enforced in update)
      */
     static async create(data) {
         // Check email uniqueness
@@ -122,9 +122,9 @@ class StaffService {
             reportingManager: data.reportingManager || null,
             role: 'staff',
             isActive: true,
+            isDeleted: false,
         });
 
-        // Return without password
         return User.findById(staff._id)
             .select('-password -googleId -__v')
             .populate('reportingManager', 'name email designation department');
@@ -132,14 +132,9 @@ class StaffService {
 
     /**
      * Update an existing staff member
-     * Business rules:
-     *   - Cannot change role
-     *   - Cannot assign self as reporting manager
-     *   - If password is provided, it gets re-hashed
-     *   - reportingManager must be an active staff member (not client, not inactive)
      */
     static async update(id, data) {
-        const staff = await User.findOne({ _id: id, role: 'staff' });
+        const staff = await User.findOne({ _id: id, role: 'staff', isDeleted: false });
         if (!staff) {
             const error = new Error('Staff member not found');
             error.statusCode = 404;
@@ -202,10 +197,10 @@ class StaffService {
     }
 
     /**
-     * Toggle staff active/inactive status (soft delete)
+     * Toggle staff active/inactive status
      */
     static async toggleStatus(id) {
-        const staff = await User.findOne({ _id: id, role: 'staff' });
+        const staff = await User.findOne({ _id: id, role: 'staff', isDeleted: false });
         if (!staff) {
             const error = new Error('Staff member not found');
             error.statusCode = 404;
@@ -223,18 +218,18 @@ class StaffService {
     }
 
     /**
-     * Soft delete — deactivates staff rather than removing from DB
+     * Soft delete — separates deactivation from permanent removal
      */
     static async softDelete(id) {
-        const staff = await User.findOne({ _id: id, role: 'staff' });
+        const staff = await User.findOne({ _id: id, role: 'staff', isDeleted: false });
         if (!staff) {
             const error = new Error('Staff member not found');
             error.statusCode = 404;
             throw error;
         }
 
-        // Cannot delete someone who's a reporting manager for others
-        const subordinates = await User.countDocuments({ reportingManager: id, role: 'staff' });
+        // Check for subordinates
+        const subordinates = await User.countDocuments({ reportingManager: id, role: 'staff', isDeleted: false });
         if (subordinates > 0) {
             const error = new Error(
                 `Cannot deactivate: ${staff.name} is a reporting manager for ${subordinates} staff member(s). Reassign them first.`
@@ -243,17 +238,18 @@ class StaffService {
             throw error;
         }
 
+        staff.isDeleted = true;
         staff.isActive = false;
         await staff.save();
 
-        return { id: staff._id, name: staff.name };
+        return { id: staff._id, name: staff.name, isDeleted: true };
     }
 
     /**
      * Get all active staff (for reporting manager dropdown)
      */
     static async getActiveStaffList() {
-        return User.find({ role: 'staff', isActive: true })
+        return User.find({ role: 'staff', isActive: true, isDeleted: false })
             .select('name email designation department')
             .sort('name');
     }
@@ -263,11 +259,11 @@ class StaffService {
      */
     static async getStats() {
         const [total, active, inactive, byDepartment] = await Promise.all([
-            User.countDocuments({ role: 'staff' }),
-            User.countDocuments({ role: 'staff', isActive: true }),
-            User.countDocuments({ role: 'staff', isActive: false }),
+            User.countDocuments({ role: 'staff', isDeleted: false }),
+            User.countDocuments({ role: 'staff', isActive: true, isDeleted: false }),
+            User.countDocuments({ role: 'staff', isActive: false, isDeleted: false }),
             User.aggregate([
-                { $match: { role: 'staff', isActive: true } },
+                { $match: { role: 'staff', isActive: true, isDeleted: false } },
                 { $group: { _id: '$department', count: { $sum: 1 } } },
                 { $sort: { count: -1 } },
             ]),
@@ -278,17 +274,12 @@ class StaffService {
 
     /**
      * Validate that a reporting manager reference is valid
-     * Rules:
-     *   - Must exist
-     *   - Must be a staff member (not client/admin)
-     *   - Must be active
-     *   - Cannot be self
      */
     static async validateReportingManager(managerId, staffId) {
-        const manager = await User.findById(managerId);
+        const manager = await User.findOne({ _id: managerId, isDeleted: false });
 
         if (!manager) {
-            const error = new Error('Reporting manager not found');
+            const error = new Error('Reporting manager not found or deleted');
             error.statusCode = 400;
             throw error;
         }

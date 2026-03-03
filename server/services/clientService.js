@@ -11,11 +11,20 @@ const AccessRequest = require('../models/AccessRequest');
 class ClientService {
 
     static buildFilters(query) {
-        const filters = { role: 'client' };
+        // Base filter: only non-deleted clients
+        const filters = { role: 'client', isDeleted: false };
 
-        if (query.status) filters.clientStatus = query.status;
-        if (!query.showDeleted) filters.isActive = true;
+        // If explicitly asking to show deleted, remove the filter
+        if (query.showDeleted === 'true') {
+            delete filters.isDeleted;
+        }
 
+        // Apply status filter if provided
+        if (query.status) {
+            filters.clientStatus = query.status.toLowerCase();
+        }
+
+        // Apply search filter if provided
         if (query.search) {
             const re = new RegExp(query.search, 'i');
             filters.$or = [
@@ -68,7 +77,7 @@ class ClientService {
      * Get single client by ID with approved projects populated
      */
     static async getById(id) {
-        const client = await User.findOne({ _id: id, role: 'client' })
+        const client = await User.findOne({ _id: id, role: 'client', isDeleted: false })
             .select('-password -__v')
             .populate('approvedProjects', 'projectCode projectName projectStatus priority startDate expectedCompletion')
             .lean();
@@ -87,6 +96,10 @@ class ClientService {
 
     /**
      * Change client status (active / inactive / suspended)
+     * Business rules:
+     * - Admin can change between active, inactive, suspended
+     * - 'active' sets isActive = true (allowing login)
+     * - 'inactive' or 'suspended' sets isActive = false (blocking login)
      */
     static async changeStatus(id, status) {
         const validStatuses = ['active', 'inactive', 'suspended'];
@@ -96,7 +109,7 @@ class ClientService {
             throw error;
         }
 
-        const client = await User.findOne({ _id: id, role: 'client' });
+        const client = await User.findOne({ _id: id, role: 'client', isDeleted: false });
         if (!client) {
             const error = new Error('Client not found');
             error.statusCode = 404;
@@ -104,39 +117,40 @@ class ClientService {
         }
 
         client.clientStatus = status;
-        if (status === 'inactive' || status === 'suspended') {
-            client.isActive = false;
-        } else {
-            client.isActive = true;
-        }
+        // Block login for inactive/suspended
+        client.isActive = (status === 'active');
+
         await client.save();
 
-        return { id: client._id, name: client.name, clientStatus: client.clientStatus };
+        return { id: client._id, name: client.name, clientStatus: client.clientStatus, isActive: client.isActive };
     }
 
     /**
      * Soft delete client
+     * separates data removal from suspension
      */
     static async softDelete(id) {
-        const client = await User.findOne({ _id: id, role: 'client' });
+        const client = await User.findOne({ _id: id, role: 'client', isDeleted: false });
         if (!client) {
             const error = new Error('Client not found');
             error.statusCode = 404;
             throw error;
         }
 
+        // Mark as deleted, block login, and clear access
+        client.isDeleted = true;
         client.isActive = false;
-        client.clientStatus = 'suspended';
+        client.clientStatus = 'suspended'; // Ensure status reflects suspension on delete
         client.approvedProjects = [];
         await client.save();
 
         // Also reject all pending requests
         await AccessRequest.updateMany(
             { clientId: id, status: 'pending' },
-            { status: 'rejected', rejectionReason: 'Client account suspended' }
+            { status: 'rejected', rejectionReason: 'Client account deleted' }
         );
 
-        return { id: client._id, name: client.name };
+        return { id: client._id, name: client.name, isDeleted: true };
     }
 
     /**
@@ -144,10 +158,10 @@ class ClientService {
      */
     static async getStats() {
         const [total, active, inactive, suspended] = await Promise.all([
-            User.countDocuments({ role: 'client' }),
-            User.countDocuments({ role: 'client', clientStatus: 'active' }),
-            User.countDocuments({ role: 'client', clientStatus: 'inactive' }),
-            User.countDocuments({ role: 'client', clientStatus: 'suspended' }),
+            User.countDocuments({ role: 'client', isDeleted: false }),
+            User.countDocuments({ role: 'client', clientStatus: 'active', isDeleted: false }),
+            User.countDocuments({ role: 'client', clientStatus: 'inactive', isDeleted: false }),
+            User.countDocuments({ role: 'client', clientStatus: 'suspended', isDeleted: false }),
         ]);
 
         return { total, active, inactive, suspended };
