@@ -67,8 +67,8 @@ exports.sendAdminOTP = async (req, res) => {
             expiresAt: new Date(Date.now() + OTP.EXPIRY_MINUTES * 60 * 1000),
         });
 
-        // ── Send via Resend ──
-        await emailService.sendAdminOTP(normalizedEmail, plainOtp);
+        // ── Send via Gmail SMTP (Nodemailer) ──
+        await emailService.sendOTPEmail(normalizedEmail, plainOtp);
 
         return sendSuccess(res, null, 'OTP sent successfully');
     } catch (error) {
