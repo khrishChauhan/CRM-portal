@@ -1,6 +1,8 @@
 const AccessRequest = require('../models/AccessRequest');
 const { Project } = require('../models/Project');
 const User = require('../models/User');
+const ActivityLogService = require('./activityLogService');
+const mongoose = require('mongoose');
 
 /**
  * AccessRequestService — handles the project access request flow.
@@ -16,13 +18,8 @@ class AccessRequestService {
 
     /**
      * Client: Request access to a project
-     * Business rules:
-     *   - Project must exist and not be soft-deleted
-     *   - Client must be active (not suspended)
-     *   - Cannot request access if already requested (duplicate prevention via unique index)
-     *   - Cannot request if already approved
      */
-    static async requestAccess(clientId, projectId) {
+    static async requestAccess(clientId, projectId, message = '') {
         // Verify project exists
         const project = await Project.findOne({ _id: projectId, isDeleted: false });
         if (!project) {
@@ -32,26 +29,26 @@ class AccessRequestService {
         }
 
         // Verify client is active
-        const client = await User.findOne({ _id: clientId, role: 'client' });
+        const client = await User.findOne({ _id: clientId, role: 'client', isDeleted: false });
         if (!client) {
             const error = new Error('Client not found');
             error.statusCode = 404;
             throw error;
         }
-        if (client.clientStatus === 'suspended') {
-            const error = new Error('Your account is suspended. Contact admin.');
+        if (client.clientStatus === 'suspended' || !client.isActive) {
+            const error = new Error('Your account is suspended or inactive. Contact admin.');
             error.statusCode = 403;
             throw error;
         }
 
         // Check if already approved
-        if (client.approvedProjects?.includes(projectId)) {
+        if (client.approvedProjects?.some(id => id.toString() === projectId.toString())) {
             const error = new Error('You already have access to this project');
             error.statusCode = 400;
             throw error;
         }
 
-        // Check for existing request (pending or rejected — allow re-request on rejection)
+        // Check for existing request
         const existing = await AccessRequest.findOne({ clientId, projectId });
         if (existing) {
             if (existing.status === 'pending') {
@@ -64,8 +61,9 @@ class AccessRequestService {
                 error.statusCode = 400;
                 throw error;
             }
-            // If rejected, allow re-request by updating status back to pending
+            // If rejected, allow re-request
             existing.status = 'pending';
+            existing.message = message || existing.message;
             existing.reviewedBy = null;
             existing.reviewedAt = null;
             existing.rejectionReason = null;
@@ -74,12 +72,12 @@ class AccessRequestService {
         }
 
         // Create new request
-        const request = await AccessRequest.create({ clientId, projectId });
+        const request = await AccessRequest.create({ clientId, projectId, message });
         return request;
     }
 
     /**
-     * Client: Get my access requests with project info
+     * Client: Get my access requests
      */
     static async getMyRequests(clientId) {
         return AccessRequest.find({ clientId })
@@ -89,57 +87,114 @@ class AccessRequestService {
     }
 
     /**
-     * Admin: Get all access requests (filterable by status)
+     * Admin: Get all access requests with aggregation-based stats and search
+     * Uses MongoDB Aggregation Facilites ($facet) for production efficiency
      */
-    static async getAllRequests({ page = 1, limit = 20, status }) {
-        const filters = {};
-        if (status) filters.status = status;
-
+    static async getAllRequests({ page = 1, limit = 10, status, search }) {
         const skip = (page - 1) * limit;
 
-        const [requests, total] = await Promise.all([
-            AccessRequest.find(filters)
-                .populate('clientId', 'name email company')
-                .populate('projectId', 'projectCode projectName projectStatus')
-                .populate('reviewedBy', 'name')
-                .sort('-createdAt')
-                .skip(skip)
-                .limit(Number(limit))
-                .lean(),
-            AccessRequest.countDocuments(filters),
-        ]);
+        // Base match for requests
+        const matchStage = {};
+        if (status) {
+            matchStage.status = status;
+        }
+
+        // Pipeline for gathering stats AND paginated results in one trip
+        const pipeline = [
+            { $match: matchStage },
+            // Join Client User
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'clientId',
+                    foreignField: '_id',
+                    as: 'client'
+                }
+            },
+            { $unwind: '$client' },
+            // Join Project
+            {
+                $lookup: {
+                    from: 'projects',
+                    localField: 'projectId',
+                    foreignField: '_id',
+                    as: 'project'
+                }
+            },
+            { $unwind: '$project' },
+            // Search filters
+            ...(search ? [{
+                $match: {
+                    $or: [
+                        { 'client.name': new RegExp(search, 'i') },
+                        { 'client.email': new RegExp(search, 'i') },
+                        { 'project.projectName': new RegExp(search, 'i') },
+                        { 'project.projectCode': new RegExp(search, 'i') }
+                    ]
+                }
+            }] : []),
+            // Main aggregation facet
+            {
+                $facet: {
+                    // Branch 1: Stats (Total, Pending, Approved, Rejected)
+                    stats: [
+                        {
+                            $group: {
+                                _id: null,
+                                total: { $sum: 1 },
+                                pending: { $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] } },
+                                approved: { $sum: { $cond: [{ $eq: ['$status', 'approved'] }, 1, 0] } },
+                                rejected: { $sum: { $cond: [{ $eq: ['$status', 'rejected'] }, 1, 0] } }
+                            }
+                        }
+                    ],
+                    // Branch 2: Paginated Data
+                    data: [
+                        { $sort: { createdAt: -1 } },
+                        { $skip: skip },
+                        { $limit: Number(limit) },
+                        {
+                            $project: {
+                                _id: 1,
+                                status: 1,
+                                message: 1,
+                                createdAt: 1,
+                                updatedAt: 1,
+                                rejectionReason: 1,
+                                reviewedAt: 1,
+                                'client.name': 1,
+                                'client.email': 1,
+                                'client.company': 1,
+                                'project.projectName': 1,
+                                'project.projectCode': 1,
+                                'project.projectStatus': 1
+                            }
+                        }
+                    ]
+                }
+            }
+        ];
+
+        const result = await AccessRequest.aggregate(pipeline);
+        const stats = result[0].stats[0] || { total: 0, pending: 0, approved: 0, rejected: 0 };
+        const data = result[0].data;
 
         return {
-            requests,
+            stats,
+            requests: data,
             pagination: {
-                total,
+                total: stats.total,
                 page: Number(page),
                 limit: Number(limit),
-                totalPages: Math.ceil(total / limit),
-                hasNext: page * limit < total,
+                totalPages: Math.ceil(stats.total / limit),
+                hasNext: page * limit < stats.total,
                 hasPrev: page > 1,
             },
         };
     }
 
     /**
-     * Admin: Get request stats
-     */
-    static async getStats() {
-        const [pending, approved, rejected] = await Promise.all([
-            AccessRequest.countDocuments({ status: 'pending' }),
-            AccessRequest.countDocuments({ status: 'approved' }),
-            AccessRequest.countDocuments({ status: 'rejected' }),
-        ]);
-        return { pending, approved, rejected, total: pending + approved + rejected };
-    }
-
-    /**
      * Admin: Approve a request
-     * Business logic:
-     *   - Add projectId to client's approvedProjects array
-     *   - Update request status
-     *   - Record who approved it
      */
     static async approveRequest(requestId, adminId) {
         const request = await AccessRequest.findById(requestId);
@@ -154,7 +209,10 @@ class AccessRequestService {
             throw error;
         }
 
-        // Add project to client's approved list (idempotent with $addToSet)
+        const project = await Project.findById(request.projectId);
+        const client = await User.findById(request.clientId);
+
+        // Add project to client's approved list
         await User.findByIdAndUpdate(
             request.clientId,
             { $addToSet: { approvedProjects: request.projectId } }
@@ -166,8 +224,18 @@ class AccessRequestService {
         request.reviewedAt = new Date();
         await request.save();
 
+        // 📝 Log Activity
+        await ActivityLogService.log({
+            user: adminId,
+            action: 'APPROVE_ACCESS',
+            entityType: 'AccessRequest',
+            entityId: requestId,
+            description: `Approved access for ${client.name} to project ${project.projectName} (${project.projectCode})`,
+            metadata: { clientId: request.clientId, projectId: request.projectId }
+        });
+
         return AccessRequest.findById(requestId)
-            .populate('clientId', 'name email')
+            .populate('clientId', 'name email company')
             .populate('projectId', 'projectCode projectName');
     }
 
@@ -187,20 +255,32 @@ class AccessRequestService {
             throw error;
         }
 
+        const project = await Project.findById(request.projectId);
+        const client = await User.findById(request.clientId);
+
         request.status = 'rejected';
         request.reviewedBy = adminId;
         request.reviewedAt = new Date();
-        request.rejectionReason = reason || null;
+        request.rejectionReason = reason || 'No reason provided';
         await request.save();
 
+        // 📝 Log Activity
+        await ActivityLogService.log({
+            user: adminId,
+            action: 'REJECT_ACCESS',
+            entityType: 'AccessRequest',
+            entityId: requestId,
+            description: `Rejected access for ${client.name} to project ${project.projectName} (${project.projectCode})`,
+            metadata: { clientId: request.clientId, projectId: request.projectId, reason }
+        });
+
         return AccessRequest.findById(requestId)
-            .populate('clientId', 'name email')
+            .populate('clientId', 'name email company')
             .populate('projectId', 'projectCode projectName');
     }
 
     /**
-     * Client: Get all projects (public listing — limited fields)
-     * Shows all non-deleted projects so clients can request access
+     * Client: Get all projects (public listing)
      */
     static async getPublicProjectList({ page = 1, limit = 10, search, status, location }) {
         const filters = { isDeleted: false };

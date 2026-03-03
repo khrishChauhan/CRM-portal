@@ -105,3 +105,14 @@ exports.staffUpdateProject = async (req, res) => {
         return sendError(res, error.message, error.statusCode || 400);
     }
 };
+
+// GET /api/projects/my-approved — Client's approved projects
+exports.getMyApprovedProjects = async (req, res) => {
+    try {
+        const result = await ProjectService.getClientProjects(req.user.id);
+        return sendSuccess(res, result, 'Approved projects fetched');
+    } catch (error) {
+        return sendError(res, error.message, error.statusCode || 500);
+    }
+};
+

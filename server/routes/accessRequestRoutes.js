@@ -3,9 +3,8 @@ const router = express.Router();
 const {
     requestAccess,
     getMyRequests,
-    getPublicProjects,
+    browseProjects,
     getAllRequests,
-    getRequestStats,
     approveRequest,
     rejectRequest,
 } = require('../controllers/accessRequestController');
@@ -17,10 +16,9 @@ router.use(protect);
 // ── Client endpoints ──
 router.post('/', authorize('client'), requestAccess);
 router.get('/my', authorize('client'), getMyRequests);
-router.get('/projects', authorize('client'), getPublicProjects);
+router.get('/projects', authorize('client'), browseProjects);
 
 // ── Admin endpoints ──
-router.get('/stats', authorize('admin'), getRequestStats);
 router.get('/', authorize('admin'), getAllRequests);
 router.patch('/:id/approve', authorize('admin'), approveRequest);
 router.patch('/:id/reject', authorize('admin'), rejectRequest);

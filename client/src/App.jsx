@@ -11,7 +11,10 @@ import ManageStaff from './pages/ManageStaff';
 import ManageClients from './pages/ManageClients';
 import ManageProjects from './pages/ManageProjects';
 import StaffDashboard from './pages/StaffDashboard';
+import ManageStaffProjects from './pages/ManageStaffProjects';
 import ClientDashboard from './pages/ClientDashboard';
+import MyProjects from './pages/MyProjects';
+import ManageAccessRequests from './pages/ManageAccessRequests';
 import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
@@ -40,6 +43,9 @@ function App() {
                 <Route path="/admin/projects" element={
                   <DashboardLayout><ManageProjects /></DashboardLayout>
                 } />
+                <Route path="/admin/access-requests" element={
+                  <DashboardLayout><ManageAccessRequests /></DashboardLayout>
+                } />
                 <Route path="/admin/settings" element={
                   <DashboardLayout><AdminDashboard /></DashboardLayout>
                 } />
@@ -51,13 +57,7 @@ function App() {
                   <DashboardLayout><StaffDashboard /></DashboardLayout>
                 } />
                 <Route path="/staff/projects" element={
-                  <DashboardLayout><StaffDashboard /></DashboardLayout>
-                } />
-                <Route path="/staff/clients" element={
-                  <DashboardLayout><StaffDashboard /></DashboardLayout>
-                } />
-                <Route path="/staff/tasks" element={
-                  <DashboardLayout><StaffDashboard /></DashboardLayout>
+                  <DashboardLayout><ManageStaffProjects /></DashboardLayout>
                 } />
               </Route>
 
@@ -67,10 +67,7 @@ function App() {
                   <DashboardLayout><ClientDashboard /></DashboardLayout>
                 } />
                 <Route path="/client/projects" element={
-                  <DashboardLayout><ClientDashboard /></DashboardLayout>
-                } />
-                <Route path="/client/profile" element={
-                  <DashboardLayout><ClientDashboard /></DashboardLayout>
+                  <DashboardLayout><MyProjects /></DashboardLayout>
                 } />
               </Route>
 

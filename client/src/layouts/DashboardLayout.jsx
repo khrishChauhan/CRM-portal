@@ -8,7 +8,8 @@ import {
     Menu,
     X,
     UserCircle,
-    FolderOpen
+    FolderOpen,
+    FileText
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
@@ -21,20 +22,18 @@ const Sidebar = ({ role }) => {
         { name: 'Manage Staff', path: '/admin/staff', icon: Users },
         { name: 'Manage Clients', path: '/admin/clients', icon: Briefcase },
         { name: 'Projects', path: '/admin/projects', icon: FolderOpen },
+        { name: 'Access Requests', path: '/admin/access-requests', icon: FileText },
         { name: 'Settings', path: '/admin/settings', icon: Settings },
     ];
 
     const staffLinks = [
         { name: 'Dashboard', path: '/staff/dashboard', icon: LayoutDashboard },
         { name: 'My Projects', path: '/staff/projects', icon: FolderOpen },
-        { name: 'My Clients', path: '/staff/clients', icon: Users },
-        { name: 'Tasks', path: '/staff/tasks', icon: Briefcase },
     ];
 
     const clientLinks = [
         { name: 'Dashboard', path: '/client/dashboard', icon: LayoutDashboard },
         { name: 'My Projects', path: '/client/projects', icon: FolderOpen },
-        { name: 'My Profile', path: '/client/profile', icon: UserCircle },
     ];
 
     const links = role === 'admin' ? adminLinks : role === 'staff' ? staffLinks : clientLinks;

@@ -251,6 +251,30 @@ class ProjectService {
         };
     }
 
+    /**
+     * Get projects approved for a specific client
+     */
+    static async getClientProjects(clientId) {
+        const client = await User.findOne({ _id: clientId, role: 'client', isDeleted: false })
+            .select('approvedProjects');
+
+        if (!client) {
+            const error = new Error('Client not found');
+            error.statusCode = 404;
+            throw error;
+        }
+
+        const approvedIds = client.approvedProjects || [];
+
+        return Project.find({
+            _id: { $in: approvedIds },
+            isDeleted: false
+        })
+            .populate('projectManager', 'name email designation')
+            .sort('-updatedAt')
+            .lean();
+    }
+
     // ════════════════════════════════════════
     //  Dashboard Aggregations
     // ════════════════════════════════════════

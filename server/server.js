@@ -14,6 +14,7 @@ const staffRoutes = require('./routes/staffRoutes');
 const clientRoutes = require('./routes/clientRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const accessRequestRoutes = require('./routes/accessRequestRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 // ── Debug: Verify environment variables loaded ──
 console.log('──────────────────────────────────────');
@@ -63,6 +64,7 @@ app.use('/api/staff', staffRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/access-requests', accessRequestRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // ── Health check ──
 app.get('/', (req, res) => {

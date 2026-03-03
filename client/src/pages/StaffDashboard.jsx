@@ -1,67 +1,154 @@
-import { Users, CheckCircle, Clock, Plus } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import api from '../services/api';
+import {
+    Briefcase,
+    Clock,
+    CheckCircle,
+    AlertCircle,
+    Loader2,
+    Calendar,
+    ChevronRight,
+    TrendingUp
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const StaffDashboard = () => {
-    const tasks = [
-        { title: 'Follow up with Client X', status: 'Pending', priority: 'High', date: 'Mar 15' },
-        { title: 'Update CRM records', status: 'In Progress', priority: 'Medium', date: 'Mar 14' },
-        { title: 'Send invoice #1234', status: 'Completed', priority: 'Low', date: 'Mar 12' },
+    const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const { data } = await api.get('/dashboard/staff');
+                setStats(data.data);
+            } catch (err) {
+                setError(err.response?.data?.message || 'Failed to fetch dashboard stats');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchStats();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <Loader2 className="w-10 h-10 animate-spin text-primary-500" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="bg-red-50 p-6 rounded-2xl border border-red-100 flex items-center gap-4 text-red-700">
+                <AlertCircle className="w-6 h-6" />
+                <p className="font-medium">{error}</p>
+            </div>
+        );
+    }
+
+    const cards = [
+        { label: 'Assigned Projects', value: stats.total, icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50' },
+        { label: 'In Progress', value: stats.inProgress, icon: TrendingUp, color: 'text-amber-600', bg: 'bg-amber-50' },
+        { label: 'Completed', value: stats.completed, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+        { label: 'Delayed', value: stats.delayed, icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-50' },
     ];
 
     return (
-        <div className="space-y-8">
-            <div>
-                <h1 className="text-3xl font-bold text-slate-900">Staff Dashboard</h1>
-                <p className="text-slate-500 mt-1">Manage your clients and tasks efficiently</p>
+        <div className="space-y-8 animate-in fade-in duration-500">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight">Staff Dashboard</h1>
+                    <p className="text-slate-500 mt-1 font-medium">Manage your assignments and track progress real-time</p>
+                </div>
+                <Link
+                    to="/staff/projects"
+                    className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl font-black text-sm hover:bg-slate-800 transition shadow-lg shadow-slate-200"
+                >
+                    View My Projects
+                    <ChevronRight className="w-4 h-4" />
+                </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm col-span-2">
-                    <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                        <Users className="w-5 h-5 text-primary-500" />
-                        Latest Task Updates
-                    </h2>
-                    <div className="space-y-4">
-                        {tasks.map((task) => (
-                            <div key={task.title} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                <div className="flex items-center space-x-4">
-                                    <div className="bg-white p-2 rounded-lg border border-slate-200">
-                                        <Clock className="w-5 h-5 text-slate-400" />
-                                    </div>
-                                    <div>
-                                        <h3 className="font-semibold text-slate-800">{task.title}</h3>
-                                        <p className="text-sm text-slate-500">Due {task.date}</p>
-                                    </div>
-                                </div>
-                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${task.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
-                                    }`}>{task.status}</span>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {cards.map((card) => (
+                    <div key={card.label} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+                        <div className="flex flex-col gap-4">
+                            <div className={`${card.bg} ${card.color} w-12 h-12 rounded-2xl flex items-center justify-center`}>
+                                <card.icon className="w-6 h-6" />
                             </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
-                    <div>
-                        <h2 className="text-xl font-bold mb-2">My Clients</h2>
-                        <p className="text-slate-500 text-sm mb-6">You are currently managing 12 clients</p>
-                        <div className="flex -space-x-3 mb-6 overflow-hidden">
-                            {[1, 2, 3, 4].map(i => (
-                                <div key={i} className="inline-block h-10 w-10 rounded-full ring-2 ring-white bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-500">
-                                    C{i}
-                                </div>
-                            ))}
-                            <div className="inline-block h-10 w-10 rounded-full ring-2 ring-white bg-primary-100 text-primary-600 flex items-center justify-center text-xs font-bold">
-                                +8
+                            <div>
+                                <h3 className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">{card.label}</h3>
+                                <p className="text-3xl font-black text-slate-900 mt-1">{card.value}</p>
                             </div>
                         </div>
                     </div>
-                    <button className="w-full flex items-center justify-center space-x-2 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition">
-                        <Plus className="w-5 h-5" />
-                        <span>Add Client</span>
-                    </button>
+                ))}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Recent Task Info Card */}
+                <div className="lg:col-span-2 bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                    <h2 className="text-xl font-black text-slate-900 mb-8 flex items-center gap-3">
+                        <Clock className="w-6 h-6 text-primary-500" />
+                        Management Guidelines
+                    </h2>
+                    <div className="space-y-6">
+                        <GuidelineItem
+                            number="01"
+                            title="Update Status Regularly"
+                            description="Ensure project status is updated as soon as milestones are reached to maintain accurate reporting."
+                        />
+                        <GuidelineItem
+                            number="02"
+                            title="Log Delays Promptly"
+                            description="If a project is encountering roadblocks, update the status to 'Delayed' and provide a clear reason."
+                        />
+                        <GuidelineItem
+                            number="03"
+                            title="Verify Completion"
+                            description="Set the actual completion date only when all deliverables have been formally signed off."
+                        />
+                    </div>
+                </div>
+
+                {/* Quick Profile/Status */}
+                <div className="bg-primary-600 p-10 rounded-[2.5rem] text-white shadow-xl shadow-primary-100 flex flex-col justify-between">
+                    <div>
+                        <h3 className="text-2xl font-black mb-2">My Performance</h3>
+                        <p className="text-primary-100 text-sm font-medium leading-relaxed opacity-80">
+                            Your completion rate is currently {(stats.completed / (stats.total || 1) * 100).toFixed(0)}%.
+                            Keep updating your projects for better visibility.
+                        </p>
+                    </div>
+                    <div className="mt-8">
+                        <div className="flex items-center justify-between text-xs font-black uppercase tracking-widest mb-3">
+                            <span>Target Completion</span>
+                            <span>{stats.completed}/{stats.total}</span>
+                        </div>
+                        <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-white rounded-full transition-all duration-1000"
+                                style={{ width: `${(stats.completed / (stats.total || 1) * 100)}%` }}
+                            ></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
+
+const GuidelineItem = ({ number, title, description }) => (
+    <div className="flex gap-6 items-start group">
+        <span className="text-4xl font-black text-slate-100 group-hover:text-primary-100 transition-colors leading-none">{number}</span>
+        <div>
+            <h4 className="font-black text-slate-900 text-lg mb-1">{title}</h4>
+            <p className="text-slate-500 text-sm font-medium leading-relaxed">{description}</p>
+        </div>
+    </div>
+);
 
 export default StaffDashboard;

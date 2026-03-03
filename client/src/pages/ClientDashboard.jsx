@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 import {
     Search, ChevronLeft, ChevronRight, Loader2, FolderOpen,
-    AlertCircle, CheckCircle, Clock, XCircle, MapPin, Send
+    AlertCircle, CheckCircle, Clock, XCircle, MapPin, Send, MessageSquare
 } from 'lucide-react';
 
 const STATUS_COLORS = {
@@ -21,6 +21,7 @@ const PROJECT_STATUS_COLORS = {
 };
 
 const ClientDashboard = () => {
+    const [stats, setStats] = useState(null);
     const [myRequests, setMyRequests] = useState([]);
     const [projects, setProjects] = useState([]);
     const [pagination, setPagination] = useState({ total: 0, page: 1, limit: 10, totalPages: 1 });
@@ -29,7 +30,16 @@ const ClientDashboard = () => {
     const [statusFilter, setStatusFilter] = useState('');
     const [locationFilter, setLocationFilter] = useState('');
     const [toast, setToast] = useState(null);
-    const [requesting, setRequesting] = useState(null);
+    const [requestModal, setRequestModal] = useState(null);
+    const [requestMessage, setRequestMessage] = useState('');
+    const [requesting, setRequesting] = useState(false);
+
+    const fetchStats = useCallback(async () => {
+        try {
+            const { data } = await api.get('/dashboard/client');
+            setStats(data.data);
+        } catch (err) { console.error(err); }
+    }, []);
 
     const fetchMyRequests = useCallback(async () => {
         try {
@@ -38,7 +48,7 @@ const ClientDashboard = () => {
         } catch (err) { console.error(err); }
     }, []);
 
-    const fetchProjects = useCallback(async (page = 1) => {
+    const fetchBrowseProjects = useCallback(async (page = 1) => {
         setLoading(true);
         try {
             const params = new URLSearchParams({ page, limit: 10 });
@@ -55,41 +65,49 @@ const ClientDashboard = () => {
         }
     }, [search, statusFilter, locationFilter]);
 
-    useEffect(() => { fetchMyRequests(); }, [fetchMyRequests]);
     useEffect(() => {
-        const t = setTimeout(() => fetchProjects(1), 400);
+        fetchStats();
+        fetchMyRequests();
+    }, [fetchStats, fetchMyRequests]);
+
+    useEffect(() => {
+        const t = setTimeout(() => fetchBrowseProjects(1), 400);
         return () => clearTimeout(t);
-    }, [search, statusFilter, locationFilter, fetchProjects]);
+    }, [search, statusFilter, locationFilter, fetchBrowseProjects]);
 
     const showToast = (message, type = 'success') => {
         setToast({ message, type });
         setTimeout(() => setToast(null), 4000);
     };
 
-    const requestAccess = async (projectId) => {
-        setRequesting(projectId);
+    const handleRequestAccess = async () => {
+        if (!requestModal) return;
+        setRequesting(true);
         try {
-            await api.post('/access-requests', { projectId });
+            await api.post('/access-requests', {
+                projectId: requestModal._id,
+                message: requestMessage
+            });
             showToast('Access request submitted!');
+            setRequestModal(null);
+            setRequestMessage('');
+            fetchStats();
             fetchMyRequests();
         } catch (err) {
             showToast(err.response?.data?.message || 'Failed to request access', 'error');
         } finally {
-            setRequesting(null);
+            setRequesting(false);
         }
     };
 
-    // Build a lookup of projectId → request status
+    // Build lookup of projectId → request
     const requestMap = {};
     myRequests.forEach(r => {
-        if (r.projectId?._id) requestMap[r.projectId._id] = r.status;
+        if (r.projectId?._id) requestMap[r.projectId._id] = r;
     });
 
-    const pendingCount = myRequests.filter(r => r.status === 'pending').length;
-    const approvedCount = myRequests.filter(r => r.status === 'approved').length;
-
     return (
-        <div className="space-y-6">
+        <div className="space-y-8 animate-in fade-in duration-500">
             {toast && (
                 <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-lg text-sm font-medium ${toast.type === 'error' ? 'bg-red-500 text-white' : 'bg-emerald-500 text-white'}`}>
                     {toast.type === 'error' ? <AlertCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
@@ -98,131 +116,101 @@ const ClientDashboard = () => {
             )}
 
             <div>
-                <h1 className="text-3xl font-bold text-slate-900">My Dashboard</h1>
-                <p className="text-slate-500 mt-1">Browse projects and request access</p>
+                <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Client Dashboard</h1>
+                <p className="text-slate-500 mt-1">Real-time status of your project access and availability</p>
             </div>
 
-            {/* Access Request Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-amber-50 text-amber-600"><Clock className="w-6 h-6" /></div>
-                    <div>
-                        <p className="text-sm font-medium text-slate-500">Pending Requests</p>
-                        <p className="text-2xl font-bold text-slate-900">{pendingCount}</p>
-                    </div>
-                </div>
-                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-emerald-50 text-emerald-600"><CheckCircle className="w-6 h-6" /></div>
-                    <div>
-                        <p className="text-sm font-medium text-slate-500">Approved Projects</p>
-                        <p className="text-2xl font-bold text-slate-900">{approvedCount}</p>
-                    </div>
-                </div>
-                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-                    <div className="p-3 rounded-xl bg-blue-50 text-blue-600"><FolderOpen className="w-6 h-6" /></div>
-                    <div>
-                        <p className="text-sm font-medium text-slate-500">Total Requests</p>
-                        <p className="text-2xl font-bold text-slate-900">{myRequests.length}</p>
-                    </div>
-                </div>
+            {/* Aggregated Stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <StatCard
+                    label="Approved Projects"
+                    value={stats?.totalApprovedProjects || 0}
+                    icon={CheckCircle}
+                    color="emerald"
+                />
+                <StatCard
+                    label="Pending Requests"
+                    value={stats?.totalPendingRequests || 0}
+                    icon={Clock}
+                    color="amber"
+                />
+                <StatCard
+                    label="Rejected Requests"
+                    value={stats?.totalRejectedRequests || 0}
+                    icon={XCircle}
+                    color="red"
+                />
             </div>
 
-            {/* My Access Requests */}
-            {myRequests.length > 0 && (
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-                    <h2 className="text-lg font-bold text-slate-800 mb-4">My Access Requests</h2>
-                    <div className="space-y-3">
-                        {myRequests.map(r => (
-                            <div key={r._id} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
-                                <div>
-                                    <p className="font-semibold text-slate-800 text-sm">{r.projectId?.projectName || 'Unknown'}</p>
-                                    <p className="text-xs text-slate-400">{r.projectId?.projectCode} · Requested {new Date(r.createdAt).toLocaleDateString()}</p>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${STATUS_COLORS[r.status]}`}>
-                                        {r.status === 'pending' && <Clock className="w-3 h-3" />}
-                                        {r.status === 'approved' && <CheckCircle className="w-3 h-3" />}
-                                        {r.status === 'rejected' && <XCircle className="w-3 h-3" />}
-                                        {r.status}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+            {/* Browse & Request Section */}
+            <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-slate-900">Available Projects</h2>
+                    <p className="text-sm text-slate-400 font-medium">{pagination.total} total projects found</p>
                 </div>
-            )}
 
-            {/* Browse All Projects */}
-            <div>
-                <h2 className="text-lg font-bold text-slate-800 mb-4">All Available Projects</h2>
-
-                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-3 mb-4">
-                    <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search projects..." className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-3">
+                    <div className="relative flex-2">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                        <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search projects..." className="w-full pl-11 pr-4 py-3 border border-slate-100 rounded-2xl text-sm focus:ring-2 focus:ring-primary-500 outline-none transition-all" />
                     </div>
-                    <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white">
+                    <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-4 py-3 border border-slate-100 rounded-2xl text-sm bg-slate-50 font-medium outline-none">
                         <option value="">All Status</option>
                         <option value="Planned">Planned</option>
                         <option value="In Progress">In Progress</option>
                         <option value="On Hold">On Hold</option>
-                        <option value="Completed">Completed</option>
                     </select>
-                    <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <input type="text" value={locationFilter} onChange={e => setLocationFilter(e.target.value)} placeholder="Filter by location..." className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                    <div className="relative flex-1">
+                        <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                        <input type="text" value={locationFilter} onChange={e => setLocationFilter(e.target.value)} placeholder="Location..." className="w-full pl-11 pr-4 py-3 border border-slate-100 rounded-2xl text-sm outline-none" />
                     </div>
                 </div>
 
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
                     {loading ? (
-                        <div className="flex items-center justify-center py-16"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /></div>
+                        <div className="flex items-center justify-center py-20"><Loader2 className="w-10 h-10 animate-spin text-primary-500" /></div>
                     ) : projects.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-16 text-slate-400">
-                            <FolderOpen className="w-12 h-12 mb-3 text-slate-200" />
-                            <p className="font-medium">No projects found</p>
+                        <div className="py-20 flex flex-col items-center text-slate-300">
+                            <FolderOpen className="w-16 h-16 mb-4 opacity-20" />
+                            <p className="text-lg font-bold">No projects available for request</p>
                         </div>
                     ) : (
                         <div className="divide-y divide-slate-50">
                             {projects.map(p => {
-                                const reqStatus = requestMap[p._id];
+                                const req = requestMap[p._id];
+                                const reqStatus = req?.status;
                                 return (
-                                    <div key={p._id} className="p-5 hover:bg-slate-50/50 transition-colors">
-                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <h3 className="font-semibold text-slate-800">{p.projectName}</h3>
-                                                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${PROJECT_STATUS_COLORS[p.projectStatus]}`}>{p.projectStatus}</span>
+                                    <div key={p._id} className="p-6 hover:bg-slate-50/50 transition-colors">
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                                            <div className="flex-1 space-y-2">
+                                                <div className="flex items-center gap-3">
+                                                    <h3 className="font-bold text-slate-900 text-lg leading-tight">{p.projectName}</h3>
+                                                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${PROJECT_STATUS_COLORS[p.projectStatus]}`}>
+                                                        {p.projectStatus}
+                                                    </span>
                                                 </div>
-                                                <p className="text-xs text-slate-400">{p.projectCode} · {p.projectCategory || 'Uncategorized'}</p>
-                                                {p.siteAddress && (
-                                                    <p className="text-xs text-slate-400 mt-1 flex items-center gap-1"><MapPin className="w-3 h-3" />{p.siteAddress}</p>
-                                                )}
-                                                <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
-                                                    {p.startDate && <span>Start: {new Date(p.startDate).toLocaleDateString()}</span>}
-                                                    {p.expectedCompletion && <span>Due: {new Date(p.expectedCompletion).toLocaleDateString()}</span>}
+                                                <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-semibold text-slate-400">
+                                                    <span className="text-primary-600">#{p.projectCode}</span>
+                                                    <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> {p.siteAddress || 'N/A'}</span>
+                                                    <span>{p.projectCategory}</span>
                                                 </div>
                                             </div>
                                             <div className="flex-shrink-0">
                                                 {reqStatus === 'approved' ? (
-                                                    <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-xl text-xs font-semibold">
-                                                        <CheckCircle className="w-4 h-4" /> Approved
-                                                    </span>
+                                                    <div className="flex items-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-700 rounded-2xl text-sm font-bold ring-1 ring-emerald-100">
+                                                        <CheckCircle className="w-4 h-4" /> Access Granted
+                                                    </div>
                                                 ) : reqStatus === 'pending' ? (
-                                                    <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-50 text-amber-700 rounded-xl text-xs font-semibold">
-                                                        <Clock className="w-4 h-4" /> Pending
-                                                    </span>
-                                                ) : reqStatus === 'rejected' ? (
-                                                    <button onClick={() => requestAccess(p._id)} disabled={requesting === p._id}
-                                                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 rounded-xl text-xs font-semibold transition disabled:opacity-50">
-                                                        {requesting === p._id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                                                        Re-Request Access
-                                                    </button>
+                                                    <div className="flex items-center gap-2 px-6 py-3 bg-amber-50 text-amber-700 rounded-2xl text-sm font-bold ring-1 ring-amber-100">
+                                                        <Clock className="w-4 h-4" /> Final Review
+                                                    </div>
                                                 ) : (
-                                                    <button onClick={() => requestAccess(p._id)} disabled={requesting === p._id}
-                                                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-xs font-semibold transition shadow-sm disabled:opacity-50">
-                                                        {requesting === p._id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                                                        Request Access
+                                                    <button
+                                                        onClick={() => setRequestModal(p)}
+                                                        className="flex items-center gap-2 px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-2xl text-sm font-black transition shadow-lg shadow-primary-200"
+                                                    >
+                                                        <Send className="w-4 h-4 text-white/70" />
+                                                        {reqStatus === 'rejected' ? 'Re-Request Access' : 'Apply for Access'}
                                                     </button>
                                                 )}
                                             </div>
@@ -233,14 +221,81 @@ const ClientDashboard = () => {
                         </div>
                     )}
                     {pagination.totalPages > 1 && (
-                        <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50/50">
-                            <p className="text-sm text-slate-500">Page {pagination.page} of {pagination.totalPages}</p>
-                            <div className="flex items-center gap-2">
-                                <button onClick={() => fetchProjects(pagination.page - 1)} disabled={!pagination.hasPrev} className="p-2 rounded-lg border border-slate-200 hover:bg-white disabled:opacity-40"><ChevronLeft className="w-4 h-4" /></button>
-                                <button onClick={() => fetchProjects(pagination.page + 1)} disabled={!pagination.hasNext} className="p-2 rounded-lg border border-slate-200 hover:bg-white disabled:opacity-40"><ChevronRight className="w-4 h-4" /></button>
+                        <div className="px-8 py-5 flex items-center justify-between bg-slate-50/50 border-t border-slate-100">
+                            <p className="text-sm font-bold text-slate-400">Page {pagination.page} of {pagination.totalPages}</p>
+                            <div className="flex items-center gap-3">
+                                <button onClick={() => fetchBrowseProjects(pagination.page - 1)} disabled={!pagination.hasPrev} className="p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-white disabled:opacity-40 transition shadow-sm"><ChevronLeft className="w-5 h-5 text-slate-600" /></button>
+                                <button onClick={() => fetchBrowseProjects(pagination.page + 1)} disabled={!pagination.hasNext} className="p-2.5 rounded-xl border border-slate-200 bg-white hover:bg-white disabled:opacity-40 transition shadow-sm"><ChevronRight className="w-5 h-5 text-slate-600" /></button>
                             </div>
                         </div>
                     )}
+                </div>
+            </div>
+
+            {/* Request Modal */}
+            {requestModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+                        <div className="p-10">
+                            <div className="text-center mb-8">
+                                <div className="w-20 h-20 bg-primary-50 text-primary-600 flex items-center justify-center rounded-3xl mx-auto mb-6">
+                                    <Send className="w-10 h-10" />
+                                </div>
+                                <h3 className="text-2xl font-black text-slate-900">Project Access</h3>
+                                <p className="text-slate-500 font-medium mt-1">Requesting access for {requestModal.projectName}</p>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3 text-center">Your Message (Optional)</label>
+                                    <textarea
+                                        value={requestMessage}
+                                        onChange={(e) => setRequestMessage(e.target.value)}
+                                        placeholder="Add context to your request..."
+                                        className="w-full p-5 border border-slate-200 rounded-3xl text-sm focus:ring-4 focus:ring-primary-100 outline-none h-36 resize-none transition-all placeholder:text-slate-300 font-medium"
+                                    />
+                                </div>
+
+                                <div className="flex flex-col gap-4">
+                                    <button
+                                        onClick={handleRequestAccess}
+                                        disabled={requesting}
+                                        className="w-full py-4.5 bg-primary-600 hover:bg-primary-700 text-white font-black rounded-3xl transition shadow-xl shadow-primary-200 flex items-center justify-center gap-3 disabled:opacity-50"
+                                    >
+                                        {requesting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                                        Send Request
+                                    </button>
+                                    <button
+                                        onClick={() => { setRequestModal(null); setRequestMessage(''); }}
+                                        className="text-slate-400 font-black text-sm uppercase tracking-widest hover:text-slate-600 transition"
+                                    >
+                                        Dismiss
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+const StatCard = ({ label, value, icon: Icon, color }) => {
+    const colors = {
+        emerald: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+        amber: 'bg-amber-50 text-amber-600 border-amber-100',
+        red: 'bg-red-50 text-red-600 border-red-100',
+    };
+    return (
+        <div className={`bg-white p-8 rounded-[2.5rem] border ${colors[color]} shadow-sm`}>
+            <div className="flex flex-col gap-6">
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${colors[color].split(' ')[0]}`}>
+                    <Icon className="w-7 h-7" />
+                </div>
+                <div>
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest">{label}</p>
+                    <p className="text-4xl font-black text-slate-900 mt-2">{value}</p>
                 </div>
             </div>
         </div>

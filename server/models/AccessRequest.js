@@ -12,6 +12,11 @@ const accessRequestSchema = new mongoose.Schema(
             ref: 'Project',
             required: [true, 'Project ID is required'],
         },
+        message: {
+            type: String,
+            trim: true,
+            maxlength: [1000, 'Message cannot exceed 1000 characters'],
+        },
         status: {
             type: String,
             enum: {
