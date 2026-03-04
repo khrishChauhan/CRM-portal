@@ -9,19 +9,19 @@ export const Button = ({
     className = '',
     ...props
 }) => {
-    const baseStyles = "inline-flex items-center justify-center rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+    const baseStyles = "inline-flex items-center justify-center rounded-2xl font-bold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:opacity-40 disabled:cursor-not-allowed hover:-translate-y-0.5 active:translate-y-0 active:scale-95 tracking-wide uppercase text-[11px]";
 
     const variants = {
-        primary: "bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500",
-        secondary: "bg-slate-100 text-slate-900 hover:bg-slate-200 focus:ring-slate-300",
-        outline: "border border-slate-200 text-slate-700 hover:bg-slate-50 focus:ring-slate-300",
-        danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
+        primary: "bg-indigo-600 text-white hover:bg-indigo-500 shadow-[0_10px_20px_-10px_rgba(79,70,229,0.4)] focus:ring-indigo-500",
+        secondary: "bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white border border-white/5 focus:ring-slate-500",
+        outline: "border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 focus:ring-slate-500",
+        danger: "bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 focus:ring-red-500",
     };
 
     const sizes = {
-        sm: "px-3 py-1.5 text-xs",
-        md: "px-4 py-2.5 text-sm",
-        lg: "px-6 py-3.5 text-base",
+        sm: "px-4 py-2 text-[9px]",
+        md: "px-6 py-3 text-[10px]",
+        lg: "px-8 py-4 text-[12px]",
     };
 
     return (
@@ -30,7 +30,7 @@ export const Button = ({
             disabled={disabled || isLoading}
             {...props}
         >
-            {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            {isLoading && <Loader2 className="w-4 h-4 mr-2.5 animate-spin" />}
             {children}
         </button>
     );

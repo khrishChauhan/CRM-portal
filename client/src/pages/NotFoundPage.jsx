@@ -5,20 +5,33 @@ const NotFoundPage = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
-            <h1 className="text-9xl font-bold text-slate-200">404</h1>
-            <div className="text-center mt-[-4rem]">
-                <h2 className="text-3xl font-bold text-slate-800">Page Not Found</h2>
-                <p className="text-slate-500 mt-4 max-w-md">
-                    Sorry, the page you are looking for doesn't exist or has been moved.
-                </p>
-                <button
-                    onClick={() => navigate('/')}
-                    className="mt-8 inline-flex items-center space-x-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-                >
-                    <Home className="w-5 h-5" />
-                    <span>Back to Home</span>
-                </button>
+        <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-8 relative overflow-hidden">
+            {/* Background Texture & Glow */}
+            <div className="absolute inset-0 noise-bg opacity-[0.03] pointer-events-none z-50"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+            <div className="relative z-10 text-center animate-reveal">
+                <h1 className="text-[12rem] font-display font-black text-white/5 tracking-tighter leading-none mb-[-2rem] select-none">
+                    404
+                </h1>
+                <div className="glass-dark p-12 rounded-[3.5rem] border border-white/5 shadow-2xl relative">
+                    <h2 className="text-4xl font-display font-bold text-white tracking-tight leading-none mb-4 uppercase">Missing Vector</h2>
+                    <p className="text-slate-500 max-w-sm mx-auto font-medium text-lg leading-relaxed italic tracking-tight">
+                        The resource coordination you requested does not exist within the current system parameters.
+                    </p>
+                    <button
+                        onClick={() => navigate('/')}
+                        className="mt-12 inline-flex items-center space-x-3 px-10 py-5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-2xl shadow-xl shadow-indigo-600/20 transition-all hover:-translate-y-1 active:scale-95 group"
+                    >
+                        <Home className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                        <span>Return to Hub</span>
+                    </button>
+                </div>
+            </div>
+
+            {/* Cinematic details */}
+            <div className="absolute bottom-12 text-[10px] font-bold text-slate-700 uppercase tracking-[0.4em] animate-pulse">
+                Operation Node 04 // System Error Report
             </div>
         </div>
     );

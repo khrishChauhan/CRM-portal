@@ -33,55 +33,60 @@ const StaffDashboard = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="w-10 h-10 animate-spin text-primary-500" />
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
+                <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />
+                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Calibrating Neural Sync...</p>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="bg-red-50 p-6 rounded-2xl border border-red-100 flex items-center gap-4 text-red-700">
-                <AlertCircle className="w-6 h-6" />
-                <p className="font-medium">{error}</p>
+            <div className="glass-dark p-8 rounded-3xl border border-red-500/20 flex items-center gap-6 text-red-400">
+                <AlertCircle className="w-8 h-8 flex-shrink-0" />
+                <div>
+                    <h3 className="font-bold uppercase tracking-widest text-[11px] mb-1">System Error</h3>
+                    <p className="text-sm font-medium opacity-80">{error}</p>
+                </div>
             </div>
         );
     }
 
     const cards = [
-        { label: 'Assigned Projects', value: stats.total, icon: Briefcase, color: 'text-blue-600', bg: 'bg-blue-50' },
-        { label: 'In Progress', value: stats.inProgress, icon: TrendingUp, color: 'text-amber-600', bg: 'bg-amber-50' },
-        { label: 'Completed', value: stats.completed, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-        { label: 'Delayed', value: stats.delayed, icon: AlertCircle, color: 'text-red-600', bg: 'bg-red-50' },
+        { label: 'Assigned Projects', value: stats.total, icon: Briefcase, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
+        { label: 'In Velocity', value: stats.inProgress, icon: TrendingUp, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+        { label: 'Completed', value: stats.completed, icon: CheckCircle, color: 'text-sky-400', bg: 'bg-sky-500/10' },
+        { label: 'Bottleneck', value: stats.delayed, icon: AlertCircle, color: 'text-red-400', bg: 'bg-red-500/10' },
     ];
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-500">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-10 animate-reveal">
+            {/* ── Header ── */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight">Staff Dashboard</h1>
-                    <p className="text-slate-500 mt-1 font-medium">Manage your assignments and track progress real-time</p>
+                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Operative Core</h1>
+                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Strategic execution and mission status tracking.</p>
                 </div>
                 <Link
                     to="/staff/projects"
-                    className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl font-black text-sm hover:bg-slate-800 transition shadow-lg shadow-slate-200"
+                    className="group flex items-center gap-3 px-8 py-5 bg-white/5 border border-white/10 hover:border-white/20 text-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all hover:bg-white/10 shadow-2xl"
                 >
-                    View My Projects
-                    <ChevronRight className="w-4 h-4" />
+                    View Project Ledger
+                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
             </div>
 
-            {/* Stats Grid */}
+            {/* ── Stats Grid ── */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {cards.map((card) => (
-                    <div key={card.label} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
-                        <div className="flex flex-col gap-4">
-                            <div className={`${card.bg} ${card.color} w-12 h-12 rounded-2xl flex items-center justify-center`}>
-                                <card.icon className="w-6 h-6" />
+                    <div key={card.label} className="glass p-6 rounded-[2.5rem] border border-white/5 shadow-xl group hover:border-indigo-500/30 transition-all duration-500">
+                        <div className="flex flex-col gap-5">
+                            <div className={`${card.bg} ${card.color} w-14 h-14 rounded-2xl flex items-center justify-center border border-white/5 ring-1 ring-white/5 group-hover:scale-110 transition-transform`}>
+                                <card.icon className="w-7 h-7" />
                             </div>
                             <div>
-                                <h3 className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">{card.label}</h3>
-                                <p className="text-3xl font-black text-slate-900 mt-1">{card.value}</p>
+                                <h3 className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.2em] group-hover:text-slate-400 transition-colors">{card.label}</h3>
+                                <p className="text-4xl font-display font-bold text-white mt-1 tracking-tighter">{card.value}</p>
                             </div>
                         </div>
                     </div>
@@ -89,51 +94,60 @@ const StaffDashboard = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Recent Task Info Card */}
-                <div className="lg:col-span-2 bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
-                    <h2 className="text-xl font-black text-slate-900 mb-8 flex items-center gap-3">
-                        <Clock className="w-6 h-6 text-primary-500" />
-                        Management Guidelines
+                {/* ── Guidelines ── */}
+                <div className="lg:col-span-2 glass p-10 rounded-[3rem] border border-white/5 shadow-2xl relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 blur-[100px] -mr-32 -mt-32"></div>
+
+                    <h2 className="text-2xl font-display font-bold text-white mb-10 flex items-center gap-4 relative z-10">
+                        <Clock className="w-7 h-7 text-indigo-500" />
+                        Mission Protocols
                     </h2>
-                    <div className="space-y-6">
+
+                    <div className="space-y-10 relative z-10">
                         <GuidelineItem
                             number="01"
-                            title="Update Status Regularly"
-                            description="Ensure project status is updated as soon as milestones are reached to maintain accurate reporting."
+                            title="Synchronize Velocity"
+                            description="Maintain high-fidelity status updates across all assigned deployment vectors."
                         />
                         <GuidelineItem
                             number="02"
-                            title="Log Delays Promptly"
-                            description="If a project is encountering roadblocks, update the status to 'Delayed' and provide a clear reason."
+                            title="Report Interference"
+                            description="Identify and escalate bottleneck markers immediately to command override."
                         />
                         <GuidelineItem
                             number="03"
-                            title="Verify Completion"
-                            description="Set the actual completion date only when all deliverables have been formally signed off."
+                            title="Finalize Deliverables"
+                            description="Execute post-mission audit only after all verification parameters are met."
                         />
                     </div>
                 </div>
 
-                {/* Quick Profile/Status */}
-                <div className="bg-primary-600 p-10 rounded-[2.5rem] text-white shadow-xl shadow-primary-100 flex flex-col justify-between">
-                    <div>
-                        <h3 className="text-2xl font-black mb-2">My Performance</h3>
-                        <p className="text-primary-100 text-sm font-medium leading-relaxed opacity-80">
-                            Your completion rate is currently {(stats.completed / (stats.total || 1) * 100).toFixed(0)}%.
-                            Keep updating your projects for better visibility.
+                {/* ── Performance Meter ── */}
+                <div className="glass-dark p-10 rounded-[3rem] border border-white/10 shadow-2xl flex flex-col justify-between relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/20 to-transparent pointer-events-none"></div>
+
+                    <div className="relative z-10">
+                        <h3 className="text-3xl font-display font-bold text-white mb-4 leading-tight">Sync Rate Efficiency</h3>
+                        <p className="text-slate-400 text-sm font-medium leading-relaxed italic">
+                            Operational throughput verified at <span className="text-indigo-400 font-bold">{(stats.completed / (stats.total || 1) * 100).toFixed(0)}%</span> proficiency levels.
                         </p>
                     </div>
-                    <div className="mt-8">
-                        <div className="flex items-center justify-between text-xs font-black uppercase tracking-widest mb-3">
-                            <span>Target Completion</span>
-                            <span>{stats.completed}/{stats.total}</span>
+
+                    <div className="mt-12 relative z-10">
+                        <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4">
+                            <span className="flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                                Target Objective
+                            </span>
+                            <span className="text-white">{stats.completed}/{stats.total}</span>
                         </div>
-                        <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden">
+                        <div className="w-full h-4 bg-white/5 rounded-full overflow-hidden border border-white/5 p-1">
                             <div
-                                className="h-full bg-white rounded-full transition-all duration-1000"
+                                className="h-full bg-gradient-to-r from-indigo-600 to-sky-400 rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(79,70,229,0.5)]"
                                 style={{ width: `${(stats.completed / (stats.total || 1) * 100)}%` }}
                             ></div>
                         </div>
+                        <p className="mt-6 text-[10px] font-bold text-slate-600 uppercase tracking-widest text-center">Protocol Adherence Log</p>
                     </div>
                 </div>
             </div>
@@ -142,11 +156,11 @@ const StaffDashboard = () => {
 };
 
 const GuidelineItem = ({ number, title, description }) => (
-    <div className="flex gap-6 items-start group">
-        <span className="text-4xl font-black text-slate-100 group-hover:text-primary-100 transition-colors leading-none">{number}</span>
+    <div className="flex gap-8 items-start group/item">
+        <span className="text-5xl font-display font-bold text-white/5 group-hover/item:text-indigo-500/20 transition-all duration-500 leading-none">{number}</span>
         <div>
-            <h4 className="font-black text-slate-900 text-lg mb-1">{title}</h4>
-            <p className="text-slate-500 text-sm font-medium leading-relaxed">{description}</p>
+            <h4 className="font-bold text-white text-xl mb-2 group-hover/item:text-indigo-400 transition-colors uppercase tracking-tight">{title}</h4>
+            <p className="text-slate-500 text-[13px] font-medium leading-relaxed max-w-md">{description}</p>
         </div>
     </div>
 );

@@ -3,7 +3,7 @@ import api from '../services/api';
 import {
     Search, ChevronLeft, ChevronRight, Loader2, Users, UserCheck, UserX,
     AlertTriangle, Mail, Building2, Calendar, FolderOpen, AlertCircle,
-    CheckCircle, Eye, ShieldOff, ShieldCheck, Trash2
+    CheckCircle, Eye, ShieldOff, ShieldCheck, Trash2, X
 } from 'lucide-react';
 
 const STATUS_COLORS = {
@@ -89,93 +89,129 @@ const ManageClients = () => {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-10 animate-reveal">
+            {/* ── Toast ── */}
             {toast && (
-                <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-lg text-sm font-medium ${toast.type === 'error' ? 'bg-red-500 text-white' : 'bg-emerald-500 text-white'}`}>
-                    {toast.type === 'error' ? <AlertCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
+                <div className={`fixed top-8 right-8 z-[100] flex items-center gap-4 px-6 py-4 rounded-3xl shadow-2xl glass-dark border border-white/10 text-sm font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-400' : 'text-emerald-400'}`}>
+                    {toast.type === 'error' ? <AlertCircle className="w-5 h-5" /> : <CheckCircle className="w-5 h-5" />}
                     {toast.message}
                 </div>
             )}
 
-            <div>
-                <h1 className="text-3xl font-bold text-slate-900">Manage Clients</h1>
-                <p className="text-slate-500 mt-1">View and manage client accounts</p>
+            {/* ── Header ── */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Client Network</h1>
+                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Strategic oversight of your enterprise partnerships.</p>
+                </div>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                <StatCard icon={Users} label="Total" value={stats.total} color="blue" />
-                <StatCard icon={UserCheck} label="Active" value={stats.active} color="green" />
+            {/* ── Stats Cards ── */}
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
+                <StatCard icon={Users} label="Total Partners" value={stats.total} color="indigo" />
+                <StatCard icon={UserCheck} label="Active Status" value={stats.active} color="emerald" />
                 <StatCard icon={UserX} label="Inactive" value={stats.inactive} color="slate" />
                 <StatCard icon={AlertTriangle} label="Suspended" value={stats.suspended} color="red" />
             </div>
 
-            {/* Filters */}
-            <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-3">
-                <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name, email, or company..." className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500" />
+            {/* ── Filters Bar ── */}
+            <div className="glass p-2 rounded-[2rem] border border-white/5 shadow-xl flex flex-col md:flex-row gap-2">
+                <div className="relative flex-1 group">
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="Filter by name, credential, or corporation..."
+                        className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm font-medium"
+                    />
                 </div>
-                <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500">
-                    <option value="">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="suspended">Suspended</option>
+                <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
+                >
+                    <option value="" className="bg-slate-900">All Status</option>
+                    <option value="active" className="bg-slate-900">Active</option>
+                    <option value="inactive" className="bg-slate-900">Inactive</option>
+                    <option value="suspended" className="bg-slate-900">Suspended</option>
                 </select>
             </div>
 
-            {/* Table */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            {/* ── Client Table ── */}
+            <div className="glass rounded-[3rem] border border-white/5 shadow-2xl overflow-hidden min-h-[500px]">
                 {loading ? (
-                    <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /></div>
+                    <div className="flex flex-col items-center justify-center py-40">
+                        <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />
+                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Synchronizing Network Data...</p>
+                    </div>
                 ) : clients.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-                        <Users className="w-16 h-16 mb-4 text-slate-200" />
-                        <p className="text-lg font-medium">No clients found</p>
+                    <div className="flex flex-col items-center justify-center py-40 text-slate-600">
+                        <div className="w-20 h-20 bg-white/5 border border-white/5 rounded-3xl flex items-center justify-center mb-8 ring-1 ring-white/5">
+                            <Users className="w-10 h-10 opacity-40" />
+                        </div>
+                        <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">Zero Partners</h3>
+                        <p className="text-sm mt-2 font-medium">No results discovered in modern query.</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="bg-slate-50 border-b border-slate-100">
-                                    <th className="text-left px-6 py-4 font-semibold text-slate-600">Client</th>
-                                    <th className="text-left px-6 py-4 font-semibold text-slate-600">Company</th>
-                                    <th className="text-left px-6 py-4 font-semibold text-slate-600">Status</th>
-                                    <th className="text-left px-6 py-4 font-semibold text-slate-600">Projects</th>
-                                    <th className="text-left px-6 py-4 font-semibold text-slate-600">Joined</th>
-                                    <th className="text-right px-6 py-4 font-semibold text-slate-600">Actions</th>
+                                <tr className="bg-white/[0.01] border-b border-white/5">
+                                    <th className="text-left px-10 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Partner</th>
+                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Corporation</th>
+                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Integrity</th>
+                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Deployments</th>
+                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Inducted</th>
+                                    <th className="text-right px-10 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Control</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-50">
-                                {clients.map(c => (
-                                    <tr key={c._id} className="hover:bg-slate-50/50 transition-colors">
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">{c.name?.charAt(0).toUpperCase()}</div>
+                            <tbody className="divide-y divide-white/5">
+                                {clients.map((c) => (
+                                    <tr key={c._id} className="group hover:bg-white/[0.02] transition-colors cursor-default">
+                                        <td className="px-10 py-6">
+                                            <div className="flex items-center gap-5">
+                                                <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center font-display font-bold text-sm ring-1 ring-indigo-500/10 shadow-[0_0_15px_rgba(99,102,241,0.1)] group-hover:scale-110 transition-transform">
+                                                    {c.name?.charAt(0).toUpperCase()}
+                                                </div>
                                                 <div>
-                                                    <p className="font-semibold text-slate-800">{c.name}</p>
-                                                    <p className="text-xs text-slate-400">{c.email}</p>
+                                                    <p className="font-bold text-white group-hover:text-indigo-400 transition-colors text-lg tracking-tight">{c.name}</p>
+                                                    <p className="text-[11px] font-bold text-slate-500 tracking-wider font-mono opacity-80 uppercase">{c.email}</p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-slate-600">{c.company || '—'}</td>
-                                        <td className="px-6 py-4">
-                                            <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${STATUS_COLORS[c.clientStatus] || STATUS_COLORS.active}`}>
+                                        <td className="px-8 py-6 font-medium text-slate-400 text-sm italic">{c.company || '—'}</td>
+                                        <td className="px-8 py-6">
+                                            <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${c.clientStatus === 'active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : c.clientStatus === 'suspended' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-slate-500/10 text-slate-400 border border-slate-500/20'}`}>
+                                                <div className={`w-1.5 h-1.5 rounded-full ${c.clientStatus === 'active' ? 'bg-emerald-50 animate-pulse' : c.clientStatus === 'suspended' ? 'bg-red-500' : 'bg-slate-500'}`}></div>
                                                 {c.clientStatus || 'active'}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4"><span className="inline-flex items-center gap-1 text-slate-600"><FolderOpen className="w-3.5 h-3.5" /> {c.projectCount}</span></td>
-                                        <td className="px-6 py-4 text-slate-500 text-xs">{c.createdAt ? new Date(c.createdAt).toLocaleDateString() : '—'}</td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center justify-end gap-1">
-                                                <button onClick={() => viewClient(c._id)} className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-primary-600 transition" title="View"><Eye className="w-4 h-4" /></button>
+                                        <td className="px-8 py-6">
+                                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/5 text-slate-400 rounded-lg text-[10px] font-bold uppercase tracking-wider group-hover:border-slate-500/30 transition-colors">
+                                                <FolderOpen className="w-3.5 h-3.5" />
+                                                {c.projectCount} Projects
+                                            </span>
+                                        </td>
+                                        <td className="px-8 py-6 text-slate-500 text-[10px] font-bold uppercase tracking-widest">{c.createdAt ? new Date(c.createdAt).toLocaleDateString() : '—'}</td>
+                                        <td className="px-10 py-6">
+                                            <div className="flex items-center justify-end gap-2 px-1">
+                                                <button onClick={() => viewClient(c._id)} className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-indigo-400 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300" title="Inspect">
+                                                    <Eye className="w-4.5 h-4.5" />
+                                                </button>
                                                 {c.clientStatus !== 'active' && (
-                                                    <button onClick={() => handleStatusChange(c._id, 'active')} className="p-2 rounded-lg hover:bg-emerald-50 text-slate-500 hover:text-emerald-600 transition" title="Activate"><ShieldCheck className="w-4 h-4" /></button>
+                                                    <button onClick={() => handleStatusChange(c._id, 'active')} className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all duration-300" title="Restore Integrity">
+                                                        <ShieldCheck className="w-4.5 h-4.5" />
+                                                    </button>
                                                 )}
                                                 {c.clientStatus === 'active' && (
-                                                    <button onClick={() => handleStatusChange(c._id, 'suspended')} className="p-2 rounded-lg hover:bg-amber-50 text-slate-500 hover:text-amber-600 transition" title="Suspend"><ShieldOff className="w-4 h-4" /></button>
+                                                    <button onClick={() => handleStatusChange(c._id, 'suspended')} className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-amber-400 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300" title="Isolate">
+                                                        <ShieldOff className="w-4.5 h-4.5" />
+                                                    </button>
                                                 )}
-                                                <button onClick={() => handleDelete(c._id, c.name)} className="p-2 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-600 transition" title="Deactivate"><Trash2 className="w-4 h-4" /></button>
+                                                <button onClick={() => handleDelete(c._id, c.name)} className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all duration-300" title="Expunge Account">
+                                                    <Trash2 className="w-4.5 h-4.5" />
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -184,49 +220,74 @@ const ManageClients = () => {
                         </table>
                     </div>
                 )}
+
+                {/* ── Pagination ── */}
                 {pagination.totalPages > 1 && (
-                    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50/50">
-                        <p className="text-sm text-slate-500">Showing {((pagination.page - 1) * pagination.limit) + 1}–{Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}</p>
-                        <div className="flex items-center gap-2">
-                            <button onClick={() => fetchClients(pagination.page - 1)} disabled={!pagination.hasPrev} className="p-2 rounded-lg border border-slate-200 hover:bg-white disabled:opacity-40 transition"><ChevronLeft className="w-4 h-4" /></button>
-                            <span className="text-sm font-medium text-slate-600 px-2">{pagination.page} / {pagination.totalPages}</span>
-                            <button onClick={() => fetchClients(pagination.page + 1)} disabled={!pagination.hasNext} className="p-2 rounded-lg border border-slate-200 hover:bg-white disabled:opacity-40 transition"><ChevronRight className="w-4 h-4" /></button>
+                    <div className="flex items-center justify-between px-10 py-8 border-t border-white/5 bg-white/[0.01]">
+                        <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
+                            Showing partner entities {((pagination.page - 1) * pagination.limit) + 1}–{Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
+                        </p>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => fetchClients(pagination.page - 1)}
+                                disabled={!pagination.hasPrev}
+                                className="p-3 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 text-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            <span className="text-xs font-display font-bold text-white px-4 border-r border-l border-white/5">{pagination.page} <span className="text-slate-600 mx-2">/</span> {pagination.totalPages}</span>
+                            <button
+                                onClick={() => fetchClients(pagination.page + 1)}
+                                disabled={!pagination.hasNext}
+                                className="p-3 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 text-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all"
+                            >
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
                         </div>
                     </div>
                 )}
             </div>
 
-            {/* Client Detail Modal */}
+            {/* ── Client Detail Modal ── */}
             {selectedClient && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto p-8">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-bold text-slate-900">{selectedClient.name}</h2>
-                            <button onClick={() => setSelectedClient(null)} className="text-slate-400 hover:text-slate-600 text-sm font-medium">Close</button>
-                        </div>
-                        <div className="space-y-3 text-sm">
-                            <InfoRow icon={Mail} label="Email" value={selectedClient.email} />
-                            <InfoRow icon={Building2} label="Company" value={selectedClient.company || '—'} />
-                            <InfoRow icon={ShieldCheck} label="Status" value={selectedClient.clientStatus} />
-                            <InfoRow icon={Calendar} label="Joined" value={new Date(selectedClient.createdAt).toLocaleDateString()} />
-                            <InfoRow icon={Calendar} label="Last Login" value={selectedClient.lastLogin ? new Date(selectedClient.lastLogin).toLocaleString() : 'Never'} />
-                        </div>
-                        {selectedClient.approvedProjects?.length > 0 && (
-                            <div className="mt-6">
-                                <h3 className="text-sm font-bold text-slate-700 mb-3">Approved Projects ({selectedClient.approvedProjects.length})</h3>
-                                <div className="space-y-2">
-                                    {selectedClient.approvedProjects.map(p => (
-                                        <div key={p._id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
-                                            <div>
-                                                <p className="font-medium text-slate-800 text-sm">{p.projectName}</p>
-                                                <p className="text-xs text-slate-400">{p.projectCode}</p>
-                                            </div>
-                                            <span className="text-xs font-medium text-slate-500">{p.projectStatus}</span>
-                                        </div>
-                                    ))}
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-500" onClick={() => setSelectedClient(null)}></div>
+                    <div className="glass-dark border border-white/10 rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
+                        <div className="px-10 py-10 overflow-y-auto">
+                            <div className="flex items-center justify-between mb-10">
+                                <div>
+                                    <h2 className="text-3xl font-display font-bold text-white tracking-tight">{selectedClient.name}</h2>
+                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic">Detailed Security Audit</p>
                                 </div>
+                                <button onClick={() => setSelectedClient(null)} className="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 text-slate-500 hover:text-white transition-all duration-300">
+                                    <X className="w-5 h-5 mx-auto" />
+                                </button>
                             </div>
-                        )}
+
+                            <div className="space-y-6">
+                                <InfoRow icon={Mail} label="Transmission" value={selectedClient.email} />
+                                <InfoRow icon={Building2} label="Network Hub" value={selectedClient.company || '—'} />
+                                <InfoRow icon={ShieldCheck} label="Sec-Status" value={selectedClient.clientStatus.toUpperCase()} />
+                                <InfoRow icon={Calendar} label="Induction" value={new Date(selectedClient.createdAt).toLocaleDateString()} />
+                            </div>
+
+                            {selectedClient.approvedProjects?.length > 0 && (
+                                <div className="mt-12">
+                                    <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.3em] mb-6 px-1">Active Deployments ({selectedClient.approvedProjects.length})</h3>
+                                    <div className="space-y-3">
+                                        {selectedClient.approvedProjects.map(p => (
+                                            <div key={p._id} className="flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-3xl group hover:bg-white/10 transition-all cursor-default">
+                                                <div>
+                                                    <p className="font-bold text-white group-hover:text-indigo-400 transition-colors text-sm">{p.projectName}</p>
+                                                    <p className="text-[10px] font-mono text-slate-500 uppercase mt-1">{p.projectCode}</p>
+                                                </div>
+                                                <span className="text-[9px] font-bold text-slate-400 border border-white/5 px-3 py-1 rounded-lg uppercase tracking-widest">{p.projectStatus}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
@@ -235,23 +296,34 @@ const ManageClients = () => {
 };
 
 const StatCard = ({ icon: Icon, label, value, color }) => {
-    const colors = { blue: 'bg-blue-50 text-blue-600', green: 'bg-emerald-50 text-emerald-600', red: 'bg-red-50 text-red-600', slate: 'bg-slate-100 text-slate-600' };
+    const colors = {
+        indigo: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+        emerald: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+        red: 'bg-red-500/10 text-red-400 border-red-500/20',
+        slate: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+    };
     return (
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-            <div className={`p-3 rounded-xl ${colors[color]}`}><Icon className="w-6 h-6" /></div>
+        <div className="glass p-8 rounded-[3rem] border border-white/5 shadow-2xl group flex flex-col gap-6 hover:border-indigo-500/30 transition-all duration-500">
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${colors[color]} ring-4 ring-black ring-opacity-10 group-hover:scale-110 transition-transform duration-500`}>
+                <Icon className="w-7 h-7" />
+            </div>
             <div>
-                <p className="text-sm font-medium text-slate-500">{label}</p>
-                <p className="text-2xl font-bold text-slate-900">{value}</p>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">{label}</p>
+                <p className="text-4xl font-display font-bold text-white tracking-tighter">{value}</p>
             </div>
         </div>
     );
 };
 
 const InfoRow = ({ icon: Icon, label, value }) => (
-    <div className="flex items-center gap-3 py-2 border-b border-slate-50">
-        <Icon className="w-4 h-4 text-slate-400 flex-shrink-0" />
-        <span className="text-slate-500 w-24">{label}</span>
-        <span className="font-medium text-slate-800">{value}</span>
+    <div className="flex items-center gap-6 py-4 border-b border-white/5 group">
+        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:text-indigo-400 transition-colors">
+            <Icon className="w-4 h-4" />
+        </div>
+        <div className="flex flex-col">
+            <span className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">{label}</span>
+            <span className="font-medium text-white text-sm mt-0.5">{value}</span>
+        </div>
     </div>
 );
 

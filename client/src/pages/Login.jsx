@@ -149,43 +149,60 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-950 flex font-sans">
+        <div className="min-h-screen bg-slate-950 flex relative overflow-hidden selection:bg-indigo-500/30">
+            {/* Background Texture/Noise */}
+            <div className="absolute inset-0 noise-bg opacity-[0.03] pointer-events-none z-50"></div>
 
             {/* LEFT SIDE: Hero Section */}
-            <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 bg-slate-900 border-r border-slate-800 relative overflow-hidden">
-                <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px]"></div>
-                <div className="relative z-10">
-                    <div className="flex items-center space-x-2 text-white font-bold text-xl mb-32 hover:opacity-80 cursor-pointer">
-                        <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
-                        <span>CRM Portal</span>
+            <div className="hidden lg:flex lg:w-3/5 flex-col justify-between p-16 relative overflow-hidden">
+                {/* Decorative Gradients */}
+                <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-indigo-600/10 rounded-full blur-[120px] animate-pulse"></div>
+                <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-[120px] delay-1000"></div>
+
+                <div className="relative z-10 animate-reveal">
+                    <div className="flex items-center space-x-3 text-white font-display font-medium text-2xl mb-32 tracking-tight group cursor-pointer">
+                        <div className="relative">
+                            <div className="w-3 h-3 bg-indigo-500 rounded-full shadow-[0_0_15px_rgba(99,102,241,0.6)]"></div>
+                            <div className="absolute inset-0 w-3 h-3 bg-indigo-400 rounded-full animate-ping opacity-75"></div>
+                        </div>
+                        <span className="opacity-90 group-hover:opacity-100 transition-opacity">CRM Portal</span>
                     </div>
-                    <div className="max-w-md">
-                        <h1 className="text-5xl font-extrabold text-white leading-tight mb-6 bg-clip-text text-transparent bg-gradient-to-br from-white to-slate-400">
-                            Manage projects with clarity and control
+
+                    <div className="max-w-xl">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-8 animate-reveal" style={{ animationDelay: '0.2s' }}>
+                            Enterprise Solutions
+                        </div>
+                        <h1 className="text-7xl font-display font-bold text-white leading-[1.1] mb-8 text-gradient animate-reveal" style={{ animationDelay: '0.4s' }}>
+                            Precision in Every <br />
+                            <span className="text-indigo-400">Connection.</span>
                         </h1>
-                        <p className="text-slate-400 text-lg leading-relaxed">
-                            Real-time synchronization between Admin, Staff, and Clients. Secure and robust infrastructure.
+                        <p className="text-slate-400 text-xl leading-relaxed max-w-lg mb-12 animate-reveal" style={{ animationDelay: '0.6s' }}>
+                            A unified dashboard for ambitious teams to manage projects, staff, and clients with surgical accuracy.
                         </p>
                     </div>
                 </div>
-                <div className="relative z-10 text-slate-500 text-sm italic">
-                    v2.0 Enterprise Release
+
+                <div className="relative z-10 text-slate-500 text-sm font-medium tracking-widest uppercase opacity-50 flex items-center gap-4 animate-reveal" style={{ animationDelay: '0.8s' }}>
+                    <div className="w-12 h-[1px] bg-slate-800"></div>
+                    v2.4 Core Release
                 </div>
             </div>
 
-            {/* RIGHT SIDE: Dynamic Card */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
-                <div className="w-full max-w-md">
-                    <div className="bg-slate-900 border border-slate-800 p-8 sm:p-10 rounded-[2.5rem] shadow-2xl relative">
+            {/* RIGHT SIDE: Authentication Card */}
+            <div className="w-full lg:w-2/5 flex items-center justify-center p-8 sm:p-12 relative z-10">
+                <div className="w-full max-w-md animate-reveal" style={{ animationDelay: '0.5s' }}>
+                    <div className="glass-dark p-10 sm:p-12 rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden">
+                        {/* Card Glow */}
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
 
-                        <div className="mb-10 text-center">
-                            <h2 className="text-3xl font-bold text-white mb-2">Secure Access</h2>
-                            <p className="text-slate-500 text-sm">Select your role to view login options</p>
+                        <div className="mb-12 text-center relative z-10">
+                            <h2 className="text-4xl font-display font-bold text-white mb-3">Welcome Back</h2>
+                            <p className="text-slate-500 font-medium">Identify your role to proceed</p>
                         </div>
 
                         {/* ROLE PICKER */}
-                        <div className="grid grid-cols-3 gap-3 mb-10">
-                            {roles.map((role) => (
+                        <div className="grid grid-cols-3 gap-4 mb-10 relative z-10">
+                            {roles.map((role, idx) => (
                                 <button
                                     key={role.id}
                                     type="button"
@@ -194,14 +211,15 @@ const Login = () => {
                                         setError('');
                                         setShowOtpField(false);
                                     }}
-                                    className={`flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-300 ${selectedRole === role.id
-                                        ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.1)]'
-                                        : 'border-slate-800 bg-slate-800/20 hover:border-slate-700'
+                                    className={`flex flex-col items-center justify-center p-4 rounded-3xl border transition-all duration-500 animate-reveal ${selectedRole === role.id
+                                        ? 'border-indigo-500/50 bg-indigo-500/10 shadow-[0_0_30px_rgba(99,102,241,0.15)] ring-1 ring-indigo-500/20'
+                                        : 'border-white/5 bg-white/[0.02] hover:bg-white/[0.05] grayscale hover:grayscale-0'
                                         }`}
+                                    style={{ animationDelay: `${0.6 + (idx * 0.1)}s` }}
                                 >
-                                    <role.icon className={`w-5 h-5 mb-2 ${selectedRole === role.id ? 'text-emerald-500' : 'text-slate-500'
+                                    <role.icon className={`w-6 h-6 mb-3 transition-colors duration-500 ${selectedRole === role.id ? 'text-indigo-400' : 'text-slate-500'
                                         }`} />
-                                    <span className={`text-[10px] font-bold uppercase tracking-widest ${selectedRole === role.id ? 'text-emerald-400' : 'text-slate-600 font-medium'
+                                    <span className={`text-[10px] font-bold uppercase tracking-[0.15em] transition-colors duration-500 ${selectedRole === role.id ? 'text-indigo-300' : 'text-slate-600'
                                         }`}>
                                         {role.title}
                                     </span>
@@ -210,47 +228,47 @@ const Login = () => {
                         </div>
 
                         {error && (
-                            <div className="mb-6 flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-xs animate-shake">
-                                <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                                <span>{error}</span>
+                            <div className="mb-8 flex items-center gap-4 p-5 bg-red-500/5 border border-red-500/20 rounded-2xl text-red-400 text-xs animate-shake relative z-10">
+                                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                                <span className="font-medium leading-snug">{error}</span>
                             </div>
                         )}
 
-                        <div className="min-h-[250px]">
+                        <div className="min-h-[260px] relative z-10">
 
                             {/* ADMIN FLOW */}
                             {selectedRole === 'admin' && (
-                                <div className="animate-in fade-in duration-500">
-                                    <form onSubmit={showOtpField ? handleAdminStep2 : handleAdminStep1} className="space-y-6">
-                                        <div className="space-y-1">
-                                            <label className="text-xs font-bold text-slate-500 ml-1 uppercase">Admin Email</label>
-                                            <div className="relative">
-                                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600" />
+                                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                                    <form onSubmit={showOtpField ? handleAdminStep2 : handleAdminStep1} className="space-y-7">
+                                        <div className="space-y-2">
+                                            <label className="text-[11px] font-bold text-slate-500 ml-1 uppercase tracking-widest opacity-80">Admin Credentials</label>
+                                            <div className="relative group">
+                                                <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors" />
                                                 <input
                                                     type="email"
                                                     required
                                                     disabled={showOtpField}
                                                     value={email}
                                                     onChange={(e) => setEmail(e.target.value)}
-                                                    placeholder="admin@gmail.com"
-                                                    className="w-full bg-slate-950 border border-slate-800 text-white pl-12 pr-4 py-3.5 rounded-xl focus:border-emerald-500 transition-all outline-none disabled:opacity-50"
+                                                    placeholder="admin@crm.com"
+                                                    className="w-full bg-slate-950/50 border border-white/5 text-white pl-14 pr-5 py-4.5 rounded-2xl focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none disabled:opacity-40"
                                                 />
                                             </div>
                                         </div>
 
                                         {showOtpField && (
-                                            <div className="space-y-1 animate-in zoom-in-95 duration-300">
-                                                <label className="text-xs font-bold text-slate-500 ml-1 uppercase">Enter 6-Digit OTP</label>
-                                                <div className="relative">
-                                                    <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-500" />
+                                            <div className="space-y-2 animate-in zoom-in-95 duration-500">
+                                                <label className="text-[11px] font-bold text-slate-500 ml-1 uppercase tracking-widest opacity-80">Verification Code</label>
+                                                <div className="relative group">
+                                                    <KeyRound className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-indigo-400" />
                                                     <input
                                                         type="text"
                                                         required
                                                         maxLength="6"
                                                         value={otp}
                                                         onChange={(e) => setOtp(e.target.value)}
-                                                        placeholder="000000"
-                                                        className="w-full bg-slate-950 border border-emerald-500/30 text-white pl-12 pr-4 py-3.5 rounded-xl focus:border-emerald-500 transition-all outline-none"
+                                                        placeholder="••••••"
+                                                        className="w-full bg-slate-950/50 border border-indigo-500/40 text-white pl-14 pr-5 py-4.5 rounded-2xl focus:border-indigo-500 transition-all outline-none text-xl tracking-[0.5em] font-display font-medium"
                                                     />
                                                 </div>
                                             </div>
@@ -259,18 +277,18 @@ const Login = () => {
                                         <button
                                             type="submit"
                                             disabled={loading}
-                                            className="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 group"
+                                            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold py-5 rounded-2xl transition-all shadow-[0_20px_40px_-12px_rgba(79,70,229,0.3)] hover:shadow-[0_25px_50px_-12px_rgba(79,70,229,0.4)] hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3 group disabled:opacity-50 disabled:translate-y-0"
                                         >
-                                            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (
+                                            {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
                                                 <>
-                                                    <span>{showOtpField ? 'Verify & Enter' : 'Send OTP'}</span>
-                                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                    <span className="text-base">{showOtpField ? 'Verify Code' : 'Request OTP'}</span>
+                                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
                                                 </>
                                             )}
                                         </button>
 
                                         {showOtpField && (
-                                            <p className="text-center text-[10px] text-slate-600 hover:text-emerald-500 cursor-pointer" onClick={() => setShowOtpField(false)}>
+                                            <p className="text-center text-[10px] text-slate-600 hover:text-indigo-400 font-bold uppercase tracking-widest cursor-pointer transition-colors" onClick={() => setShowOtpField(false)}>
                                                 Use a different email address?
                                             </p>
                                         )}
@@ -280,42 +298,42 @@ const Login = () => {
 
                             {/* STAFF FLOW */}
                             {selectedRole === 'staff' && (
-                                <div className="animate-in fade-in duration-500">
-                                    <form onSubmit={handleStaffLogin} className="space-y-5">
-                                        <div className="space-y-1">
-                                            <label className="text-xs font-bold text-slate-500 ml-1 uppercase tracking-widest">Staff Email</label>
+                                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                                    <form onSubmit={handleStaffLogin} className="space-y-6">
+                                        <div className="space-y-2">
+                                            <label className="text-[11px] font-bold text-slate-500 ml-1 uppercase tracking-widest opacity-80">Staff Portal Email</label>
                                             <div className="relative group">
-                                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-emerald-500" />
+                                                <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors" />
                                                 <input
                                                     type="email"
                                                     required
                                                     value={staffEmail}
                                                     onChange={(e) => setStaffEmail(e.target.value)}
-                                                    placeholder="staff@company.com"
-                                                    className="w-full bg-slate-950 border border-slate-800 text-white pl-12 pr-4 py-3.5 rounded-xl focus:border-emerald-500 transition-all outline-none"
+                                                    placeholder="identity@company.com"
+                                                    className="w-full bg-slate-950/50 border border-white/5 text-white pl-14 pr-5 py-4.5 rounded-2xl focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none"
                                                 />
                                             </div>
                                         </div>
-                                        <div className="space-y-1">
-                                            <label className="text-xs font-bold text-slate-500 ml-1 uppercase tracking-widest">Master Password</label>
+                                        <div className="space-y-2">
+                                            <label className="text-[11px] font-bold text-slate-500 ml-1 uppercase tracking-widest opacity-80">Master Key</label>
                                             <div className="relative group">
-                                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-emerald-500" />
+                                                <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors" />
                                                 <input
                                                     type="password"
                                                     required
                                                     value={password}
                                                     onChange={(e) => setPassword(e.target.value)}
                                                     placeholder="••••••••"
-                                                    className="w-full bg-slate-950 border border-slate-800 text-white pl-12 pr-4 py-3.5 rounded-xl focus:border-emerald-500 transition-all outline-none"
+                                                    className="w-full bg-slate-950/50 border border-white/5 text-white pl-14 pr-5 py-4.5 rounded-2xl focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none"
                                                 />
                                             </div>
                                         </div>
                                         <button
                                             type="submit"
                                             disabled={loading}
-                                            className="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2"
+                                            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold py-5 rounded-2xl transition-all shadow-[0_20px_40px_-12px_rgba(79,70,229,0.3)] hover:shadow-[0_25px_50px_-12px_rgba(79,70,229,0.4)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50"
                                         >
-                                            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Staff Sign In'}
+                                            {loading ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : 'Authorize Session'}
                                         </button>
                                     </form>
                                 </div>
@@ -323,10 +341,13 @@ const Login = () => {
 
                             {/* CLIENT FLOW */}
                             {selectedRole === 'client' && (
-                                <div className="flex flex-col items-center justify-center min-h-[220px] animate-in fade-in duration-500">
-                                    <div id="googleBtn" className="w-full"></div>
-                                    <p className="mt-6 text-[11px] text-slate-600 max-w-[250px] text-center">
-                                        Access your project dashboard using your official Google Work account.
+                                <div className="flex flex-col items-center justify-center min-h-[240px] animate-in fade-in zoom-in-95 duration-700">
+                                    <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center mb-8 shadow-xl">
+                                        <UserCircle className="w-10 h-10 text-indigo-400" />
+                                    </div>
+                                    <div id="googleBtn" className="w-full scale-110 mb-2"></div>
+                                    <p className="mt-8 text-[11px] text-slate-500 font-medium tracking-wide max-w-[280px] text-center leading-relaxed">
+                                        Use your Google Workspace credentials to access the secure client project environment.
                                     </p>
                                 </div>
                             )}

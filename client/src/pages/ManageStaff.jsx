@@ -117,55 +117,56 @@ const ManageStaff = () => {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-10 animate-reveal">
             {/* ── Toast ── */}
             {toast && (
-                <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-lg text-sm font-medium animate-in slide-in-from-top duration-300 ${toast.type === 'error' ? 'bg-red-500 text-white' : 'bg-emerald-500 text-white'}`}>
-                    {toast.type === 'error' ? <AlertCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
+                <div className={`fixed top-8 right-8 z-[100] flex items-center gap-4 px-6 py-4 rounded-3xl shadow-2xl glass-dark border border-white/10 text-sm font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-400' : 'text-emerald-400'}`}>
+                    {toast.type === 'error' ? <AlertCircle className="w-5 h-5" /> : <CheckCircle className="w-5 h-5" />}
                     {toast.message}
                 </div>
             )}
 
             {/* ── Header ── */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900">Manage Staff</h1>
-                    <p className="text-slate-500 mt-1">Add, edit and manage your team members</p>
+                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Staff Force</h1>
+                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Command and optimize your high-performance team.</p>
                 </div>
                 <button
                     onClick={() => openModal()}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-colors shadow-sm"
+                    className="group relative inline-flex items-center gap-3 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold rounded-2xl transition-all shadow-[0_20px_40px_-12px_rgba(79,70,229,0.3)] hover:-translate-y-1 active:translate-y-0"
                 >
-                    <UserPlus className="w-5 h-5" />
-                    Add Staff
+                    <UserPlus className="w-5 h-5 transition-transform group-hover:scale-110" />
+                    <span>Enlist New Operative</span>
+                    <div className="absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
                 </button>
             </div>
 
             {/* ── Stats Cards ── */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <StatCard icon={Users} label="Total Staff" value={stats.total} color="blue" />
-                <StatCard icon={UserCheck} label="Active" value={stats.active} color="green" />
-                <StatCard icon={UserX} label="Inactive" value={stats.inactive} color="red" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <StatCard icon={Users} label="Total Operatives" value={stats.total} color="indigo" />
+                <StatCard icon={UserCheck} label="Active Status" value={stats.active} color="emerald" />
+                <StatCard icon={UserX} label="Deactivated" value={stats.inactive} color="red" />
             </div>
 
             {/* ── Filters Bar ── */}
-            <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                <div className="flex flex-col md:flex-row gap-3">
-                    <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <div className="glass p-2 rounded-[2rem] border border-white/5 shadow-xl">
+                <div className="flex flex-col md:flex-row gap-2">
+                    <div className="relative flex-1 group">
+                        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
                         <input
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Search by name, email, or department..."
-                            className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            placeholder="Filter by name, credential, or sector..."
+                            className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm font-medium"
                         />
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex gap-2">
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
                         >
                             <option value="">All Status</option>
                             <option value="active">Active</option>
@@ -174,80 +175,92 @@ const ManageStaff = () => {
                         <select
                             value={deptFilter}
                             onChange={(e) => setDeptFilter(e.target.value)}
-                            className="px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
                         >
-                            <option value="">All Departments</option>
-                            {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
+                            <option value="">All Sectors</option>
+                            {DEPARTMENTS.map(d => <option key={d} value={d} className="bg-slate-900">{d}</option>)}
                         </select>
                     </div>
                 </div>
             </div>
 
             {/* ── Staff Table ── */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="glass rounded-[3rem] border border-white/5 shadow-2xl overflow-hidden min-h-[500px]">
                 {loading ? (
-                    <div className="flex items-center justify-center py-20">
-                        <Loader2 className="w-8 h-8 animate-spin text-primary-500" />
+                    <div className="flex flex-col items-center justify-center py-40">
+                        <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />
+                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Synchronizing Data...</p>
                     </div>
                 ) : staff.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-                        <Users className="w-16 h-16 mb-4 text-slate-200" />
-                        <p className="text-lg font-medium">No staff members found</p>
-                        <p className="text-sm mt-1">Try adjusting your search or filters</p>
+                    <div className="flex flex-col items-center justify-center py-40 text-slate-600">
+                        <div className="w-20 h-20 bg-white/5 border border-white/5 rounded-3xl flex items-center justify-center mb-8 ring-1 ring-white/5">
+                            <Users className="w-10 h-10 opacity-40" />
+                        </div>
+                        <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">Empty Roster</h3>
+                        <p className="text-sm mt-2 font-medium">No operatives found matching current filter parameters.</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="bg-slate-50 border-b border-slate-100">
-                                    <th className="text-left px-6 py-4 font-semibold text-slate-600">Name</th>
-                                    <th className="text-left px-6 py-4 font-semibold text-slate-600">Department</th>
-                                    <th className="text-left px-6 py-4 font-semibold text-slate-600">Designation</th>
-                                    <th className="text-left px-6 py-4 font-semibold text-slate-600">Manager</th>
-                                    <th className="text-left px-6 py-4 font-semibold text-slate-600">Status</th>
-                                    <th className="text-right px-6 py-4 font-semibold text-slate-600">Actions</th>
+                                <tr className="bg-white/[0.01] border-b border-white/5">
+                                    <th className="text-left px-10 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Operative</th>
+                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sector</th>
+                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Level</th>
+                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Command</th>
+                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Integrity</th>
+                                    <th className="text-right px-10 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Control</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-50">
+                            <tbody className="divide-y divide-white/5">
                                 {staff.map((s) => (
-                                    <tr key={s._id} className="hover:bg-slate-50/50 transition-colors">
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-bold text-xs">
+                                    <tr key={s._id} className="group hover:bg-white/[0.02] transition-colors cursor-default">
+                                        <td className="px-10 py-6">
+                                            <div className="flex items-center gap-5">
+                                                <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center font-display font-bold text-sm ring-1 ring-indigo-500/10 shadow-[0_0_15px_rgba(99,102,241,0.1)] group-hover:scale-110 transition-transform">
                                                     {s.name?.charAt(0).toUpperCase()}
                                                 </div>
                                                 <div>
-                                                    <p className="font-semibold text-slate-800">{s.name}</p>
-                                                    <p className="text-xs text-slate-400">{s.email}</p>
+                                                    <p className="font-bold text-white group-hover:text-indigo-400 transition-colors text-lg tracking-tight">{s.name}</p>
+                                                    <p className="text-[11px] font-bold text-slate-500 tracking-wider font-mono opacity-80 uppercase">{s.email}</p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-medium">
-                                                <Building2 className="w-3 h-3" />
+                                        <td className="px-8 py-6">
+                                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/5 text-slate-400 rounded-lg text-[10px] font-bold uppercase tracking-wider group-hover:border-slate-500/30 transition-colors">
+                                                <Building2 className="w-3.5 h-3.5" />
                                                 {s.department || '—'}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-slate-600">{s.designation || '—'}</td>
-                                        <td className="px-6 py-4 text-slate-600 text-xs">
-                                            {s.reportingManager ? s.reportingManager.name : '—'}
+                                        <td className="px-8 py-6 font-medium text-slate-400 text-sm italic">{s.designation || '—'}</td>
+                                        <td className="px-8 py-6">
+                                            <div className="flex items-center gap-2">
+                                                {s.reportingManager ? (
+                                                    <>
+                                                        <div className="w-6 h-6 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-[10px] font-bold text-slate-400 capitalize">
+                                                            {s.reportingManager.name?.charAt(0)}
+                                                        </div>
+                                                        <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">{s.reportingManager.name}</span>
+                                                    </>
+                                                ) : <span className="text-slate-700 tracking-widest">UNDEFINED</span>}
+                                            </div>
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${s.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
-                                                <span className={`w-1.5 h-1.5 rounded-full ${s.isActive ? 'bg-emerald-500' : 'bg-red-400'}`}></span>
-                                                {s.isActive ? 'Active' : 'Inactive'}
+                                        <td className="px-8 py-6">
+                                            <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${s.isActive ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
+                                                <div className={`w-1.5 h-1.5 rounded-full ${s.isActive ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`}></div>
+                                                {s.isActive ? 'Operational' : 'Compromised'}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center justify-end gap-1">
-                                                <button onClick={() => openModal(s)} className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-primary-600 transition" title="Edit">
-                                                    <Edit3 className="w-4 h-4" />
+                                        <td className="px-10 py-6">
+                                            <div className="flex items-center justify-end gap-2 px-1">
+                                                <button onClick={() => openModal(s)} className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-indigo-400 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300" title="Modify">
+                                                    <Edit3 className="w-4.5 h-4.5" />
                                                 </button>
-                                                <button onClick={() => handleToggleStatus(s._id, s.name)} className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-amber-600 transition" title={s.isActive ? 'Deactivate' : 'Activate'}>
-                                                    {s.isActive ? <ToggleRight className="w-4 h-4" /> : <ToggleLeft className="w-4 h-4" />}
+                                                <button onClick={() => handleToggleStatus(s._id, s.name)} className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-amber-400 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300" title={s.isActive ? 'Deactivate' : 'Restore'}>
+                                                    {s.isActive ? <ToggleRight className="w-4.5 h-4.5" /> : <ToggleLeft className="w-4.5 h-4.5" />}
                                                 </button>
-                                                <button onClick={() => handleDelete(s._id, s.name)} className="p-2 rounded-lg hover:bg-red-50 text-slate-500 hover:text-red-600 transition" title="Delete">
-                                                    <Trash2 className="w-4 h-4" />
+                                                <button onClick={() => handleDelete(s._id, s.name)} className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all duration-300" title="Expunge">
+                                                    <Trash2 className="w-4.5 h-4.5" />
                                                 </button>
                                             </div>
                                         </td>
@@ -260,25 +273,25 @@ const ManageStaff = () => {
 
                 {/* ── Pagination ── */}
                 {pagination.totalPages > 1 && (
-                    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50/50">
-                        <p className="text-sm text-slate-500">
-                            Showing {((pagination.page - 1) * pagination.limit) + 1}–{Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
+                    <div className="flex items-center justify-between px-10 py-8 border-t border-white/5 bg-white/[0.01]">
+                        <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
+                            Showing operatives {((pagination.page - 1) * pagination.limit) + 1}–{Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
                         </p>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                             <button
                                 onClick={() => fetchStaff(pagination.page - 1)}
                                 disabled={!pagination.hasPrev}
-                                className="p-2 rounded-lg border border-slate-200 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition"
+                                className="p-3 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 text-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all"
                             >
-                                <ChevronLeft className="w-4 h-4" />
+                                <ChevronLeft className="w-5 h-5" />
                             </button>
-                            <span className="text-sm font-medium text-slate-600 px-2">{pagination.page} / {pagination.totalPages}</span>
+                            <span className="text-xs font-display font-bold text-white px-4 border-r border-l border-white/5">{pagination.page} <span className="text-slate-600 mx-2">/</span> {pagination.totalPages}</span>
                             <button
                                 onClick={() => fetchStaff(pagination.page + 1)}
                                 disabled={!pagination.hasNext}
-                                className="p-2 rounded-lg border border-slate-200 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed transition"
+                                className="p-3 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 text-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all"
                             >
-                                <ChevronRight className="w-4 h-4" />
+                                <ChevronRight className="w-5 h-5" />
                             </button>
                         </div>
                     </div>
@@ -304,18 +317,18 @@ const ManageStaff = () => {
 // ════════════════════════════════════════
 const StatCard = ({ icon: Icon, label, value, color }) => {
     const colors = {
-        blue: 'bg-blue-50 text-blue-600',
-        green: 'bg-emerald-50 text-emerald-600',
-        red: 'bg-red-50 text-red-600',
+        indigo: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+        emerald: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+        red: 'bg-red-500/10 text-red-400 border-red-500/20',
     };
     return (
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-            <div className={`p-3 rounded-xl ${colors[color]}`}>
-                <Icon className="w-6 h-6" />
+        <div className="glass p-8 rounded-[3rem] border border-white/5 shadow-2xl group flex flex-col gap-6 hover:border-indigo-500/30 transition-all duration-500">
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${colors[color]} ring-4 ring-black ring-opacity-10 group-hover:scale-110 transition-transform duration-500`}>
+                <Icon className="w-7 h-7" />
             </div>
             <div>
-                <p className="text-sm font-medium text-slate-500">{label}</p>
-                <p className="text-2xl font-bold text-slate-900">{value}</p>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">{label}</p>
+                <p className="text-5xl font-display font-bold text-white tracking-tighter">{value}</p>
             </div>
         </div>
     );
@@ -342,155 +355,117 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
         setError('');
 
-        // Client-side validation
         if (!form.name || !form.email) {
-            setError('Name and email are required');
-            setSaving(false);
-            return;
-        }
-        if (!isEdit && (!form.password || form.password.length < 6)) {
-            setError('Password must be at least 6 characters');
+            setError('Operational Identity (Name & Email) is required');
             setSaving(false);
             return;
         }
 
         try {
             const payload = { ...form };
-            // Don't send empty password on edit
             if (isEdit && !payload.password) delete payload.password;
-            // Don't send empty reportingManager
             if (!payload.reportingManager) payload.reportingManager = null;
 
             if (isEdit) {
                 await api.put(`/staff/${staff._id}`, payload);
-                showToast('Staff member updated successfully');
+                showToast('Operative data synchronized successfully');
             } else {
                 await api.post('/staff', payload);
-                showToast('Staff member created successfully');
+                showToast('New operative enlisted to the force');
             }
             onSaved();
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to save staff member');
+            setError(err.response?.data?.message || 'Data synchronization failure');
         } finally {
             setSaving(false);
         }
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                {/* Modal Header */}
-                <div className="flex items-center justify-between px-8 py-6 border-b border-slate-100 sticky top-0 bg-white rounded-t-3xl z-10">
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-500" onClick={onClose}></div>
+            <div className="glass-dark border border-white/10 rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
+                <div className="flex items-center justify-between px-10 py-8 border-b border-white/5">
                     <div>
-                        <h2 className="text-xl font-bold text-slate-900">{isEdit ? 'Edit Staff Member' : 'Add New Staff'}</h2>
-                        <p className="text-sm text-slate-500 mt-0.5">{isEdit ? `Editing ${staff.name}` : 'Fill in the details below'}</p>
+                        <h2 className="text-3xl font-display font-bold text-white tracking-tight">{isEdit ? 'Modify Operative' : 'Enlist Operative'}</h2>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic">Assignment Level 04 Auth Required</p>
                     </div>
-                    <button onClick={onClose} className="p-2 rounded-xl hover:bg-slate-100 transition">
-                        <X className="w-5 h-5 text-slate-400" />
+                    <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 text-slate-500 hover:text-white transition-all duration-300">
+                        <X className="w-5 h-5 mx-auto" />
                     </button>
                 </div>
 
-                {/* Form */}
-                <form onSubmit={handleSubmit} className="px-8 py-6 space-y-5">
+                <form onSubmit={handleSubmit} className="p-10 space-y-8 overflow-y-auto">
                     {error && (
-                        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm">
-                            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                        <div className="flex items-center gap-4 p-5 bg-red-500/5 border border-red-500/20 rounded-3xl text-red-400 text-[11px] font-bold uppercase tracking-widest animate-shake">
+                            <AlertCircle className="w-5 h-5 flex-shrink-0" />
                             {error}
                         </div>
                     )}
 
-                    {/* Row: Name + Email */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField icon={Users} label="Full Name" name="name" value={form.name} onChange={handleChange} required placeholder="John Doe" />
-                        <FormField icon={Mail} label="Email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="john@company.com" disabled={isEdit} />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <FormField icon={Users} label="Alias / Name" name="name" value={form.name} onChange={handleChange} required placeholder="Operative Designation" />
+                        <FormField icon={Mail} label="Secure Email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="identity@node.com" disabled={isEdit} />
                     </div>
 
-                    {/* Row: Password (required for create, optional for edit) */}
-                    <FormField
-                        icon={Briefcase}
-                        label={isEdit ? 'New Password (leave blank to keep current)' : 'Password'}
-                        name="password"
-                        type="password"
-                        value={form.password}
-                        onChange={handleChange}
-                        required={!isEdit}
-                        placeholder={isEdit ? '••••••••' : 'Min 6 characters'}
-                    />
+                    <FormField icon={Briefcase} label={isEdit ? 'Security Re-Authentication' : 'Master Credential'} name="password" type="password" value={form.password} onChange={handleChange} required={!isEdit} placeholder={isEdit ? '•••••••• (UNMODIFIED)' : 'Secure Password Required'} />
 
-                    {/* Row: Phone + Alt Phone */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField icon={Phone} label="Phone" name="phone" value={form.phone} onChange={handleChange} placeholder="+91 98765 43210" />
-                        <FormField icon={Phone} label="Alternate Phone" name="alternatePhone" value={form.alternatePhone} onChange={handleChange} placeholder="+91 12345 67890" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <FormField icon={Phone} label="Primary Comms" name="phone" value={form.phone} onChange={handleChange} placeholder="+1 ERROR_LOG_ONLY" />
+                        <FormField icon={Phone} label="Secondary Backup" name="alternatePhone" value={form.alternatePhone} onChange={handleChange} placeholder="BACKUP_RESERVE" />
                     </div>
 
-                    {/* Row: Designation + Department */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField icon={Briefcase} label="Designation" name="designation" value={form.designation} onChange={handleChange} placeholder="Senior Developer" />
-                        <div className="space-y-1.5">
-                            <label className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-                                <Building2 className="w-4 h-4 text-slate-400" />
-                                Department
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <FormField icon={Briefcase} label="Operation Role" name="designation" value={form.designation} onChange={handleChange} placeholder="CORE ARCHITECT" />
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                <Building2 className="w-3.5 h-3.5" /> Sector
                             </label>
-                            <select name="department" value={form.department} onChange={handleChange} className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500">
-                                <option value="">Select Department</option>
-                                {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
+                            <select name="department" value={form.department} onChange={handleChange} className="w-full px-5 py-4 bg-white/5 border border-white/5 rounded-2xl text-[13px] font-medium text-white focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 cursor-pointer transition-all">
+                                <option value="" className="bg-slate-900 text-white">SELECT SECTOR</option>
+                                {DEPARTMENTS.map(d => <option key={d} value={d} className="bg-slate-900 text-white uppercase">{d}</option>)}
                             </select>
                         </div>
                     </div>
 
-                    {/* Row: Joining Date + Employment Type */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField icon={Calendar} label="Joining Date" name="joiningDate" type="date" value={form.joiningDate} onChange={handleChange} />
-                        <div className="space-y-1.5">
-                            <label className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-                                <Briefcase className="w-4 h-4 text-slate-400" />
-                                Employment Type
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <FormField icon={Calendar} label="Induction Date" name="joiningDate" type="date" value={form.joiningDate} onChange={handleChange} className="inverted-date-picker" />
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                <Briefcase className="w-3.5 h-3.5" /> Employment Force
                             </label>
-                            <select name="employmentType" value={form.employmentType} onChange={handleChange} className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500">
-                                {EMPLOYMENT_TYPES.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
+                            <select name="employmentType" value={form.employmentType} onChange={handleChange} className="w-full px-5 py-4 bg-white/5 border border-white/5 rounded-2xl text-[13px] font-medium text-white focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 cursor-pointer transition-all">
+                                {EMPLOYMENT_TYPES.map(t => <option key={t} value={t} className="bg-slate-900 text-white uppercase">{t}</option>)}
                             </select>
                         </div>
                     </div>
 
-                    {/* Row: Salary Band + Reporting Manager */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField icon={DollarSign} label="Salary Band" name="salaryBand" value={form.salaryBand} onChange={handleChange} placeholder="e.g. Band A" />
-                        <div className="space-y-1.5">
-                            <label className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-                                <Users className="w-4 h-4 text-slate-400" />
-                                Reporting Manager
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
+                        <FormField icon={DollarSign} label="Financial Band" name="salaryBand" value={form.salaryBand} onChange={handleChange} placeholder="COMP_LEVEL_10" />
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                <Users className="w-3.5 h-3.5" /> Command Authority
                             </label>
-                            <select name="reportingManager" value={form.reportingManager} onChange={handleChange} className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500">
-                                <option value="">No Manager</option>
-                                {managers
-                                    .filter(m => m._id !== staff?._id) // Can't be own manager
-                                    .map(m => (
-                                        <option key={m._id} value={m._id}>
-                                            {m.name} — {m.designation || m.department || 'Staff'}
-                                        </option>
-                                    ))
-                                }
+                            <select name="reportingManager" value={form.reportingManager} onChange={handleChange} className="w-full px-5 py-4 bg-white/5 border border-white/5 rounded-2xl text-[13px] font-medium text-white focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 cursor-pointer transition-all">
+                                <option value="" className="bg-slate-900 text-slate-600 tracking-widest">NO DIRECT COMMAND</option>
+                                {managers.filter(m => m._id !== staff?._id).map(m => (
+                                    <option key={m._id} value={m._id} className="bg-slate-900 text-white">{m.name.toUpperCase()}</option>
+                                ))}
                             </select>
                         </div>
                     </div>
 
-                    {/* Actions */}
-                    <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                        <button type="button" onClick={onClose} className="px-5 py-2.5 border border-slate-200 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition">
-                            Cancel
-                        </button>
-                        <button type="submit" disabled={saving} className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition shadow-sm disabled:opacity-50">
-                            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                            {isEdit ? 'Update Staff' : 'Create Staff'}
+                    <div className="flex items-center justify-end gap-4 p-4 sticky bottom-0 bg-slate-950/20 backdrop-blur-md rounded-3xl border border-white/5">
+                        <button type="button" onClick={onClose} className="px-8 py-4 bg-white/5 text-[11px] font-bold text-slate-400 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Abort</button>
+                        <button type="submit" disabled={saving} className="px-10 py-4 bg-indigo-600 text-[11px] font-bold text-white uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:bg-indigo-500 transition-all disabled:opacity-30">
+                            {saving ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : (isEdit ? 'Sync Data' : 'Execute Enlistment')}
                         </button>
                     </div>
                 </form>
@@ -502,12 +477,11 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
 // ════════════════════════════════════════
 //  Reusable Form Field
 // ════════════════════════════════════════
-const FormField = ({ icon: Icon, label, name, type = 'text', value, onChange, required, placeholder, disabled }) => (
-    <div className="space-y-1.5">
-        <label className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-            {Icon && <Icon className="w-4 h-4 text-slate-400" />}
-            {label}
-            {required && <span className="text-red-400">*</span>}
+const FormField = ({ icon: Icon, label, name, type = 'text', value, onChange, required, placeholder, disabled, className = '' }) => (
+    <div className={`space-y-2 ${className}`}>
+        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+            {Icon && <Icon className="w-3.5 h-3.5 transition-colors group-focus-within:text-indigo-400" />}
+            {label} {required && <span className="text-indigo-400 opacity-50">•</span>}
         </label>
         <input
             type={type}
@@ -515,9 +489,9 @@ const FormField = ({ icon: Icon, label, name, type = 'text', value, onChange, re
             value={value}
             onChange={onChange}
             required={required}
-            placeholder={placeholder}
+            placeholder={placeholder?.toUpperCase()}
             disabled={disabled}
-            className="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-slate-50 disabled:text-slate-400 transition"
+            className="w-full px-5 py-4 bg-white/5 border border-white/5 rounded-2xl text-[13px] font-medium text-white placeholder-slate-700/50 focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 disabled:opacity-30 transition-all"
         />
     </div>
 );

@@ -77,120 +77,135 @@ const ManageStaffProjects = () => {
     }
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-500">
-            <div>
-                <h1 className="text-3xl font-black text-slate-900 tracking-tight">My Assigned Projects</h1>
-                <p className="text-slate-500 mt-1 font-medium">View details and update progress for your assigned projects</p>
+        <div className="space-y-10 animate-reveal pb-20">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <div>
+                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Assignment Ledger</h1>
+                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Strategic execution and deployment vector tracking.</p>
+                </div>
             </div>
 
             {error && (
-                <div className="bg-red-50 p-6 rounded-3xl border border-red-100 flex items-center gap-4 text-red-700">
-                    <AlertCircle className="w-6 h-6" />
-                    <p className="font-bold">{error}</p>
+                <div className="glass-dark p-8 rounded-[2rem] border border-red-500/20 flex items-center gap-6 text-red-400">
+                    <AlertCircle className="w-8 h-8 flex-shrink-0" />
+                    <div>
+                        <h3 className="font-bold uppercase tracking-widest text-[11px] mb-1">Grid Failure</h3>
+                        <p className="text-sm font-medium opacity-80">{error}</p>
+                    </div>
                 </div>
             )}
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                 {projects.map(project => (
-                    <div key={project._id} className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-lg transition-all p-8 flex flex-col justify-between group">
-                        <div>
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="px-3 py-1.5 bg-slate-50 text-slate-500 rounded-xl text-[10px] font-black uppercase tracking-widest border border-slate-100">
-                                    #{project.projectCode}
+                    <div key={project._id} className="glass p-10 rounded-[3rem] border border-white/5 shadow-2xl hover:border-indigo-500/30 transition-all duration-500 flex flex-col justify-between group relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/5 blur-[80px] -mr-24 -mt-24 group-hover:bg-indigo-500/10 transition-colors"></div>
+
+                        <div className="relative z-10">
+                            <div className="flex justify-between items-start mb-8">
+                                <div className="px-4 py-1.5 glass-dark border border-white/10 text-indigo-400 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] font-mono">
+                                    ID // {project.projectCode}
                                 </div>
-                                <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${PROJECT_STATUS_COLORS[project.projectStatus]}`}>
+                                <span className={`inline-flex px-3 py-1.5 rounded-xl text-[9px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus]?.replace('bg-', 'bg-transparent border border-').replace('text-', 'text-') || 'border-slate-500/20 text-slate-400'}`}>
                                     {project.projectStatus}
                                 </span>
                             </div>
 
-                            <h3 className="text-xl font-black text-slate-900 mb-2 group-hover:text-primary-600 transition-colors">
+                            <h3 className="text-3xl font-display font-bold text-white mb-3 group-hover:text-indigo-400 transition-colors uppercase tracking-tight">
                                 {project.projectName}
                             </h3>
-                            <p className="text-sm font-medium text-slate-400 mb-6">{project.projectCategory}</p>
+                            <p className="text-xs font-bold text-slate-600 uppercase tracking-[0.25em] mb-10 italic">{project.projectCategory || 'GENERAL_INITIATIVE'}</p>
 
-                            <div className="space-y-4">
-                                <DetailItem icon={MapPin} value={project.siteAddress || 'No Address'} />
-                                <DetailItem icon={Calendar} value={`Due: ${project.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'TBD'}`} />
+                            <div className="space-y-6">
+                                <DetailItem icon={MapPin} value={project.siteAddress || 'UNSPECIFIED_GRID'} />
+                                <DetailItem icon={Calendar} value={`OBLIGATION_WINDOW: ${project.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'TBD'}`} />
                             </div>
                         </div>
 
-                        <div className="mt-8 pt-8 border-t border-slate-50 flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-500">
+                        <div className="mt-12 pt-10 border-t border-white/5 flex items-center justify-between relative z-10">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-[11px] font-bold text-indigo-400 shadow-inner group-hover:scale-110 transition-transform">
                                     {project.projectStatus[0]}
                                 </div>
-                                <span className="text-xs font-bold text-slate-400">Status active</span>
+                                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Protocol Active</span>
                             </div>
                             <button
                                 onClick={() => handleEdit(project)}
-                                className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black hover:bg-slate-800 transition"
+                                className="group/btn flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all shadow-xl"
                             >
-                                <Edit3 className="w-4 h-4" />
-                                Update Status
+                                <Edit3 className="w-4 h-4 text-indigo-400 group-hover/btn:rotate-12 transition-transform" />
+                                Sync Status
                             </button>
                         </div>
                     </div>
                 ))}
 
                 {projects.length === 0 && (
-                    <div className="xl:col-span-2 bg-white p-20 rounded-[3rem] border border-slate-100 shadow-sm flex flex-col items-center justify-center text-center">
-                        <FolderOpen className="w-16 h-16 text-slate-100 mb-4" />
-                        <h3 className="text-xl font-black text-slate-900">No Assignments</h3>
-                        <p className="text-slate-400 font-medium">You don't have any projects assigned to you yet.</p>
+                    <div className="xl:col-span-2 glass p-40 rounded-[4rem] border border-white/5 shadow-2xl flex flex-col items-center justify-center text-center">
+                        <div className="w-24 h-24 bg-white/5 border border-white/5 rounded-[2.5rem] flex items-center justify-center mb-10 ring-1 ring-white/10">
+                            <FolderOpen className="w-12 h-12 text-slate-800" />
+                        </div>
+                        <h3 className="text-2xl font-display font-bold text-white tracking-tight">Zero Assignments</h3>
+                        <p className="text-slate-500 font-medium mt-4 text-lg italic">No active deployment vectors identified in your sector.</p>
                     </div>
                 )}
             </div>
 
             {/* Update Modal */}
             {selectedProject && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-                    <div className="bg-white rounded-[3rem] shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-300">
-                        <form onSubmit={handleUpdate} className="p-10">
-                            <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Update Progress</h3>
-                                <button type="button" onClick={() => setSelectedProject(null)} className="p-2 hover:bg-slate-50 rounded-xl transition text-slate-400">
-                                    <X className="w-6 h-6" />
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-500" onClick={() => setSelectedProject(null)}></div>
+                    <div className="glass-dark border border-white/10 rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-xl relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700 overflow-hidden">
+                        <form onSubmit={handleUpdate} className="p-12">
+                            <div className="flex items-center justify-between mb-12">
+                                <div>
+                                    <h3 className="text-3xl font-display font-bold text-white tracking-tight">Protocol Sync</h3>
+                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic font-mono">Modifying Vector: {selectedProject.projectName.toUpperCase()}</p>
+                                </div>
+                                <button type="button" onClick={() => setSelectedProject(null)} className="p-4 hover:bg-white/10 rounded-2xl transition-all text-slate-500 hover:text-white">
+                                    <X className="w-7 h-7" />
                                 </button>
                             </div>
 
-                            <div className="space-y-6">
-                                <div>
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Project Status</label>
-                                    <select
-                                        value={editForm.projectStatus}
-                                        onChange={e => setEditForm({ ...editForm, projectStatus: e.target.value })}
-                                        className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold outline-none focus:ring-4 focus:ring-primary-100 transition-all cursor-pointer"
-                                    >
-                                        <option value="Planned">Planned</option>
-                                        <option value="In Progress">In Progress</option>
-                                        <option value="On Hold">On Hold</option>
-                                        <option value="Completed">Completed</option>
-                                        <option value="Delayed">Delayed</option>
-                                        <option value="Cancelled">Cancelled</option>
-                                    </select>
+                            <div className="space-y-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div>
+                                        <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Vector State</label>
+                                        <select
+                                            value={editForm.projectStatus}
+                                            onChange={e => setEditForm({ ...editForm, projectStatus: e.target.value })}
+                                            className="w-full px-6 py-5 bg-white/5 border border-white/10 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-white outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all cursor-pointer"
+                                        >
+                                            <option value="Planned" className="bg-slate-900">PLANNED</option>
+                                            <option value="In Progress" className="bg-slate-900">IN PROGRESS</option>
+                                            <option value="On Hold" className="bg-slate-900">ON HOLD</option>
+                                            <option value="Completed" className="bg-slate-900">COMPLETED</option>
+                                            <option value="Delayed" className="bg-slate-900">DELAYED</option>
+                                            <option value="Cancelled" className="bg-slate-900">CANCELLED</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Finality Stamp</label>
+                                        <input
+                                            type="date"
+                                            value={editForm.actualCompletion}
+                                            onChange={e => setEditForm({ ...editForm, actualCompletion: e.target.value })}
+                                            className="w-full px-6 py-5 bg-white/5 border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all font-mono"
+                                        />
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Actual Completion Date</label>
-                                    <input
-                                        type="date"
-                                        value={editForm.actualCompletion}
-                                        onChange={e => setEditForm({ ...editForm, actualCompletion: e.target.value })}
-                                        className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-bold outline-none focus:ring-4 focus:ring-primary-100 transition-all font-mono"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Risk Level</label>
-                                    <div className="grid grid-cols-3 gap-3">
+                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Risk Magnitude</label>
+                                    <div className="grid grid-cols-3 gap-4">
                                         {['Low', 'Medium', 'High'].map(level => (
                                             <button
                                                 key={level}
                                                 type="button"
                                                 onClick={() => setEditForm({ ...editForm, riskLevel: level })}
-                                                className={`py-3 rounded-2xl text-xs font-black border transition-all ${editForm.riskLevel === level
-                                                        ? 'bg-slate-900 border-slate-900 text-white shadow-lg'
-                                                        : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'
+                                                className={`py-4 rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] border transition-all ${editForm.riskLevel === level
+                                                    ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_0_30px_rgba(79,70,229,0.3)]'
+                                                    : 'bg-white/5 border-white/5 text-slate-600 hover:border-white/20'
                                                     }`}
                                             >
                                                 {level}
@@ -200,22 +215,22 @@ const ManageStaffProjects = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Delay Reason / Progress Notes</label>
+                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Sync Notes / Bottleneck Details</label>
                                     <textarea
                                         value={editForm.delayReason}
                                         onChange={e => setEditForm({ ...editForm, delayReason: e.target.value })}
-                                        placeholder="Explain any delays or key updates..."
-                                        className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium outline-none focus:ring-4 focus:ring-primary-100 transition-all h-28 resize-none"
+                                        placeholder="PROVIDE OPERATIONAL CONTEXT OR OBSTACLE MARKERS..."
+                                        className="w-full px-8 py-6 bg-white/5 border border-white/10 rounded-[2rem] text-sm text-white focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all h-32 resize-none placeholder:text-slate-800 font-mono"
                                     />
                                 </div>
 
                                 <button
                                     type="submit"
                                     disabled={updating}
-                                    className="w-full py-5 bg-primary-600 hover:bg-primary-700 text-white font-black rounded-2xl transition shadow-xl shadow-primary-100 flex items-center justify-center gap-2 disabled:opacity-50"
+                                    className="w-full py-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-3xl transition-all shadow-[0_0_40px_rgba(79,70,229,0.3)] flex items-center justify-center gap-4 disabled:opacity-30 pt-6"
                                 >
-                                    {updating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5 font-black" />}
-                                    Save Changes
+                                    {updating ? <Loader2 className="w-6 h-6 animate-spin" /> : <Save className="w-6 h-6" />}
+                                    Commit Sync Parameters
                                 </button>
                             </div>
                         </form>
@@ -227,9 +242,9 @@ const ManageStaffProjects = () => {
 };
 
 const DetailItem = ({ icon: Icon, value }) => (
-    <div className="flex items-center gap-3 text-slate-500">
-        <Icon className="w-4 h-4 text-slate-300" />
-        <span className="text-sm font-semibold">{value}</span>
+    <div className="flex items-center gap-4 text-slate-500 group/item">
+        <Icon className="w-5 h-5 text-indigo-500/30 group-hover/item:text-indigo-400 transition-colors" />
+        <span className="text-[13px] font-medium tracking-tight group-hover/item:text-slate-300 transition-colors">{value}</span>
     </div>
 );
 

@@ -33,44 +33,53 @@ const AdminDashboard = () => {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="w-10 h-10 animate-spin text-primary-500" />
+                <Loader2 className="w-10 h-10 animate-spin text-indigo-500" />
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="bg-red-50 p-6 rounded-3xl border border-red-100 flex items-center gap-4 text-red-700">
-                <AlertCircle className="w-6 h-6" />
-                <p className="font-bold">{error}</p>
+            <div className="bg-red-500/5 p-8 rounded-[2.5rem] border border-red-500/20 flex items-center gap-4 text-red-400">
+                <AlertCircle className="w-8 h-8" />
+                <p className="font-bold text-lg">{error}</p>
             </div>
         );
     }
 
     const cards = [
-        { name: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-indigo-600', bg: 'bg-indigo-50/50' },
-        { name: 'Total Staff', value: stats.totalStaff, icon: UserCheck, color: 'text-emerald-600', bg: 'bg-emerald-50/50' },
-        { name: 'Total Clients', value: stats.totalClients, icon: Briefcase, color: 'text-amber-600', bg: 'bg-amber-50/50' },
+        { name: 'Total Force', value: stats.totalUsers, subtitle: 'Active Identities', icon: Users, color: 'text-indigo-400', glow: 'shadow-[0_0_40px_rgba(99,102,241,0.1)]' },
+        { name: 'Staff Support', value: stats.totalStaff, subtitle: 'Operations Team', icon: UserCheck, color: 'text-emerald-400', glow: 'shadow-[0_0_40px_rgba(16,185,129,0.1)]' },
+        { name: 'Client Base', value: stats.totalClients, subtitle: 'Project Owners', icon: Briefcase, color: 'text-amber-400', glow: 'shadow-[0_0_40px_rgba(245,158,11,0.1)]' },
     ];
 
     return (
-        <div className="space-y-10 animate-in fade-in duration-500">
-            <div>
-                <h1 className="text-4xl font-black text-slate-900 tracking-tight">System Overview</h1>
-                <p className="text-slate-500 mt-2 font-medium">Production metrics and real-time activity tracking.</p>
-            </div>
+        <div className="space-y-12 animate-in fade-in duration-700">
+            <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <h1 className="text-5xl font-display font-bold text-white tracking-tight text-gradient">System Overview</h1>
+                    <p className="text-slate-500 mt-2 font-medium text-lg">Real-time operational metrics and activity tracking.</p>
+                </div>
+                <div className="px-5 py-2.5 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex items-center gap-3">
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.6)]"></div>
+                    <span className="text-xs font-bold text-indigo-300 uppercase tracking-widest">Live Operations</span>
+                </div>
+            </header>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {cards.map((card) => (
-                    <div key={card.name} className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                        <div className="flex items-center gap-6">
-                            <div className={`${card.bg} ${card.color} p-5 rounded-[1.5rem]`}>
-                                <card.icon className="w-8 h-8" />
+                {cards.map((card, idx) => (
+                    <div key={card.name} className={`glass p-8 rounded-[3rem] group hover:border-indigo-500/30 transition-all duration-500 hover:-translate-y-2 ${card.glow} animate-reveal`} style={{ animationDelay: `${idx * 0.1}s` }}>
+                        <div className="flex flex-col gap-6">
+                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-white/5 border border-white/5 ${card.color} group-hover:scale-110 transition-transform duration-500 ring-1 ring-white/5`}>
+                                <card.icon className="w-7 h-7" />
                             </div>
                             <div>
-                                <h3 className="text-slate-400 text-xs font-black uppercase tracking-widest">{card.name}</h3>
-                                <p className="text-4xl font-black text-slate-900 mt-1">{card.value}</p>
+                                <h3 className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">{card.name}</h3>
+                                <div className="flex items-baseline gap-3">
+                                    <p className="text-5xl font-display font-bold text-white tracking-tighter">{card.value}</p>
+                                    <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{card.subtitle}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -78,29 +87,38 @@ const AdminDashboard = () => {
             </div>
 
             {/* Recent Activities Section */}
-            <div className="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden">
-                <div className="px-10 py-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
-                    <div className="flex items-center gap-3">
-                        <Activity className="w-6 h-6 text-primary-600" />
-                        <h2 className="text-xl font-black text-slate-900 tracking-tight">Recent Activities</h2>
+            <div className="glass rounded-[3.5rem] overflow-hidden animate-reveal shadow-2xl" style={{ animationDelay: '0.4s' }}>
+                <div className="px-10 py-10 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                            <Activity className="w-6 h-6 text-indigo-400" />
+                        </div>
+                        <h2 className="text-2xl font-display font-bold text-white tracking-tight">Recent Log Activities</h2>
                     </div>
-                    <span className="px-4 py-1.5 bg-white border border-slate-100 rounded-full text-[10px] font-black uppercase text-slate-400 tracking-widest">
-                        Live Feed
-                    </span>
+                    <div className="hidden sm:flex items-center gap-4">
+                        <div className="flex -space-x-3">
+                            {[1, 2, 3].map(i => (
+                                <div key={i} className="w-8 h-8 rounded-full border-2 border-slate-950 bg-slate-900" />
+                            ))}
+                        </div>
+                        <span className="text-[10px] font-bold uppercase text-slate-500 tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                            +42 others
+                        </span>
+                    </div>
                 </div>
 
-                <div className="divide-y divide-slate-50">
+                <div className="divide-y divide-white/5">
                     {stats.recentActivities && stats.recentActivities.length > 0 ? (
                         stats.recentActivities.map((log, idx) => (
                             <ActivityRow key={idx} log={log} />
                         ))
                     ) : (
-                        <div className="p-20 text-center flex flex-col items-center">
-                            <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-4">
-                                <Clock className="w-8 h-8 text-slate-200" />
+                        <div className="p-32 text-center flex flex-col items-center">
+                            <div className="w-20 h-20 bg-white/5 border border-white/5 rounded-3xl flex items-center justify-center mb-6 ring-1 ring-white/5">
+                                <Clock className="w-10 h-10 text-slate-700" />
                             </div>
-                            <h3 className="font-bold text-slate-900">No activity yet</h3>
-                            <p className="text-slate-400 text-sm mt-1">Activities will appear here as they are recorded.</p>
+                            <h3 className="text-xl font-display font-bold text-white tracking-tight">System Silence</h3>
+                            <p className="text-slate-500 mt-2 max-w-xs font-medium">Operations will appear here as the system records real-time interactions.</p>
                         </div>
                     )}
                 </div>
@@ -111,28 +129,34 @@ const AdminDashboard = () => {
 
 const ActivityRow = ({ log }) => {
     const roleColors = {
-        admin: 'bg-indigo-100 text-indigo-700',
-        staff: 'bg-emerald-100 text-emerald-700',
-        client: 'bg-amber-100 text-amber-700'
+        admin: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+        staff: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+        client: 'bg-amber-500/10 text-amber-400 border-amber-500/20'
     };
 
     return (
-        <div className="px-10 py-6 hover:bg-slate-50 transition-colors group">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-5">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center bg-slate-100 group-hover:bg-white transition-colors`}>
-                        <User className="w-6 h-6 text-slate-400" />
+        <div className="px-10 py-8 hover:bg-white/[0.02] transition-colors group cursor-default">
+            <div className="flex items-center justify-between gap-6">
+                <div className="flex items-center gap-6">
+                    <div className="relative">
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-white/5 border border-white/5 group-hover:bg-white/10 transition-all duration-500 group-hover:scale-105 ring-1 ring-white/5`}>
+                            <User className="w-6 h-6 text-slate-500 group-hover:text-indigo-400 transition-colors" />
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-slate-950 border border-white/10 rounded-full flex items-center justify-center shadow-lg">
+                            <div className={`w-2.5 h-2.5 rounded-full ${log.actorRole === 'admin' ? 'bg-indigo-500' : log.actorRole === 'staff' ? 'bg-emerald-500' : 'bg-amber-500'}`}></div>
+                        </div>
                     </div>
                     <div>
-                        <p className="text-sm font-bold text-slate-800 leading-snug">
+                        <p className="text-lg font-medium text-slate-200 leading-tight group-hover:text-white transition-colors">
                             {log.message}
                         </p>
-                        <div className="flex items-center gap-3 mt-1.5">
-                            <span className={`px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-wider ${roleColors[log.actorRole] || 'bg-slate-100 text-slate-500'}`}>
+                        <div className="flex items-center gap-4 mt-2.5">
+                            <span className={`px-3 py-0.5 rounded-full border text-[9px] font-bold uppercase tracking-[0.15em] ${roleColors[log.actorRole] || 'bg-white/5 text-slate-500 border-white/5'}`}>
                                 {log.actorRole}
                             </span>
-                            <span className="text-[10px] font-bold text-slate-400 flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
+                            <div className="w-1 h-1 bg-slate-700 rounded-full"></div>
+                            <span className="text-[10px] font-bold text-slate-500 flex items-center gap-2 tracking-widest uppercase">
+                                <Clock className="w-3.5 h-3.5 text-slate-600" />
                                 {new Date(log.createdAt).toLocaleString(undefined, {
                                     month: 'short',
                                     day: 'numeric',
@@ -143,8 +167,11 @@ const ActivityRow = ({ log }) => {
                         </div>
                     </div>
                 </div>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-2 h-2 rounded-full bg-primary-400 animate-pulse" />
+                <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
+                        <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
+                        <span className="text-[9px] font-bold text-indigo-400 uppercase tracking-widest">Active Connection</span>
+                    </div>
                 </div>
             </div>
         </div>
