@@ -231,8 +231,9 @@ const ManageProjects = () => {
                                         </td>
                                         <td className="px-10 py-7">
                                             <div className="flex items-center justify-end gap-2">
-                                                <button onClick={() => navigate(`/admin/projects/${p._id}/updates`)} className="p-3 rounded-2xl bg-white/5 border border-white/5 text-slate-500 hover:text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all duration-300" title="Updates">
-                                                    <MessageSquare className="w-4.5 h-4.5" />
+                                                <button onClick={() => navigate(`/admin/projects/${p._id}/updates`)} className="group/btn flex items-center gap-2 px-4 py-3 rounded-2xl bg-white/5 border border-white/5 text-slate-500 hover:text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all duration-300" title="Updates">
+                                                    <MessageSquare className="w-4 h-4" />
+                                                    <span className="text-[9px] font-bold uppercase tracking-widest hidden lg:block">Updates</span>
                                                 </button>
                                                 <button onClick={() => openEdit(p._id)} className="p-3 rounded-2xl bg-white/5 border border-white/5 text-slate-500 hover:text-indigo-400 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300" title="Modify">
                                                     <Edit3 className="w-4.5 h-4.5" />

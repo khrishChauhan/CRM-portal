@@ -328,8 +328,9 @@ const ProjectUpdates = () => {
 
                         <div className="flex items-center gap-2">
                             {/* Image upload */}
-                            <label className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30 transition-all cursor-pointer active:scale-95">
-                                <Camera className="w-5 h-5" />
+                            <label className="group/upload h-12 px-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30 transition-all cursor-pointer active:scale-95">
+                                <Camera className="w-5 h-5 group-hover/upload:scale-110 transition-transform" />
+                                <span className="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Attach Image</span>
                                 <input
                                     type="file"
                                     accept="image/jpeg,image/png,image/webp"
@@ -342,9 +343,11 @@ const ProjectUpdates = () => {
                             <button
                                 onClick={captureLocation}
                                 disabled={locLoading}
-                                className={`w-12 h-12 rounded-2xl border flex items-center justify-center transition-all active:scale-95 ${location ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-white/5 border-white/10 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30'}`}
+                                title="Pin Location"
+                                className={`h-12 px-4 rounded-2xl border flex items-center gap-3 transition-all active:scale-95 ${location ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-white/5 border-white/10 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30'}`}
                             >
                                 {locLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
+                                <span className="text-[9px] font-bold uppercase tracking-widest hidden sm:block">{location ? 'Pinned' : 'Pin Grid'}</span>
                             </button>
 
                             {/* Post */}
