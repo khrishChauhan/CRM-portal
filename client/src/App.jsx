@@ -15,6 +15,7 @@ import ManageStaffProjects from './pages/ManageStaffProjects';
 import ClientDashboard from './pages/ClientDashboard';
 import MyProjects from './pages/MyProjects';
 import ManageAccessRequests from './pages/ManageAccessRequests';
+import ProjectUpdates from './pages/ProjectUpdates';
 import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
@@ -49,6 +50,9 @@ function App() {
                 <Route path="/admin/settings" element={
                   <DashboardLayout><AdminDashboard /></DashboardLayout>
                 } />
+                <Route path="/admin/projects/:id/updates" element={
+                  <DashboardLayout><ProjectUpdates /></DashboardLayout>
+                } />
               </Route>
 
               {/* ── Staff Routes ── */}
@@ -59,6 +63,9 @@ function App() {
                 <Route path="/staff/projects" element={
                   <DashboardLayout><ManageStaffProjects /></DashboardLayout>
                 } />
+                <Route path="/staff/projects/:id/updates" element={
+                  <DashboardLayout><ProjectUpdates /></DashboardLayout>
+                } />
               </Route>
 
               {/* ── Client Routes ── */}
@@ -68,6 +75,9 @@ function App() {
                 } />
                 <Route path="/client/projects" element={
                   <DashboardLayout><MyProjects /></DashboardLayout>
+                } />
+                <Route path="/client/projects/:id/updates" element={
+                  <DashboardLayout><ProjectUpdates /></DashboardLayout>
                 } />
               </Route>
 

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import {
     Search, Loader2, FolderOpen, AlertCircle,
-    MapPin, Calendar, User, ChevronRight, LayoutGrid, List
+    MapPin, Calendar, User, ChevronRight, LayoutGrid, List, MessageSquare
 } from 'lucide-react';
 
 const PROJECT_STATUS_COLORS = {
@@ -111,6 +112,7 @@ const MyProjects = () => {
 };
 
 const ProjectItem = ({ project, mode, onSelect }) => {
+    const navigate = useNavigate();
     if (mode === 'list') {
         return (
             <div className="glass p-8 rounded-3xl border border-white/5 shadow-xl hover:border-indigo-500/30 transition-all duration-500 cursor-pointer group flex items-center justify-between gap-8" onClick={onSelect}>
@@ -166,7 +168,13 @@ const ProjectItem = ({ project, mode, onSelect }) => {
                 </div>
 
                 <div className="mt-10 pt-10 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] group-hover:text-indigo-500/60 transition-colors">Audit File Details</span>
+                    <button
+                        onClick={(e) => { e.stopPropagation(); navigate(`/client/projects/${project._id}/updates`); }}
+                        className="flex items-center gap-2 text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] hover:text-emerald-400 transition-colors"
+                    >
+                        <MessageSquare className="w-4 h-4" />
+                        Updates
+                    </button>
                     <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 group-hover:bg-indigo-600 group-hover:border-indigo-500 flex items-center justify-center transition-all duration-500 shadow-inner group-hover:shadow-[0_0_20px_rgba(79,70,229,0.4)]">
                         <ChevronRight className="w-5 h-5 text-indigo-500 group-hover:text-white transition-colors" />
                     </div>

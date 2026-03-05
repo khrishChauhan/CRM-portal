@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import {
     Search, Loader2, FolderOpen, AlertCircle,
     MapPin, Calendar, CheckCircle, ChevronRight,
-    Edit3, X, Save
+    Edit3, X, Save, MessageSquare
 } from 'lucide-react';
 
 const PROJECT_STATUS_COLORS = {
@@ -16,6 +17,7 @@ const PROJECT_STATUS_COLORS = {
 };
 
 const ManageStaffProjects = () => {
+    const navigate = useNavigate();
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -128,13 +130,22 @@ const ManageStaffProjects = () => {
                                 </div>
                                 <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Protocol Active</span>
                             </div>
-                            <button
-                                onClick={() => handleEdit(project)}
-                                className="group/btn flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all shadow-xl"
-                            >
-                                <Edit3 className="w-4 h-4 text-indigo-400 group-hover/btn:rotate-12 transition-transform" />
-                                Sync Status
-                            </button>
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => navigate(`/staff/projects/${project._id}/updates`)}
+                                    className="group/btn flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-emerald-500/10 border border-white/10 hover:border-emerald-500/30 text-white rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all shadow-xl"
+                                >
+                                    <MessageSquare className="w-4 h-4 text-emerald-400 group-hover/btn:scale-110 transition-transform" />
+                                    Updates
+                                </button>
+                                <button
+                                    onClick={() => handleEdit(project)}
+                                    className="group/btn flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all shadow-xl"
+                                >
+                                    <Edit3 className="w-4 h-4 text-indigo-400 group-hover/btn:rotate-12 transition-transform" />
+                                    Sync Status
+                                </button>
+                            </div>
                         </div>
                     </div>
                 ))}

@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import {
     Plus, Search, ChevronLeft, ChevronRight, Loader2, FolderOpen,
     Edit3, Trash2, X, AlertCircle, CheckCircle, Calendar, MapPin,
-    Clock, AlertTriangle, Briefcase, TrendingUp
+    Clock, AlertTriangle, Briefcase, TrendingUp, MessageSquare
 } from 'lucide-react';
 
 const STATUSES = ['Planned', 'In Progress', 'On Hold', 'Completed', 'Delayed', 'Cancelled'];
@@ -19,6 +20,7 @@ const STATUS_COLORS = {
 const PRIORITY_COLORS = { Low: 'text-blue-500', Medium: 'text-amber-500', High: 'text-red-500' };
 
 const ManageProjects = () => {
+    const navigate = useNavigate();
     const [projects, setProjects] = useState([]);
     const [pagination, setPagination] = useState({ total: 0, page: 1, limit: 10, totalPages: 1 });
     const [dashboard, setDashboard] = useState(null);
@@ -229,6 +231,9 @@ const ManageProjects = () => {
                                         </td>
                                         <td className="px-10 py-7">
                                             <div className="flex items-center justify-end gap-2">
+                                                <button onClick={() => navigate(`/admin/projects/${p._id}/updates`)} className="p-3 rounded-2xl bg-white/5 border border-white/5 text-slate-500 hover:text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/30 transition-all duration-300" title="Updates">
+                                                    <MessageSquare className="w-4.5 h-4.5" />
+                                                </button>
                                                 <button onClick={() => openEdit(p._id)} className="p-3 rounded-2xl bg-white/5 border border-white/5 text-slate-500 hover:text-indigo-400 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300" title="Modify">
                                                     <Edit3 className="w-4.5 h-4.5" />
                                                 </button>

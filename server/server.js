@@ -17,6 +17,7 @@ const clientRoutes = require('./routes/clientRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const accessRequestRoutes = require('./routes/accessRequestRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
+const projectUpdateRoutes = require('./routes/projectUpdateRoutes');
 
 // ── Debug: Verify environment variables loaded (dev only) ──
 if (process.env.NODE_ENV !== 'production') {
@@ -28,6 +29,7 @@ if (process.env.NODE_ENV !== 'production') {
     console.log(`   ADMIN_EMAIL     = ${process.env.ADMIN_EMAIL || '❌ MISSING'}`);
     console.log(`   GOOGLE_CLIENT_ID = ${process.env.GOOGLE_CLIENT_ID ? '✅ Set' : '❌ MISSING'}`);
     console.log(`   CLIENT_URL      = ${process.env.CLIENT_URL || 'http://localhost:5173 (default)'}`);
+    console.log(`   CLOUDINARY      = ${process.env.CLOUDINARY_CLOUD_NAME ? '✅ Configured' : '❌ MISSING'}`);
     console.log('──────────────────────────────────────');
 }
 
@@ -83,6 +85,7 @@ app.use('/api/clients', clientRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/access-requests', accessRequestRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/projects/:projectId/updates', projectUpdateRoutes);
 
 // ── Health check ──
 app.get('/', (req, res) => {
