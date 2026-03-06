@@ -94,17 +94,17 @@ const ManageAccessRequests = () => {
 
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Access Oversight</h1>
-                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Administrative authorization and security clearance logs.</p>
+                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Access Requests</h1>
+                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Review and manage client access requests.</p>
                 </div>
             </div>
 
             {/* Dashboard Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatCard label="Total Queue" value={stats.total} icon={FileText} color="text-indigo-400" bgColor="bg-indigo-500/10" />
-                <StatCard label="Awaiting Sync" value={stats.pending} icon={Clock} color="text-amber-400" bgColor="bg-amber-500/10" />
-                <StatCard label="Authorized" value={stats.approved} icon={CheckCircle} color="text-emerald-400" bgColor="bg-emerald-500/10" />
-                <StatCard label="Restricted" value={stats.rejected} icon={XCircle} color="text-red-400" bgColor="bg-red-500/10" />
+                <StatCard label="Total Requests" value={stats.total} icon={FileText} color="text-indigo-400" bgColor="bg-indigo-500/10" />
+                <StatCard label="Pending" value={stats.pending} icon={Clock} color="text-amber-400" bgColor="bg-amber-500/10" />
+                <StatCard label="Approved" value={stats.approved} icon={CheckCircle} color="text-emerald-400" bgColor="bg-emerald-500/10" />
+                <StatCard label="Declined" value={stats.rejected} icon={XCircle} color="text-red-400" bgColor="bg-red-500/10" />
             </div>
 
             {/* Filters */}
@@ -115,7 +115,7 @@ const ManageAccessRequests = () => {
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search by operative or project code..."
+                        placeholder="Search by client name or project..."
                         className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm font-medium"
                     />
                 </div>
@@ -136,15 +136,15 @@ const ManageAccessRequests = () => {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-40">
                         <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />
-                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Querying Clearance Logs...</p>
+                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Loading...</p>
                     </div>
                 ) : requests.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-40 text-slate-600">
                         <div className="w-24 h-24 bg-white/5 border border-white/5 rounded-[2.5rem] flex items-center justify-center mb-8 ring-1 ring-white/10 shadow-inner">
                             <FileText className="w-10 h-10 opacity-30" />
                         </div>
-                        <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">Clearance Empty</h3>
-                        <p className="text-sm mt-3 font-medium">No pending authorization requests in current buffer.</p>
+                        <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">No requests</h3>
+                        <p className="text-sm mt-3 font-medium">No access requests to show right now.</p>
                     </div>
                 ) : (
                     <div className="divide-y divide-white/5">
@@ -168,7 +168,7 @@ const ManageAccessRequests = () => {
                                                     <Briefcase className="w-7 h-7" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1.5">Asset Target</p>
+                                                    <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1.5">Project</p>
                                                     <h3 className="font-display font-bold text-white text-xl tracking-tight leading-tight group-hover:text-indigo-400 transition-colors uppercase">{req.project?.projectName}</h3>
                                                     <p className="text-xs font-mono font-bold text-indigo-500/70 mt-1 uppercase tracking-tighter">{req.project?.projectCode}</p>
                                                 </div>
@@ -179,7 +179,7 @@ const ManageAccessRequests = () => {
                                                     <Users className="w-7 h-7" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1.5">Requesting Operative</p>
+                                                    <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1.5">Requested By</p>
                                                     <h3 className="font-display font-bold text-white text-xl tracking-tight leading-tight group-hover:text-indigo-400 transition-colors uppercase">{req.client?.name}</h3>
                                                     <p className="text-xs font-medium text-slate-500 mt-1">{req.client?.email}</p>
                                                     {req.client?.company && <p className="text-[10px] font-bold text-indigo-400/50 mt-1 uppercase tracking-widest">{req.client.company}</p>}
@@ -202,7 +202,7 @@ const ManageAccessRequests = () => {
                                                 <div className="flex gap-4 items-start">
                                                     <XCircle className="w-4 h-4 text-red-400 mt-1 flex-shrink-0" />
                                                     <div>
-                                                        <p className="text-[9px] font-bold text-red-400 uppercase tracking-widest mb-2">RESTRICTION REASON</p>
+                                                        <p className="text-[9px] font-bold text-red-400 uppercase tracking-widest mb-2">Reason for Decline</p>
                                                         <p className="text-sm text-slate-400 leading-relaxed font-medium italic">"{req.rejectionReason}"</p>
                                                     </div>
                                                 </div>
@@ -219,18 +219,18 @@ const ManageAccessRequests = () => {
                                                     className="w-full lg:w-48 px-8 py-5 bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded-2xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-3 disabled:opacity-30"
                                                 >
                                                     {processingId === req._id ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
-                                                    Authorize
+                                                    Approve
                                                 </button>
                                                 <button
                                                     onClick={() => { setRejectingId(req._id); setRejectionReason(''); }}
                                                     className="w-full lg:w-48 px-8 py-5 bg-white/5 border border-white/5 hover:border-red-500/30 hover:bg-red-500/10 text-slate-500 hover:text-red-400 text-[10px] font-bold uppercase tracking-[0.2em] rounded-2xl transition-all"
                                                 >
-                                                    Restrict
+                                                    Decline
                                                 </button>
                                             </>
                                         ) : (
                                             <div className="text-right glass-dark px-6 py-4 rounded-2xl border border-white/5">
-                                                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1">AUDIT VERIFIED</p>
+                                                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1">Reviewed</p>
                                                 <p className="text-sm font-bold text-white font-mono tracking-tighter">{req.reviewedAt ? new Date(req.reviewedAt).toLocaleDateString() : '---'}</p>
                                             </div>
                                         )}
@@ -241,13 +241,13 @@ const ManageAccessRequests = () => {
                                 {rejectingId === req._id && (
                                     <div className="mt-8 p-10 glass border border-red-500/20 rounded-[3rem] space-y-6 animate-in slide-in-from-top-4 duration-500">
                                         <div className="flex items-center justify-between">
-                                            <h4 className="text-xl font-display font-bold text-white uppercase tracking-tight">Security Override Restriction</h4>
-                                            <button onClick={() => setRejectingId(null)} className="text-[10px] font-bold text-slate-600 uppercase tracking-widest hover:text-white transition-colors">ABORT_OVERRIDE</button>
+                                            <h4 className="text-xl font-display font-bold text-white uppercase tracking-tight">Decline Request</h4>
+                                            <button onClick={() => setRejectingId(null)} className="text-[10px] font-bold text-slate-600 uppercase tracking-widest hover:text-white transition-colors">Cancel</button>
                                         </div>
                                         <textarea
                                             value={rejectionReason}
                                             onChange={(e) => setRejectionReason(e.target.value)}
-                                            placeholder="OUTLINE THE CAUSE FOR ACCESS DENIAL..."
+                                            placeholder="Why is this request being declined?"
                                             className="w-full p-8 bg-white/5 border border-white/10 rounded-[2rem] text-sm text-white focus:outline-none focus:border-red-500/50 focus:ring-4 focus:ring-red-500/10 h-32 resize-none transition-all placeholder:text-slate-800 font-mono"
                                         />
                                         <button
@@ -255,7 +255,7 @@ const ManageAccessRequests = () => {
                                             disabled={processingId === req._id}
                                             className="w-full py-5 bg-red-600 hover:bg-red-500 text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded-2xl transition-all shadow-xl shadow-red-600/20 disabled:opacity-30"
                                         >
-                                            CONFIRM RESTRICTION PROTOCOL
+                                            Confirm Decline
                                         </button>
                                     </div>
                                 )}
@@ -267,7 +267,7 @@ const ManageAccessRequests = () => {
                 {/* Pagination */}
                 {pagination.totalPages > 1 && (
                     <div className="flex items-center justify-between px-10 py-10 bg-white/[0.01] border-t border-white/5">
-                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Deployment Page {pagination.page} // {pagination.totalPages}</p>
+                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Page {pagination.page} of {pagination.totalPages}</p>
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() => fetchRequests(pagination.page - 1)}

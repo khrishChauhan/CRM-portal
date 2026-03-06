@@ -129,24 +129,24 @@ const ManageStaff = () => {
             {/* ── Header ── */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Staff Force</h1>
-                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Command and optimize your high-performance team.</p>
+                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Staff</h1>
+                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Manage your team members and their details.</p>
                 </div>
                 <button
                     onClick={() => openModal()}
                     className="group relative inline-flex items-center gap-3 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold rounded-2xl transition-all shadow-[0_20px_40px_-12px_rgba(79,70,229,0.3)] hover:-translate-y-1 active:translate-y-0"
                 >
                     <UserPlus className="w-5 h-5 transition-transform group-hover:scale-110" />
-                    <span>Enlist New Operative</span>
+                    <span>Add Staff</span>
                     <div className="absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
                 </button>
             </div>
 
             {/* ── Stats Cards ── */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <StatCard icon={Users} label="Total Operatives" value={stats.total} color="indigo" />
-                <StatCard icon={UserCheck} label="Active Status" value={stats.active} color="emerald" />
-                <StatCard icon={UserX} label="Deactivated" value={stats.inactive} color="red" />
+                <StatCard icon={Users} label="Total Staff" value={stats.total} color="indigo" />
+                <StatCard icon={UserCheck} label="Active" value={stats.active} color="emerald" />
+                <StatCard icon={UserX} label="Inactive" value={stats.inactive} color="red" />
             </div>
 
             {/* ── Filters Bar ── */}
@@ -158,7 +158,7 @@ const ManageStaff = () => {
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Filter by name, credential, or sector..."
+                            placeholder="Search by name, email, or department..."
                             className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm font-medium"
                         />
                     </div>
@@ -177,7 +177,7 @@ const ManageStaff = () => {
                             onChange={(e) => setDeptFilter(e.target.value)}
                             className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
                         >
-                            <option value="">All Sectors</option>
+                            <option value="">All Departments</option>
                             {DEPARTMENTS.map(d => <option key={d} value={d} className="bg-slate-900">{d}</option>)}
                         </select>
                     </div>
@@ -189,27 +189,27 @@ const ManageStaff = () => {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-40">
                         <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />
-                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Synchronizing Data...</p>
+                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Loading...</p>
                     </div>
                 ) : staff.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-40 text-slate-600">
                         <div className="w-20 h-20 bg-white/5 border border-white/5 rounded-3xl flex items-center justify-center mb-8 ring-1 ring-white/5">
                             <Users className="w-10 h-10 opacity-40" />
                         </div>
-                        <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">Empty Roster</h3>
-                        <p className="text-sm mt-2 font-medium">No operatives found matching current filter parameters.</p>
+                        <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">No staff found</h3>
+                        <p className="text-sm mt-2 font-medium">No staff members match your search.</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
                                 <tr className="bg-white/[0.01] border-b border-white/5">
-                                    <th className="text-left px-10 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Operative</th>
-                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Sector</th>
-                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Level</th>
-                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Command</th>
-                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Integrity</th>
-                                    <th className="text-right px-10 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Control</th>
+                                    <th className="text-left px-10 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Name</th>
+                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Department</th>
+                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Role</th>
+                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Manager</th>
+                                    <th className="text-left px-8 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Status</th>
+                                    <th className="text-right px-10 py-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
@@ -242,24 +242,24 @@ const ManageStaff = () => {
                                                         </div>
                                                         <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">{s.reportingManager.name}</span>
                                                     </>
-                                                ) : <span className="text-slate-700 tracking-widest">UNDEFINED</span>}
+                                                ) : <span className="text-slate-700 tracking-widest">None</span>}
                                             </div>
                                         </td>
                                         <td className="px-8 py-6">
                                             <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${s.isActive ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
                                                 <div className={`w-1.5 h-1.5 rounded-full ${s.isActive ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`}></div>
-                                                {s.isActive ? 'Operational' : 'Compromised'}
+                                                {s.isActive ? 'Active' : 'Inactive'}
                                             </span>
                                         </td>
                                         <td className="px-10 py-6">
                                             <div className="flex items-center justify-end gap-2 px-1">
-                                                <button onClick={() => openModal(s)} className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-indigo-400 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300" title="Modify">
+                                                <button onClick={() => openModal(s)} className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-indigo-400 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300" title="Edit">
                                                     <Edit3 className="w-4.5 h-4.5" />
                                                 </button>
                                                 <button onClick={() => handleToggleStatus(s._id, s.name)} className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-amber-400 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300" title={s.isActive ? 'Deactivate' : 'Restore'}>
                                                     {s.isActive ? <ToggleRight className="w-4.5 h-4.5" /> : <ToggleLeft className="w-4.5 h-4.5" />}
                                                 </button>
-                                                <button onClick={() => handleDelete(s._id, s.name)} className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all duration-300" title="Expunge">
+                                                <button onClick={() => handleDelete(s._id, s.name)} className="p-3 rounded-xl bg-white/5 border border-white/5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all duration-300" title="Delete">
                                                     <Trash2 className="w-4.5 h-4.5" />
                                                 </button>
                                             </div>
@@ -275,7 +275,7 @@ const ManageStaff = () => {
                 {pagination.totalPages > 1 && (
                     <div className="flex items-center justify-between px-10 py-8 border-t border-white/5 bg-white/[0.01]">
                         <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
-                            Showing operatives {((pagination.page - 1) * pagination.limit) + 1}–{Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}
+                            Showing {((pagination.page - 1) * pagination.limit) + 1}–{Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} staff
                         </p>
                         <div className="flex items-center gap-3">
                             <button
@@ -363,7 +363,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
         setError('');
 
         if (!form.name || !form.email) {
-            setError('Operational Identity (Name & Email) is required');
+            setError('Name and email are required');
             setSaving(false);
             return;
         }
@@ -375,14 +375,14 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
 
             if (isEdit) {
                 await api.put(`/staff/${staff._id}`, payload);
-                showToast('Operative data synchronized successfully');
+                showToast('Staff updated successfully');
             } else {
                 await api.post('/staff', payload);
-                showToast('New operative enlisted to the force');
+                showToast('Staff member added successfully');
             }
             onSaved();
         } catch (err) {
-            setError(err.response?.data?.message || 'Data synchronization failure');
+            setError(err.response?.data?.message || 'Could not save. Please try again.');
         } finally {
             setSaving(false);
         }
@@ -394,8 +394,8 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
             <div className="glass-dark border border-white/10 rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
                 <div className="flex items-center justify-between px-10 py-8 border-b border-white/5">
                     <div>
-                        <h2 className="text-3xl font-display font-bold text-white tracking-tight">{isEdit ? 'Modify Operative' : 'Enlist Operative'}</h2>
-                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic">Assignment Level 04 Auth Required</p>
+                        <h2 className="text-3xl font-display font-bold text-white tracking-tight">{isEdit ? 'Edit Staff' : 'Add Staff'}</h2>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic">Fill in the details below</p>
                     </div>
                     <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 text-slate-500 hover:text-white transition-all duration-300">
                         <X className="w-5 h-5 mx-auto" />
@@ -411,35 +411,35 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                     )}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormField icon={Users} label="Alias / Name" name="name" value={form.name} onChange={handleChange} required placeholder="Operative Designation" />
-                        <FormField icon={Mail} label="Secure Email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="identity@node.com" disabled={isEdit} />
+                        <FormField icon={Users} label="Full Name" name="name" value={form.name} onChange={handleChange} required placeholder="Enter name" />
+                        <FormField icon={Mail} label="Email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="Enter email" disabled={isEdit} />
                     </div>
 
-                    <FormField icon={Briefcase} label={isEdit ? 'Security Re-Authentication' : 'Master Credential'} name="password" type="password" value={form.password} onChange={handleChange} required={!isEdit} placeholder={isEdit ? '•••••••• (UNMODIFIED)' : 'Secure Password Required'} />
+                    <FormField icon={Briefcase} label={isEdit ? 'New Password (optional)' : 'Password'} name="password" type="password" value={form.password} onChange={handleChange} required={!isEdit} placeholder={isEdit ? '•••••••• (unchanged)' : 'Create a password'} />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormField icon={Phone} label="Primary Comms" name="phone" value={form.phone} onChange={handleChange} placeholder="+1 ERROR_LOG_ONLY" />
-                        <FormField icon={Phone} label="Secondary Backup" name="alternatePhone" value={form.alternatePhone} onChange={handleChange} placeholder="BACKUP_RESERVE" />
+                        <FormField icon={Phone} label="Phone" name="phone" value={form.phone} onChange={handleChange} placeholder="+1 234 567 890" />
+                        <FormField icon={Phone} label="Alternate Phone" name="alternatePhone" value={form.alternatePhone} onChange={handleChange} placeholder="Optional" />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormField icon={Briefcase} label="Operation Role" name="designation" value={form.designation} onChange={handleChange} placeholder="CORE ARCHITECT" />
+                        <FormField icon={Briefcase} label="Job Title" name="designation" value={form.designation} onChange={handleChange} placeholder="e.g. Project Manager" />
                         <div className="space-y-2">
                             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                                <Building2 className="w-3.5 h-3.5" /> Sector
+                                <Building2 className="w-3.5 h-3.5" /> Department
                             </label>
                             <select name="department" value={form.department} onChange={handleChange} className="w-full px-5 py-4 bg-white/5 border border-white/5 rounded-2xl text-[13px] font-medium text-white focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 cursor-pointer transition-all">
-                                <option value="" className="bg-slate-900 text-white">SELECT SECTOR</option>
+                                <option value="" className="bg-slate-900 text-white">Select department</option>
                                 {DEPARTMENTS.map(d => <option key={d} value={d} className="bg-slate-900 text-white uppercase">{d}</option>)}
                             </select>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormField icon={Calendar} label="Induction Date" name="joiningDate" type="date" value={form.joiningDate} onChange={handleChange} className="inverted-date-picker" />
+                        <FormField icon={Calendar} label="Joining Date" name="joiningDate" type="date" value={form.joiningDate} onChange={handleChange} className="inverted-date-picker" />
                         <div className="space-y-2">
                             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                                <Briefcase className="w-3.5 h-3.5" /> Employment Force
+                                <Briefcase className="w-3.5 h-3.5" /> Employment Type
                             </label>
                             <select name="employmentType" value={form.employmentType} onChange={handleChange} className="w-full px-5 py-4 bg-white/5 border border-white/5 rounded-2xl text-[13px] font-medium text-white focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 cursor-pointer transition-all">
                                 {EMPLOYMENT_TYPES.map(t => <option key={t} value={t} className="bg-slate-900 text-white uppercase">{t}</option>)}
@@ -448,13 +448,13 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
-                        <FormField icon={DollarSign} label="Financial Band" name="salaryBand" value={form.salaryBand} onChange={handleChange} placeholder="COMP_LEVEL_10" />
+                        <FormField icon={DollarSign} label="Salary Band" name="salaryBand" value={form.salaryBand} onChange={handleChange} placeholder="e.g. Level 5" />
                         <div className="space-y-2">
                             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                                <Users className="w-3.5 h-3.5" /> Command Authority
+                                <Users className="w-3.5 h-3.5" /> Reporting Manager
                             </label>
                             <select name="reportingManager" value={form.reportingManager} onChange={handleChange} className="w-full px-5 py-4 bg-white/5 border border-white/5 rounded-2xl text-[13px] font-medium text-white focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 cursor-pointer transition-all">
-                                <option value="" className="bg-slate-900 text-slate-600 tracking-widest">NO DIRECT COMMAND</option>
+                                <option value="" className="bg-slate-900 text-slate-600 tracking-widest">No manager</option>
                                 {managers.filter(m => m._id !== staff?._id).map(m => (
                                     <option key={m._id} value={m._id} className="bg-slate-900 text-white">{m.name.toUpperCase()}</option>
                                 ))}
@@ -463,9 +463,9 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                     </div>
 
                     <div className="flex items-center justify-end gap-4 p-4 sticky bottom-0 bg-slate-950/20 backdrop-blur-md rounded-3xl border border-white/5">
-                        <button type="button" onClick={onClose} className="px-8 py-4 bg-white/5 text-[11px] font-bold text-slate-400 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Abort</button>
+                        <button type="button" onClick={onClose} className="px-8 py-4 bg-white/5 text-[11px] font-bold text-slate-400 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Cancel</button>
                         <button type="submit" disabled={saving} className="px-10 py-4 bg-indigo-600 text-[11px] font-bold text-white uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:bg-indigo-500 transition-all disabled:opacity-30">
-                            {saving ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : (isEdit ? 'Sync Data' : 'Execute Enlistment')}
+                            {saving ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : (isEdit ? 'Save Changes' : 'Add Staff')}
                         </button>
                     </div>
                 </form>

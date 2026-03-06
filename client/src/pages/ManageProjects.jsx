@@ -111,27 +111,27 @@ const ManageProjects = () => {
             {/* ── Header ── */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Project Logistics</h1>
-                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Strategic orchestration of active deployments.</p>
+                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Projects</h1>
+                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Create and manage all your projects.</p>
                 </div>
                 <button
                     onClick={() => { setEditingProject(null); setShowModal(true); }}
                     className="group relative inline-flex items-center gap-3 px-8 py-5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-[0_0_30px_rgba(79,70,229,0.3)] hover:scale-[1.02] active:scale-[0.98]"
                 >
                     <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" />
-                    Initialize Deployment
+                    New Project
                 </button>
             </div>
 
             {/* ── Dashboard Stats ── */}
             {dashboard && (
                 <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-                    <MiniStat label="Global Queue" value={ov.total || 0} icon={FolderOpen} color="text-indigo-400" bgColor="bg-indigo-500/10" />
-                    <MiniStat label="In Velocity" value={ov.active || 0} icon={TrendingUp} color="text-emerald-400" bgColor="bg-emerald-500/10" />
-                    <MiniStat label="Archived / Final" value={ov.completed || 0} icon={CheckCircle} color="text-sky-400" bgColor="bg-sky-500/10" />
-                    <MiniStat label="Bottleneck" value={ov.delayed || 0} icon={AlertTriangle} color="text-red-400" bgColor="bg-red-500/10" />
-                    <MiniStat label="Stasis" value={ov.onHold || 0} icon={Clock} color="text-amber-400" bgColor="bg-amber-500/10" />
-                    <MiniStat label="Expunged" value={ov.deleted || 0} icon={Trash2} color="text-slate-500" bgColor="bg-slate-500/10" />
+                    <MiniStat label="Total" value={ov.total || 0} icon={FolderOpen} color="text-indigo-400" bgColor="bg-indigo-500/10" />
+                    <MiniStat label="Active" value={ov.active || 0} icon={TrendingUp} color="text-emerald-400" bgColor="bg-emerald-500/10" />
+                    <MiniStat label="Completed" value={ov.completed || 0} icon={CheckCircle} color="text-sky-400" bgColor="bg-sky-500/10" />
+                    <MiniStat label="Delayed" value={ov.delayed || 0} icon={AlertTriangle} color="text-red-400" bgColor="bg-red-500/10" />
+                    <MiniStat label="On Hold" value={ov.onHold || 0} icon={Clock} color="text-amber-400" bgColor="bg-amber-500/10" />
+                    <MiniStat label="Deleted" value={ov.deleted || 0} icon={Trash2} color="text-slate-500" bgColor="bg-slate-500/10" />
                 </div>
             )}
 
@@ -143,7 +143,7 @@ const ManageProjects = () => {
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Query deployments by code or designation..."
+                        placeholder="Search projects by name or code..."
                         className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm font-medium"
                     />
                 </div>
@@ -172,27 +172,27 @@ const ManageProjects = () => {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-40">
                         <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />
-                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Synchronizing Asset Logs...</p>
+                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Loading...</p>
                     </div>
                 ) : projects.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-40 text-slate-600">
                         <div className="w-24 h-24 bg-white/5 border border-white/5 rounded-[2.5rem] flex items-center justify-center mb-8 ring-1 ring-white/10 shadow-inner">
                             <FolderOpen className="w-10 h-10 opacity-30" />
                         </div>
-                        <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">Zero Deployments</h3>
-                        <p className="text-sm mt-3 font-medium">No active files matching the current parameters.</p>
+                        <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">No projects found</h3>
+                        <p className="text-sm mt-3 font-medium">No projects match your search criteria.</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
                                 <tr className="bg-white/[0.01] border-b border-white/5">
-                                    <th className="text-left px-10 py-8 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Deployment</th>
-                                    <th className="text-left px-8 py-8 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Command</th>
-                                    <th className="text-left px-8 py-8 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Vector State</th>
-                                    <th className="text-left px-8 py-8 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Threat Lev.</th>
+                                    <th className="text-left px-10 py-8 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Project</th>
+                                    <th className="text-left px-8 py-8 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Manager</th>
+                                    <th className="text-left px-8 py-8 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Status</th>
+                                    <th className="text-left px-8 py-8 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Priority</th>
                                     <th className="text-left px-8 py-8 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Timeline</th>
-                                    <th className="text-right px-10 py-8 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">System Control</th>
+                                    <th className="text-right px-10 py-8 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
@@ -201,7 +201,7 @@ const ManageProjects = () => {
                                         <td className="px-10 py-7">
                                             <div className="flex flex-col">
                                                 <p className="font-bold text-white group-hover:text-indigo-400 transition-colors text-lg tracking-tight leading-tight">{p.projectName}</p>
-                                                <p className="text-[10px] font-bold text-slate-500 mt-1 font-mono uppercase tracking-widest">{p.projectCode} // {p.projectCategory || 'General Operative'}</p>
+                                                <p className="text-[10px] font-bold text-slate-500 mt-1 font-mono uppercase tracking-widest">{p.projectCode} // {p.projectCategory || 'General'}</p>
                                             </div>
                                         </td>
                                         <td className="px-8 py-7 font-semibold text-slate-400 italic text-[13px]">{p.projectManager?.name || '---'}</td>
@@ -235,10 +235,10 @@ const ManageProjects = () => {
                                                     <MessageSquare className="w-4 h-4" />
                                                     <span className="text-[9px] font-bold uppercase tracking-widest hidden lg:block">Updates</span>
                                                 </button>
-                                                <button onClick={() => openEdit(p._id)} className="p-3 rounded-2xl bg-white/5 border border-white/5 text-slate-500 hover:text-indigo-400 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300" title="Modify">
+                                                <button onClick={() => openEdit(p._id)} className="p-3 rounded-2xl bg-white/5 border border-white/5 text-slate-500 hover:text-indigo-400 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all duration-300" title="Edit">
                                                     <Edit3 className="w-4.5 h-4.5" />
                                                 </button>
-                                                <button onClick={() => handleDelete(p._id, p.projectName)} className="p-3 rounded-2xl bg-white/5 border border-white/5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all duration-300" title="Decommission">
+                                                <button onClick={() => handleDelete(p._id, p.projectName)} className="p-3 rounded-2xl bg-white/5 border border-white/5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/30 transition-all duration-300" title="Delete">
                                                     <Trash2 className="w-4.5 h-4.5" />
                                                 </button>
                                             </div>
@@ -253,7 +253,7 @@ const ManageProjects = () => {
                 {/* ── Pagination ── */}
                 {pagination.totalPages > 1 && (
                     <div className="flex items-center justify-between px-10 py-10 border-t border-white/5 bg-white/[0.01]">
-                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Deployment Page {pagination.page} <span className="text-slate-800 mx-2">//</span> {pagination.totalPages}</p>
+                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Page {pagination.page} <span className="text-slate-800 mx-2">//</span> {pagination.totalPages}</p>
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() => fetchProjects(pagination.page - 1)}
@@ -336,20 +336,20 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
         e.preventDefault();
         setSaving(true);
         setError('');
-        if (!form.projectName.trim()) { setError('Deployment designation is mandatory'); setSaving(false); return; }
+        if (!form.projectName.trim()) { setError('Project name is required'); setSaving(false); return; }
         try {
             const payload = { ...form };
             if (!payload.projectManager) payload.projectManager = null;
             if (isEdit) {
                 await api.put(`/projects/${project._id}`, payload);
-                showToast('Asset modifications synchronized');
+                showToast('Project updated successfully');
             } else {
                 await api.post('/projects', payload);
-                showToast('New deployment initialized');
+                showToast('Project created successfully');
             }
             onSaved();
         } catch (err) {
-            setError(err.response?.data?.message || 'Synchronous failure in data push');
+            setError(err.response?.data?.message || 'Could not save. Please try again.');
         } finally {
             setSaving(false);
         }
@@ -361,8 +361,8 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
             <div className="glass-dark border border-white/10 rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
                 <div className="flex items-center justify-between px-10 py-10 border-b border-white/5 bg-white/[0.01]">
                     <div>
-                        <h2 className="text-3xl font-display font-bold text-white tracking-tight">{isEdit ? 'Re-Configure Project' : 'Initiate Project'}</h2>
-                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic font-mono">{isEdit ? project.projectCode : 'System Protocol: Deployment Initialization'}</p>
+                        <h2 className="text-3xl font-display font-bold text-white tracking-tight">{isEdit ? 'Edit Project' : 'New Project'}</h2>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic font-mono">{isEdit ? project.projectCode : 'Fill in the project details'}</p>
                     </div>
                     <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 text-slate-500 hover:text-white transition-all duration-300">
                         <X className="w-5 h-5 mx-auto" />
@@ -378,46 +378,46 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                     )}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <Field label="Deployment Designation" name="projectName" value={form.projectName} onChange={handleChange} icon={FolderOpen} required placeholder="PROJECT_X" />
-                        <Field label="Sector Category" name="projectCategory" value={form.projectCategory} onChange={handleChange} icon={Briefcase} placeholder="LOGISTICS_CORE" />
+                        <Field label="Project Name" name="projectName" value={form.projectName} onChange={handleChange} icon={FolderOpen} required placeholder="Enter project name" />
+                        <Field label="Category" name="projectCategory" value={form.projectCategory} onChange={handleChange} icon={Briefcase} placeholder="e.g. Website, App" />
                     </div>
 
-                    <Field label="Manifest / Description" name="description" value={form.description} onChange={handleChange} textarea placeholder="System objectives and mission details..." />
-                    <Field label="Target Grid / Site Address" name="siteAddress" value={form.siteAddress} onChange={handleChange} icon={MapPin} placeholder="GEOGRAPHICAL_COORDINATES" />
+                    <Field label="Description" name="description" value={form.description} onChange={handleChange} textarea placeholder="Describe the project goals and scope..." />
+                    <Field label="Location / Site Address" name="siteAddress" value={form.siteAddress} onChange={handleChange} icon={MapPin} placeholder="Enter site address" />
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <Field label="Launch Date" name="startDate" type="date" value={form.startDate} onChange={handleChange} icon={Calendar} />
-                        <Field label="Est. Completion" name="expectedCompletion" type="date" value={form.expectedCompletion} onChange={handleChange} icon={Calendar} />
-                        {isEdit && <Field label="Final Status" name="actualCompletion" type="date" value={form.actualCompletion} onChange={handleChange} icon={Calendar} />}
+                        <Field label="Start Date" name="startDate" type="date" value={form.startDate} onChange={handleChange} icon={Calendar} />
+                        <Field label="Expected Completion" name="expectedCompletion" type="date" value={form.expectedCompletion} onChange={handleChange} icon={Calendar} />
+                        {isEdit && <Field label="Actual Completion" name="actualCompletion" type="date" value={form.actualCompletion} onChange={handleChange} icon={Calendar} />}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <SelectField label="Vector State" name="projectStatus" value={form.projectStatus} onChange={handleChange} options={STATUSES} />
-                        <SelectField label="Threat Priority" name="priority" value={form.priority} onChange={handleChange} options={PRIORITIES} />
-                        <SelectField label="Risk Parameter" name="riskLevel" value={form.riskLevel} onChange={handleChange} options={['Low', 'Medium', 'High']} />
+                        <SelectField label="Status" name="projectStatus" value={form.projectStatus} onChange={handleChange} options={STATUSES} />
+                        <SelectField label="Priority" name="priority" value={form.priority} onChange={handleChange} options={PRIORITIES} />
+                        <SelectField label="Risk Level" name="riskLevel" value={form.riskLevel} onChange={handleChange} options={['Low', 'Medium', 'High']} />
                     </div>
 
                     {form.projectStatus === 'Delayed' && (
-                        <Field label="Interference Report" name="delayReason" value={form.delayReason} onChange={handleChange} textarea placeholder="Outline the cause of synchronization delay..." />
+                        <Field label="Delay Reason" name="delayReason" value={form.delayReason} onChange={handleChange} textarea placeholder="Explain the reason for the delay..." />
                     )}
 
                     <div className="space-y-3">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                            Command Authority
+                            Project Manager
                         </label>
                         <select name="projectManager" value={form.projectManager} onChange={handleChange} className="w-full px-6 py-5 bg-white/5 border border-white/5 rounded-2xl text-[13px] font-medium text-white focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all cursor-pointer">
-                            <option value="" className="bg-slate-900">ASSIGN COMMANDER</option>
-                            {staffList.map(s => <option key={s._id} value={s._id} className="bg-slate-900">{s.name.toUpperCase()} — {s.designation?.toUpperCase() || 'AGENT'}</option>)}
+                            <option value="" className="bg-slate-900">Select Manager</option>
+                            {staffList.map(s => <option key={s._id} value={s._id} className="bg-slate-900">{s.name.toUpperCase()} — {s.designation?.toUpperCase() || 'STAFF'}</option>)}
                         </select>
                     </div>
 
                     <div className="space-y-3">
                         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                            Assigned Operatives ({form.assignedStaff.length})
+                            Assigned Staff ({form.assignedStaff.length})
                         </label>
                         <div className="flex flex-wrap gap-3 p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] min-h-[100px]">
                             {staffList.length === 0 ? (
-                                <p className="text-[10px] font-bold text-slate-700 uppercase tracking-[0.2em] italic">No active operatives in database</p>
+                                <p className="text-[10px] font-bold text-slate-700 uppercase tracking-[0.2em] italic">No staff members available</p>
                             ) : staffList.map(s => {
                                 const selected = form.assignedStaff.includes(s._id);
                                 return (
@@ -435,9 +435,9 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                     </div>
 
                     <div className="flex items-center justify-end gap-5 p-5 bg-white/[0.01] border-t border-white/5 -mx-10 -mb-10 mt-10 px-10 py-8 sticky bottom-0 backdrop-blur-md">
-                        <button type="button" onClick={onClose} className="px-10 py-5 bg-white/5 text-[11px] font-bold text-slate-500 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Abort Protocol</button>
+                        <button type="button" onClick={onClose} className="px-10 py-5 bg-white/5 text-[11px] font-bold text-slate-500 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Cancel</button>
                         <button type="submit" disabled={saving} className="px-12 py-5 bg-indigo-600 text-[11px] font-bold text-white uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:bg-indigo-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed">
-                            {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : (isEdit ? 'Sync Deployment' : 'Launch Protocol')}
+                            {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : (isEdit ? 'Save Changes' : 'Create Project')}
                         </button>
                     </div>
                 </form>

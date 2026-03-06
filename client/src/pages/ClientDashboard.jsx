@@ -116,28 +116,28 @@ const ClientDashboard = () => {
             )}
 
             <div>
-                <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Client Portal</h1>
-                <p className="text-slate-500 mt-3 font-medium text-lg italic">Strategic access and mission availability overview.</p>
+                <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">My Dashboard</h1>
+                <p className="text-slate-500 mt-3 font-medium text-lg italic">Browse projects and manage your access requests.</p>
             </div>
 
             {/* Aggregated Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <StatCard
-                    label="Authorized Units"
+                    label="Approved Projects"
                     value={stats?.totalApprovedProjects || 0}
                     icon={CheckCircle}
                     color="sky"
                     bgColor="bg-sky-500/10"
                 />
                 <StatCard
-                    label="Pending Sync"
+                    label="Pending Requests"
                     value={stats?.totalPendingRequests || 0}
                     icon={Clock}
                     color="amber"
                     bgColor="bg-amber-500/10"
                 />
                 <StatCard
-                    label="Access Revoked"
+                    label="Declined"
                     value={stats?.totalRejectedRequests || 0}
                     icon={XCircle}
                     color="red"
@@ -148,8 +148,8 @@ const ClientDashboard = () => {
             {/* Browse & Request Section */}
             <div className="space-y-6">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <h2 className="text-2xl font-display font-bold text-white uppercase tracking-tight">Deployment Grid</h2>
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] italic font-mono">{pagination.total} Logged Assets</p>
+                    <h2 className="text-2xl font-display font-bold text-white uppercase tracking-tight">Available Projects</h2>
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] italic font-mono">{pagination.total} Projects</p>
                 </div>
 
                 <div className="glass p-2 rounded-[2.5rem] border border-white/5 shadow-xl flex flex-col lg:flex-row gap-2">
@@ -159,7 +159,7 @@ const ClientDashboard = () => {
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Query deployments by designation..."
+                            placeholder="Search projects by name..."
                             className="w-full bg-transparent pl-14 pr-6 py-4 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm font-medium"
                         />
                     </div>
@@ -180,7 +180,7 @@ const ClientDashboard = () => {
                                 type="text"
                                 value={locationFilter}
                                 onChange={(e) => setLocationFilter(e.target.value)}
-                                placeholder="Grid..."
+                                placeholder="Location..."
                                 className="w-full bg-transparent pl-14 pr-6 py-4 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm font-medium"
                             />
                         </div>
@@ -191,15 +191,15 @@ const ClientDashboard = () => {
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-40">
                             <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />
-                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Querying Asset Database...</p>
+                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Loading...</p>
                         </div>
                     ) : projects.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-40 text-slate-600">
                             <div className="w-24 h-24 bg-white/5 border border-white/5 rounded-[2.5rem] flex items-center justify-center mb-8 ring-1 ring-white/10 shadow-inner">
                                 <FolderOpen className="w-10 h-10 opacity-30" />
                             </div>
-                            <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">Zero Grid Matches</h3>
-                            <p className="text-sm mt-3 font-medium">No available deployments matching current parameters.</p>
+                            <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">No projects found</h3>
+                            <p className="text-sm mt-3 font-medium">No projects match your search.</p>
                         </div>
                     ) : (
                         <div className="divide-y divide-white/5">
@@ -217,19 +217,19 @@ const ClientDashboard = () => {
                                                     </span>
                                                 </div>
                                                 <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
-                                                    <span className="text-indigo-400 font-mono tracking-tighter self-center">ID // {p.projectCode}</span>
-                                                    <span className="flex items-center gap-2"><MapPin className="w-4 h-4 text-indigo-500/50" /> {p.siteAddress || 'UNSPECIFIED GRID'}</span>
-                                                    <span className="flex items-center gap-2 italic">{p.projectCategory || 'GENERAL_INITIATIVE'}</span>
+                                                    <span className="text-indigo-400 font-mono tracking-tighter self-center">{p.projectCode}</span>
+                                                    <span className="flex items-center gap-2"><MapPin className="w-4 h-4 text-indigo-500/50" /> {p.siteAddress || 'No location'}</span>
+                                                    <span className="flex items-center gap-2 italic">{p.projectCategory || 'General'}</span>
                                                 </div>
                                             </div>
                                             <div className="flex-shrink-0 flex items-center">
                                                 {reqStatus === 'approved' ? (
                                                     <div className="px-8 py-5 glass-dark border border-emerald-500/30 text-emerald-400 rounded-2xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-3 shadow-[0_0_20px_rgba(52,211,153,0.1)] transition-all group-hover:scale-105">
-                                                        <CheckCircle className="w-4 h-4" /> Protocol Authorized
+                                                        <CheckCircle className="w-4 h-4" /> Access Granted
                                                     </div>
                                                 ) : reqStatus === 'pending' ? (
                                                     <div className="px-8 py-5 glass-dark border border-amber-500/30 text-amber-400 rounded-2xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-3 shadow-[0_0_20px_rgba(251,191,36,0.1)] transition-all group-hover:scale-105">
-                                                        <Clock className="w-4 h-4" /> Pending Override
+                                                        <Clock className="w-4 h-4" /> Pending
                                                     </div>
                                                 ) : (
                                                     <button
@@ -237,7 +237,7 @@ const ClientDashboard = () => {
                                                         className="group relative px-10 py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all shadow-[0_0_30px_rgba(79,70,229,0.25)] hover:scale-105 active:scale-95 flex items-center gap-3"
                                                     >
                                                         <Send className="w-4 h-4 text-white group-hover:rotate-12 transition-transform" />
-                                                        {reqStatus === 'rejected' ? 'Re-Query Access' : 'Apply for Access'}
+                                                        {reqStatus === 'rejected' ? 'Request Again' : 'Request Access'}
                                                     </button>
                                                 )}
                                             </div>
@@ -249,7 +249,7 @@ const ClientDashboard = () => {
                     )}
                     {pagination.totalPages > 1 && (
                         <div className="px-10 py-10 flex items-center justify-between bg-white/[0.01] border-t border-white/5">
-                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Deployment Page {pagination.page} // {pagination.totalPages}</p>
+                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Page {pagination.page} of {pagination.totalPages}</p>
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => fetchBrowseProjects(pagination.page - 1)}
@@ -281,17 +281,17 @@ const ClientDashboard = () => {
                                 <div className="w-24 h-24 glass border border-indigo-500/30 text-indigo-400 flex items-center justify-center rounded-[2.5rem] mx-auto mb-8 shadow-[0_0_50px_rgba(79,70,229,0.1)] ring-1 ring-white/10">
                                     <Send className="w-10 h-10" />
                                 </div>
-                                <h3 className="text-3xl font-display font-bold text-white tracking-tight">Access Protocol</h3>
-                                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-3 italic font-mono">INITIATING REQUEST FOR: {requestModal.projectName.toUpperCase()}</p>
+                                <h3 className="text-3xl font-display font-bold text-white tracking-tight">Request Access</h3>
+                                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-3 italic font-mono">Requesting access to: {requestModal.projectName.toUpperCase()}</p>
                             </div>
 
                             <div className="space-y-8">
                                 <div>
-                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4 text-center">Authentication Context (Optional)</label>
+                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4 text-center">Message (Optional)</label>
                                     <textarea
                                         value={requestMessage}
                                         onChange={(e) => setRequestMessage(e.target.value)}
-                                        placeholder="OUTLINE THE PURPOSE OF ACCESS REQUIREMENT..."
+                                        placeholder="Why do you need access to this project?"
                                         className="w-full p-8 bg-white/5 border border-white/10 rounded-[2.5rem] text-sm text-white focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 h-40 resize-none transition-all placeholder:text-slate-800 font-medium font-mono"
                                     />
                                 </div>
@@ -303,13 +303,13 @@ const ClientDashboard = () => {
                                         className="w-full py-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-3xl transition-all shadow-[0_0_40px_rgba(79,70,229,0.3)] flex items-center justify-center gap-4 disabled:opacity-30"
                                     >
                                         {requesting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
-                                        Initialize Protocol
+                                        Send Request
                                     </button>
                                     <button
                                         onClick={() => { setRequestModal(null); setRequestMessage(''); }}
                                         className="text-slate-600 font-bold text-[10px] uppercase tracking-[0.2em] hover:text-white transition-colors duration-300"
                                     >
-                                        Abort Request
+                                        Cancel
                                     </button>
                                 </div>
                             </div>

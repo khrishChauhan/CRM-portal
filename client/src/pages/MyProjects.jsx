@@ -40,7 +40,7 @@ const MyProjects = () => {
         return (
             <div className="flex flex-col items-center justify-center min-h-[500px]">
                 <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-6" />
-                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em] font-mono">Querying Authorized Assets...</p>
+                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em] font-mono">Loading...</p>
             </div>
         );
     }
@@ -49,8 +49,8 @@ const MyProjects = () => {
         <div className="space-y-12 animate-reveal pb-24">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none uppercase text-gradient">Authorized Assets</h1>
-                    <p className="text-slate-500 mt-4 font-medium text-lg italic tracking-tight">Your verified deployment vectors and operational targets.</p>
+                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none uppercase text-gradient">My Projects</h1>
+                    <p className="text-slate-500 mt-4 font-medium text-lg italic tracking-tight">Your approved projects and their current status.</p>
                 </div>
                 <div className="flex glass p-1.5 rounded-2xl border border-white/5 shadow-2xl">
                     <button
@@ -72,7 +72,7 @@ const MyProjects = () => {
                 <div className="glass-dark p-8 rounded-[2rem] border border-red-500/20 flex items-center gap-6 text-red-400">
                     <AlertCircle className="w-8 h-8 flex-shrink-0" />
                     <div>
-                        <h3 className="font-bold uppercase tracking-widest text-[11px] mb-1">Grid Failure</h3>
+                        <h3 className="font-bold uppercase tracking-widest text-[11px] mb-1">Something went wrong</h3>
                         <p className="text-sm font-medium opacity-80">{error}</p>
                     </div>
                 </div>
@@ -81,8 +81,8 @@ const MyProjects = () => {
                     <div className="w-24 h-24 bg-white/5 border border-white/5 rounded-[2.5rem] flex items-center justify-center mb-10 ring-1 ring-white/10 shadow-inner">
                         <FolderOpen className="w-12 h-12 text-slate-800" />
                     </div>
-                    <h3 className="text-2xl font-display font-bold text-white tracking-tight uppercase">No Authorized Vectors</h3>
-                    <p className="text-slate-500 max-w-sm font-medium mt-4 text-lg italic leading-relaxed">You haven't been granted access to any projects. Initiate a clearance request via the primary dashboard.</p>
+                    <h3 className="text-2xl font-display font-bold text-white tracking-tight uppercase">No Projects Yet</h3>
+                    <p className="text-slate-500 max-w-sm font-medium mt-4 text-lg italic leading-relaxed">You don't have access to any projects yet. Request access from the dashboard.</p>
                 </div>
             ) : (
                 <div className={viewMode === 'grid'
@@ -162,9 +162,9 @@ const ProjectItem = ({ project, mode, onSelect }) => {
                 </h3>
 
                 <div className="space-y-5">
-                    <DetailRow icon={MapPin} label={project.siteAddress || 'UNSPECIFIED_GRID'} />
-                    <DetailRow icon={Calendar} label={`GENESIS: ${new Date(project.startDate).toLocaleDateString()}`} />
-                    <DetailRow icon={User} label={`CUSTODIAN: ${project.assignedManager?.name || 'PENDING_ASSIGNMENT'}`} />
+                    <DetailRow icon={MapPin} label={project.siteAddress || 'No location'} />
+                    <DetailRow icon={Calendar} label={`Started: ${new Date(project.startDate).toLocaleDateString()}`} />
+                    <DetailRow icon={User} label={`Manager: ${project.assignedManager?.name || 'Not assigned'}`} />
                 </div>
 
                 <div className="mt-10 pt-10 border-t border-white/5 flex items-center justify-between">
@@ -203,11 +203,11 @@ const ProjectDetailsModal = ({ project, onClose }) => {
                     </div>
                     <div className="relative z-10 w-full flex justify-between items-end gap-10">
                         <div>
-                            <p className="text-indigo-400 text-[10px] font-bold uppercase tracking-[0.4em] mb-4 font-mono shadow-sm">SECURITY CLEARANCE // LEVEL_3</p>
+                            <p className="text-indigo-400 text-[10px] font-bold uppercase tracking-[0.4em] mb-4 font-mono shadow-sm">Project Details</p>
                             <h2 className="text-5xl font-display font-bold text-white leading-none uppercase tracking-tighter">{project.projectName}</h2>
                         </div>
                         <div className="text-right flex-shrink-0">
-                            <span className="text-slate-500 text-[9px] font-bold block mb-2 uppercase tracking-[0.3em] italic">STAMPED ID</span>
+                            <span className="text-slate-500 text-[9px] font-bold block mb-2 uppercase tracking-[0.3em] italic">Code</span>
                             <span className="text-white font-mono font-black text-2xl tracking-tighter bg-white/5 border border-white/10 px-4 py-1.5 rounded-xl shadow-inner">#{project.projectCode}</span>
                         </div>
                     </div>
@@ -216,25 +216,25 @@ const ProjectDetailsModal = ({ project, onClose }) => {
                 <div className="p-14 space-y-14">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
                         <div className="space-y-8">
-                            <h4 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">ASSET_IDENTITY</h4>
+                            <h4 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Project Info</h4>
                             <div className="space-y-6">
-                                <ModalDetail icon={MapPin} title="Deployment Site" value={project.siteAddress || 'GRID_NOT_SPECIFIED'} />
-                                <ModalDetail icon={Calendar} title="Operational Window" value={`${new Date(project.startDate).toLocaleDateString()} - ${project.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'OPEN_BUFFER'}`} />
-                                <ModalDetail icon={FolderOpen} title="Vector Category" value={project.projectCategory?.toUpperCase() || 'GENERAL_INITIATIVE'} />
+                                <ModalDetail icon={MapPin} title="Location" value={project.siteAddress || 'Not specified'} />
+                                <ModalDetail icon={Calendar} title="Timeline" value={`${new Date(project.startDate).toLocaleDateString()} - ${project.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'TBD'}`} />
+                                <ModalDetail icon={FolderOpen} title="Category" value={project.projectCategory?.toUpperCase() || 'General'} />
                             </div>
                         </div>
                         <div className="space-y-8">
-                            <h4 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">GRID_VELOCITY</h4>
+                            <h4 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Progress</h4>
                             <div className="space-y-6">
                                 <div className="p-8 glass bg-white/5 rounded-[2rem] border border-white/5 flex items-center justify-between group/status">
-                                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest group-hover/status:text-indigo-400 transition-colors">Current Pulse</span>
+                                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest group-hover/status:text-indigo-400 transition-colors">Current Status</span>
                                     <span className={`inline-flex px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus]?.replace('bg-', 'bg-transparent border border-').replace('text-', 'text-') || 'border-slate-500/20 text-slate-400'}`}>
                                         {project.projectStatus}
                                     </span>
                                 </div>
                                 <div className="p-8 glass bg-white/5 rounded-[2rem] border border-white/5 space-y-5">
                                     <div className="flex justify-between items-center">
-                                        <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest font-mono">Saturation Level</span>
+                                        <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest font-mono">Progress</span>
                                         <span className="text-xs font-bold text-indigo-400 font-mono">
                                             {project.projectStatus === 'Completed' ? '100%' : '65%'}
                                         </span>
@@ -255,9 +255,9 @@ const ProjectDetailsModal = ({ project, onClose }) => {
                             <User className="w-8 h-8 text-indigo-400" />
                         </div>
                         <div className="flex-1 relative z-10">
-                            <span className="text-[9px] font-bold text-slate-600 uppercase tracking-[0.3em] block mb-2 italic">Designated Custodian</span>
-                            <span className="text-xl font-display font-bold text-white uppercase tracking-tight group-hover/manager:text-indigo-400 transition-colors">{project.assignedManager?.name || 'Awaiting Authorization'}</span>
-                            <p className="text-[11px] text-slate-500 font-medium mt-2 leading-relaxed italic opacity-70">Direct downlink for this asset is available through authorized communication protocols in the primary hub.</p>
+                            <span className="text-[9px] font-bold text-slate-600 uppercase tracking-[0.3em] block mb-2 italic">Project Manager</span>
+                            <span className="text-xl font-display font-bold text-white uppercase tracking-tight group-hover/manager:text-indigo-400 transition-colors">{project.assignedManager?.name || 'Not assigned'}</span>
+                            <p className="text-[11px] text-slate-500 font-medium mt-2 leading-relaxed italic opacity-70">Contact your project manager for any questions or updates.</p>
                         </div>
                     </div>
 
@@ -265,7 +265,7 @@ const ProjectDetailsModal = ({ project, onClose }) => {
                         onClick={onClose}
                         className="w-full py-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.4em] rounded-3xl transition-all shadow-[0_32px_96px_-16px_rgba(79,70,229,0.4)] hover:shadow-[0_32px_128px_-16px_rgba(79,70,229,0.6)] pt-6"
                     >
-                        Deactivate Hub View
+                        Close
                     </button>
                 </div>
             </div>

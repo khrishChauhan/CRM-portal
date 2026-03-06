@@ -177,7 +177,7 @@ const Login = () => {
                             <span className="text-indigo-400">Connection.</span>
                         </h1>
                         <p className="text-slate-400 text-xl leading-relaxed max-w-lg mb-12 animate-reveal" style={{ animationDelay: '0.6s' }}>
-                            A unified dashboard for ambitious teams to manage projects, staff, and clients with surgical accuracy.
+                            A unified dashboard for teams to manage projects, staff, and clients with ease.
                         </p>
                     </div>
                 </div>
@@ -197,7 +197,7 @@ const Login = () => {
 
                         <div className="mb-12 text-center relative z-10">
                             <h2 className="text-4xl font-display font-bold text-white mb-3">Welcome Back</h2>
-                            <p className="text-slate-500 font-medium">Identify your role to proceed</p>
+                            <p className="text-slate-500 font-medium">Choose how you sign in</p>
                         </div>
 
                         {/* ROLE PICKER */}
@@ -241,7 +241,7 @@ const Login = () => {
                                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
                                     <form onSubmit={showOtpField ? handleAdminStep2 : handleAdminStep1} className="space-y-7">
                                         <div className="space-y-2">
-                                            <label className="text-[11px] font-bold text-slate-500 ml-1 uppercase tracking-widest opacity-80">Admin Credentials</label>
+                                            <label className="text-[11px] font-bold text-slate-500 ml-1 uppercase tracking-widest opacity-80">Admin Email</label>
                                             <div className="relative group">
                                                 <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors" />
                                                 <input
@@ -250,7 +250,7 @@ const Login = () => {
                                                     disabled={showOtpField}
                                                     value={email}
                                                     onChange={(e) => setEmail(e.target.value)}
-                                                    placeholder="admin@crm.com"
+                                                    placeholder="Enter admin email"
                                                     className="w-full bg-slate-950/50 border border-white/5 text-white pl-14 pr-5 py-4.5 rounded-2xl focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none disabled:opacity-40"
                                                 />
                                             </div>
@@ -281,7 +281,7 @@ const Login = () => {
                                         >
                                             {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
                                                 <>
-                                                    <span className="text-base">{showOtpField ? 'Verify Code' : 'Request OTP'}</span>
+                                                    <span className="text-base">{showOtpField ? 'Verify Code' : 'Send OTP'}</span>
                                                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
                                                 </>
                                             )}
@@ -289,7 +289,7 @@ const Login = () => {
 
                                         {showOtpField && (
                                             <p className="text-center text-[10px] text-slate-600 hover:text-indigo-400 font-bold uppercase tracking-widest cursor-pointer transition-colors" onClick={() => setShowOtpField(false)}>
-                                                Use a different email address?
+                                                Use a different email?
                                             </p>
                                         )}
                                     </form>
@@ -301,7 +301,7 @@ const Login = () => {
                                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
                                     <form onSubmit={handleStaffLogin} className="space-y-6">
                                         <div className="space-y-2">
-                                            <label className="text-[11px] font-bold text-slate-500 ml-1 uppercase tracking-widest opacity-80">Staff Portal Email</label>
+                                            <label className="text-[11px] font-bold text-slate-500 ml-1 uppercase tracking-widest opacity-80">Email</label>
                                             <div className="relative group">
                                                 <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors" />
                                                 <input
@@ -309,13 +309,13 @@ const Login = () => {
                                                     required
                                                     value={staffEmail}
                                                     onChange={(e) => setStaffEmail(e.target.value)}
-                                                    placeholder="identity@company.com"
+                                                    placeholder="Enter your email"
                                                     className="w-full bg-slate-950/50 border border-white/5 text-white pl-14 pr-5 py-4.5 rounded-2xl focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none"
                                                 />
                                             </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[11px] font-bold text-slate-500 ml-1 uppercase tracking-widest opacity-80">Master Key</label>
+                                            <label className="text-[11px] font-bold text-slate-500 ml-1 uppercase tracking-widest opacity-80">Password</label>
                                             <div className="relative group">
                                                 <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors" />
                                                 <input
@@ -333,7 +333,7 @@ const Login = () => {
                                             disabled={loading}
                                             className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold py-5 rounded-2xl transition-all shadow-[0_20px_40px_-12px_rgba(79,70,229,0.3)] hover:shadow-[0_25px_50px_-12px_rgba(79,70,229,0.4)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50"
                                         >
-                                            {loading ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : 'Authorize Session'}
+                                            {loading ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : 'Sign in'}
                                         </button>
                                     </form>
                                 </div>
@@ -347,7 +347,7 @@ const Login = () => {
                                     </div>
                                     <div id="googleBtn" className="w-full scale-110 mb-2"></div>
                                     <p className="mt-8 text-[11px] text-slate-500 font-medium tracking-wide max-w-[280px] text-center leading-relaxed">
-                                        Use your Google Workspace credentials to access the secure client project environment.
+                                        Sign in with your Google account to view your projects.
                                     </p>
                                 </div>
                             )}

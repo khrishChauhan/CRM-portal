@@ -18,22 +18,22 @@ const Sidebar = ({ role }) => {
     const location = useLocation();
 
     const adminLinks = [
-        { name: 'Analytics', path: '/admin/dashboard', icon: LayoutDashboard },
-        { name: 'Staff Force', path: '/admin/staff', icon: Users },
-        { name: 'Key Clients', path: '/admin/clients', icon: Briefcase },
-        { name: 'Core Projects', path: '/admin/projects', icon: FolderOpen },
-        { name: 'Access Logs', path: '/admin/access-requests', icon: FileText },
-        { name: 'System Settings', path: '/admin/settings', icon: Settings },
+        { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+        { name: 'Staff', path: '/admin/staff', icon: Users },
+        { name: 'Clients', path: '/admin/clients', icon: Briefcase },
+        { name: 'Projects', path: '/admin/projects', icon: FolderOpen },
+        { name: 'Access Requests', path: '/admin/access-requests', icon: FileText },
+        { name: 'Settings', path: '/admin/settings', icon: Settings },
     ];
 
     const staffLinks = [
-        { name: 'My Hub', path: '/staff/dashboard', icon: LayoutDashboard },
-        { name: 'Assigned Core', path: '/staff/projects', icon: FolderOpen },
+        { name: 'Dashboard', path: '/staff/dashboard', icon: LayoutDashboard },
+        { name: 'My Projects', path: '/staff/projects', icon: FolderOpen },
     ];
 
     const clientLinks = [
-        { name: 'Overview', path: '/client/dashboard', icon: LayoutDashboard },
-        { name: 'Ongoing Projects', path: '/client/projects', icon: FolderOpen },
+        { name: 'Dashboard', path: '/client/dashboard', icon: LayoutDashboard },
+        { name: 'My Projects', path: '/client/projects', icon: FolderOpen },
     ];
 
     const links = role === 'admin' ? adminLinks : role === 'staff' ? staffLinks : clientLinks;
@@ -49,7 +49,7 @@ const Sidebar = ({ role }) => {
             </div>
 
             <nav className="flex-1 mt-8 px-4 space-y-1.5 relative z-10">
-                <p className="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4">Management</p>
+                <p className="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4">Menu</p>
                 {links.map((link, idx) => (
                     <Link
                         key={link.path}
@@ -74,7 +74,7 @@ const Sidebar = ({ role }) => {
                     <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Status</p>
                     <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                        <p className="text-[11px] text-slate-300 font-medium">System Nominal</p>
+                        <p className="text-[11px] text-slate-300 font-medium">All systems running</p>
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@ const Navbar = ({ user, toggleSidebar, logout }) => {
 
                 <div className="hidden md:flex flex-col p-5">
                     <h1 className="text-lg font-display font-bold text-white tracking-tight capitalize">
-                        {user?.role} Control Center
+                        {user?.role} Dashboard
                     </h1>
                 </div>
             </div>
@@ -117,7 +117,7 @@ const Navbar = ({ user, toggleSidebar, logout }) => {
                     title="Logout"
                 >
                     <LogOut className="w-4 h-4" />
-                    <span className="hidden sm:inline">Terminate</span>
+                    <span className="hidden sm:inline">Log out</span>
                 </button>
             </div>
         </header>

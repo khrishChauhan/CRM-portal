@@ -35,14 +35,14 @@ export class ErrorBoundary extends Component {
                                 <AlertCircle className="w-10 h-10 text-red-400" />
                             </div>
 
-                            <h1 className="text-3xl font-display font-bold text-white tracking-tight uppercase mb-4 text-gradient">System Fracture</h1>
+                            <h1 className="text-3xl font-display font-bold text-white tracking-tight uppercase mb-4 text-gradient">Something Went Wrong</h1>
                             <p className="text-slate-500 font-medium text-lg italic mb-10 leading-relaxed">
-                                An unhandled exception has interrupted the primary data stream. Core synchronization lost.
+                                An unexpected error occurred. Please try reloading the page.
                             </p>
 
                             {this.state.error && (
                                 <div className="text-left bg-slate-950/50 border border-white/5 p-6 rounded-2xl mb-10 overflow-hidden group">
-                                    <p className="text-[10px] font-bold text-slate-700 uppercase tracking-widest mb-3">Error Signature</p>
+                                    <p className="text-[10px] font-bold text-slate-700 uppercase tracking-widest mb-3">Error Details</p>
                                     <pre className="text-[11px] font-mono text-indigo-400/70 overflow-x-auto max-h-32 scrollbar-thin">
                                         {this.state.error.toString()}
                                     </pre>
@@ -54,14 +54,14 @@ export class ErrorBoundary extends Component {
                                 className="w-full inline-flex items-center justify-center gap-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.3em] py-5 px-10 rounded-2xl transition-all shadow-xl shadow-indigo-600/20 group hover:-translate-y-1 active:scale-95"
                             >
                                 <RefreshCw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-700" />
-                                Reboot Environment
+                                Reload App
                             </button>
                         </div>
                     </div>
 
                     {/* Cinematic details */}
                     <div className="absolute bottom-12 text-[10px] font-bold text-slate-700 uppercase tracking-[0.4em] animate-pulse">
-                        Operation Node 04 // Fatal Failure Report
+                        Something went wrong // Please reload
                     </div>
                 </div>
             );

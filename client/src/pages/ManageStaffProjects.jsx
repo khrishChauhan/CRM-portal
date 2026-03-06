@@ -82,8 +82,8 @@ const ManageStaffProjects = () => {
         <div className="space-y-10 animate-reveal pb-20">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Assignment Ledger</h1>
-                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Strategic execution and deployment vector tracking.</p>
+                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">My Projects</h1>
+                    <p className="text-slate-500 mt-3 font-medium text-lg italic">View and update your assigned projects.</p>
                 </div>
             </div>
 
@@ -91,7 +91,7 @@ const ManageStaffProjects = () => {
                 <div className="glass-dark p-8 rounded-[2rem] border border-red-500/20 flex items-center gap-6 text-red-400">
                     <AlertCircle className="w-8 h-8 flex-shrink-0" />
                     <div>
-                        <h3 className="font-bold uppercase tracking-widest text-[11px] mb-1">Grid Failure</h3>
+                        <h3 className="font-bold uppercase tracking-widest text-[11px] mb-1">Something went wrong</h3>
                         <p className="text-sm font-medium opacity-80">{error}</p>
                     </div>
                 </div>
@@ -115,11 +115,11 @@ const ManageStaffProjects = () => {
                             <h3 className="text-3xl font-display font-bold text-white mb-3 group-hover:text-indigo-400 transition-colors uppercase tracking-tight">
                                 {project.projectName}
                             </h3>
-                            <p className="text-xs font-bold text-slate-600 uppercase tracking-[0.25em] mb-10 italic">{project.projectCategory || 'GENERAL_INITIATIVE'}</p>
+                            <p className="text-xs font-bold text-slate-600 uppercase tracking-[0.25em] mb-10 italic">{project.projectCategory || 'General'}</p>
 
                             <div className="space-y-6">
-                                <DetailItem icon={MapPin} value={project.siteAddress || 'UNSPECIFIED_GRID'} />
-                                <DetailItem icon={Calendar} value={`OBLIGATION_WINDOW: ${project.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'TBD'}`} />
+                                <DetailItem icon={MapPin} value={project.siteAddress || 'No location set'} />
+                                <DetailItem icon={Calendar} value={`Due: ${project.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'TBD'}`} />
                             </div>
                         </div>
 
@@ -128,7 +128,7 @@ const ManageStaffProjects = () => {
                                 <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-[11px] font-bold text-indigo-400 shadow-inner group-hover:scale-110 transition-transform">
                                     {project.projectStatus[0]}
                                 </div>
-                                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Protocol Active</span>
+                                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Current Status</span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <button
@@ -143,7 +143,7 @@ const ManageStaffProjects = () => {
                                     className="group/btn flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all shadow-xl"
                                 >
                                     <Edit3 className="w-4 h-4 text-indigo-400 group-hover/btn:rotate-12 transition-transform" />
-                                    Sync Status
+                                    Update Status
                                 </button>
                             </div>
                         </div>
@@ -155,8 +155,8 @@ const ManageStaffProjects = () => {
                         <div className="w-24 h-24 bg-white/5 border border-white/5 rounded-[2.5rem] flex items-center justify-center mb-10 ring-1 ring-white/10">
                             <FolderOpen className="w-12 h-12 text-slate-800" />
                         </div>
-                        <h3 className="text-2xl font-display font-bold text-white tracking-tight">Zero Assignments</h3>
-                        <p className="text-slate-500 font-medium mt-4 text-lg italic">No active deployment vectors identified in your sector.</p>
+                        <h3 className="text-2xl font-display font-bold text-white tracking-tight">No projects yet</h3>
+                        <p className="text-slate-500 font-medium mt-4 text-lg italic">You don't have any assigned projects at the moment.</p>
                     </div>
                 )}
             </div>
@@ -169,8 +169,8 @@ const ManageStaffProjects = () => {
                         <form onSubmit={handleUpdate} className="p-12">
                             <div className="flex items-center justify-between mb-12">
                                 <div>
-                                    <h3 className="text-3xl font-display font-bold text-white tracking-tight">Protocol Sync</h3>
-                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic font-mono">Modifying Vector: {selectedProject.projectName.toUpperCase()}</p>
+                                    <h3 className="text-3xl font-display font-bold text-white tracking-tight">Update Project</h3>
+                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic font-mono">Updating: {selectedProject.projectName.toUpperCase()}</p>
                                 </div>
                                 <button type="button" onClick={() => setSelectedProject(null)} className="p-4 hover:bg-white/10 rounded-2xl transition-all text-slate-500 hover:text-white">
                                     <X className="w-7 h-7" />
@@ -180,7 +180,7 @@ const ManageStaffProjects = () => {
                             <div className="space-y-8">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div>
-                                        <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Vector State</label>
+                                        <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Status</label>
                                         <select
                                             value={editForm.projectStatus}
                                             onChange={e => setEditForm({ ...editForm, projectStatus: e.target.value })}
@@ -196,7 +196,7 @@ const ManageStaffProjects = () => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Finality Stamp</label>
+                                        <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Completion Date</label>
                                         <input
                                             type="date"
                                             value={editForm.actualCompletion}
@@ -207,7 +207,7 @@ const ManageStaffProjects = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Risk Magnitude</label>
+                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Risk Level</label>
                                     <div className="grid grid-cols-3 gap-4">
                                         {['Low', 'Medium', 'High'].map(level => (
                                             <button
@@ -226,11 +226,11 @@ const ManageStaffProjects = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Sync Notes / Bottleneck Details</label>
+                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Notes / Delay Reason</label>
                                     <textarea
                                         value={editForm.delayReason}
                                         onChange={e => setEditForm({ ...editForm, delayReason: e.target.value })}
-                                        placeholder="PROVIDE OPERATIONAL CONTEXT OR OBSTACLE MARKERS..."
+                                        placeholder="Add any notes or explain delays..."
                                         className="w-full px-8 py-6 bg-white/5 border border-white/10 rounded-[2rem] text-sm text-white focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all h-32 resize-none placeholder:text-slate-800 font-mono"
                                     />
                                 </div>
@@ -241,7 +241,7 @@ const ManageStaffProjects = () => {
                                     className="w-full py-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-3xl transition-all shadow-[0_0_40px_rgba(79,70,229,0.3)] flex items-center justify-center gap-4 disabled:opacity-30 pt-6"
                                 >
                                     {updating ? <Loader2 className="w-6 h-6 animate-spin" /> : <Save className="w-6 h-6" />}
-                                    Commit Sync Parameters
+                                    Save Changes
                                 </button>
                             </div>
                         </form>

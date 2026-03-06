@@ -23,7 +23,7 @@ const StaffDashboard = () => {
                 const { data } = await api.get('/dashboard/staff');
                 setStats(data.data);
             } catch (err) {
-                setError(err.response?.data?.message || 'Failed to fetch dashboard stats');
+                setError(err.response?.data?.message || 'Could not load dashboard');
             } finally {
                 setLoading(false);
             }
@@ -35,7 +35,7 @@ const StaffDashboard = () => {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px]">
                 <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />
-                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Calibrating Neural Sync...</p>
+                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Loading...</p>
             </div>
         );
     }
@@ -45,7 +45,7 @@ const StaffDashboard = () => {
             <div className="glass-dark p-8 rounded-3xl border border-red-500/20 flex items-center gap-6 text-red-400">
                 <AlertCircle className="w-8 h-8 flex-shrink-0" />
                 <div>
-                    <h3 className="font-bold uppercase tracking-widest text-[11px] mb-1">System Error</h3>
+                    <h3 className="font-bold uppercase tracking-widest text-[11px] mb-1">Something went wrong</h3>
                     <p className="text-sm font-medium opacity-80">{error}</p>
                 </div>
             </div>
@@ -54,9 +54,9 @@ const StaffDashboard = () => {
 
     const cards = [
         { label: 'Assigned Projects', value: stats.total, icon: Briefcase, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
-        { label: 'In Velocity', value: stats.inProgress, icon: TrendingUp, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+        { label: 'In Progress', value: stats.inProgress, icon: TrendingUp, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
         { label: 'Completed', value: stats.completed, icon: CheckCircle, color: 'text-sky-400', bg: 'bg-sky-500/10' },
-        { label: 'Bottleneck', value: stats.delayed, icon: AlertCircle, color: 'text-red-400', bg: 'bg-red-500/10' },
+        { label: 'Delayed', value: stats.delayed, icon: AlertCircle, color: 'text-red-400', bg: 'bg-red-500/10' },
     ];
 
     return (
@@ -64,14 +64,14 @@ const StaffDashboard = () => {
             {/* ── Header ── */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                 <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Operative Core</h1>
-                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Strategic execution and mission status tracking.</p>
+                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">My Dashboard</h1>
+                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Your projects and progress at a glance.</p>
                 </div>
                 <Link
                     to="/staff/projects"
                     className="group flex items-center gap-3 px-8 py-5 bg-white/5 border border-white/10 hover:border-white/20 text-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all hover:bg-white/10 shadow-2xl"
                 >
-                    View Project Ledger
+                    View All Projects
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
             </div>
@@ -100,24 +100,24 @@ const StaffDashboard = () => {
 
                     <h2 className="text-2xl font-display font-bold text-white mb-10 flex items-center gap-4 relative z-10">
                         <Clock className="w-7 h-7 text-indigo-500" />
-                        Mission Protocols
+                        Quick Tips
                     </h2>
 
                     <div className="space-y-10 relative z-10">
                         <GuidelineItem
                             number="01"
-                            title="Synchronize Velocity"
-                            description="Maintain high-fidelity status updates across all assigned deployment vectors."
+                            title="Keep Status Updated"
+                            description="Regularly update your project status so everyone stays informed."
                         />
                         <GuidelineItem
                             number="02"
-                            title="Report Interference"
-                            description="Identify and escalate bottleneck markers immediately to command override."
+                            title="Report Delays Early"
+                            description="If something is delayed, report it right away so the team can help."
                         />
                         <GuidelineItem
                             number="03"
-                            title="Finalize Deliverables"
-                            description="Execute post-mission audit only after all verification parameters are met."
+                            title="Mark Completed Work"
+                            description="Once a project is done, mark it as completed to keep records clean."
                         />
                     </div>
                 </div>
@@ -127,9 +127,9 @@ const StaffDashboard = () => {
                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/20 to-transparent pointer-events-none"></div>
 
                     <div className="relative z-10">
-                        <h3 className="text-3xl font-display font-bold text-white mb-4 leading-tight">Sync Rate Efficiency</h3>
+                        <h3 className="text-3xl font-display font-bold text-white mb-4 leading-tight">Completion Rate</h3>
                         <p className="text-slate-400 text-sm font-medium leading-relaxed italic">
-                            Operational throughput verified at <span className="text-indigo-400 font-bold">{(stats.completed / (stats.total || 1) * 100).toFixed(0)}%</span> proficiency levels.
+                            You have completed <span className="text-indigo-400 font-bold">{(stats.completed / (stats.total || 1) * 100).toFixed(0)}%</span> of your assigned projects.
                         </p>
                     </div>
 
@@ -137,7 +137,7 @@ const StaffDashboard = () => {
                         <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4">
                             <span className="flex items-center gap-2">
                                 <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-                                Target Objective
+                                Progress
                             </span>
                             <span className="text-white">{stats.completed}/{stats.total}</span>
                         </div>
@@ -147,7 +147,7 @@ const StaffDashboard = () => {
                                 style={{ width: `${(stats.completed / (stats.total || 1) * 100)}%` }}
                             ></div>
                         </div>
-                        <p className="mt-6 text-[10px] font-bold text-slate-600 uppercase tracking-widest text-center">Protocol Adherence Log</p>
+                        <p className="mt-6 text-[10px] font-bold text-slate-600 uppercase tracking-widest text-center">Project Progress</p>
                     </div>
                 </div>
             </div>

@@ -22,7 +22,7 @@ const AdminDashboard = () => {
                 const { data } = await api.get('/dashboard/admin');
                 setStats(data.data);
             } catch (err) {
-                setError(err.response?.data?.message || 'Failed to fetch dashboard stats');
+                setError(err.response?.data?.message || 'Could not load dashboard');
             } finally {
                 setLoading(false);
             }
@@ -48,21 +48,21 @@ const AdminDashboard = () => {
     }
 
     const cards = [
-        { name: 'Total Force', value: stats.totalUsers, subtitle: 'Active Identities', icon: Users, color: 'text-indigo-400', glow: 'shadow-[0_0_40px_rgba(99,102,241,0.1)]' },
-        { name: 'Staff Support', value: stats.totalStaff, subtitle: 'Operations Team', icon: UserCheck, color: 'text-emerald-400', glow: 'shadow-[0_0_40px_rgba(16,185,129,0.1)]' },
-        { name: 'Client Base', value: stats.totalClients, subtitle: 'Project Owners', icon: Briefcase, color: 'text-amber-400', glow: 'shadow-[0_0_40px_rgba(245,158,11,0.1)]' },
+        { name: 'Total Users', value: stats.totalUsers, subtitle: 'Registered', icon: Users, color: 'text-indigo-400', glow: 'shadow-[0_0_40px_rgba(99,102,241,0.1)]' },
+        { name: 'Total Staff', value: stats.totalStaff, subtitle: 'Team Members', icon: UserCheck, color: 'text-emerald-400', glow: 'shadow-[0_0_40px_rgba(16,185,129,0.1)]' },
+        { name: 'Total Clients', value: stats.totalClients, subtitle: 'Clients', icon: Briefcase, color: 'text-amber-400', glow: 'shadow-[0_0_40px_rgba(245,158,11,0.1)]' },
     ];
 
     return (
         <div className="space-y-12 animate-in fade-in duration-700">
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight text-gradient">System Overview</h1>
-                    <p className="text-slate-500 mt-2 font-medium text-lg">Real-time operational metrics and activity tracking.</p>
+                    <h1 className="text-5xl font-display font-bold text-white tracking-tight text-gradient">Overview</h1>
+                    <p className="text-slate-500 mt-2 font-medium text-lg">Real-time stats and recent activity.</p>
                 </div>
                 <div className="px-5 py-2.5 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex items-center gap-3">
                     <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.6)]"></div>
-                    <span className="text-xs font-bold text-indigo-300 uppercase tracking-widest">Live Operations</span>
+                    <span className="text-xs font-bold text-indigo-300 uppercase tracking-widest">Live Data</span>
                 </div>
             </header>
 
@@ -93,7 +93,7 @@ const AdminDashboard = () => {
                         <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
                             <Activity className="w-6 h-6 text-indigo-400" />
                         </div>
-                        <h2 className="text-2xl font-display font-bold text-white tracking-tight">Recent Log Activities</h2>
+                        <h2 className="text-2xl font-display font-bold text-white tracking-tight">Recent Activity</h2>
                     </div>
                     <div className="hidden sm:flex items-center gap-4">
                         <div className="flex -space-x-3">
@@ -117,8 +117,8 @@ const AdminDashboard = () => {
                             <div className="w-20 h-20 bg-white/5 border border-white/5 rounded-3xl flex items-center justify-center mb-6 ring-1 ring-white/5">
                                 <Clock className="w-10 h-10 text-slate-700" />
                             </div>
-                            <h3 className="text-xl font-display font-bold text-white tracking-tight">System Silence</h3>
-                            <p className="text-slate-500 mt-2 max-w-xs font-medium">Operations will appear here as the system records real-time interactions.</p>
+                            <h3 className="text-xl font-display font-bold text-white tracking-tight">No activity yet</h3>
+                            <p className="text-slate-500 mt-2 max-w-xs font-medium">Actions will show up here as they happen.</p>
                         </div>
                     )}
                 </div>
@@ -170,7 +170,7 @@ const ActivityRow = ({ log }) => {
                 <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
                     <div className="flex items-center gap-2 px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
                         <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
-                        <span className="text-[9px] font-bold text-indigo-400 uppercase tracking-widest">Active Connection</span>
+                        <span className="text-[9px] font-bold text-indigo-400 uppercase tracking-widest">Active</span>
                     </div>
                 </div>
             </div>
