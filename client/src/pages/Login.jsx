@@ -149,18 +149,18 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-950 flex relative overflow-hidden selection:bg-indigo-500/30">
+        <div className="min-h-screen bg-slate-950 flex flex-col lg:flex-row relative overflow-hidden selection:bg-indigo-500/30">
             {/* Background Texture/Noise */}
             <div className="absolute inset-0 noise-bg opacity-[0.03] pointer-events-none z-50"></div>
 
             {/* LEFT SIDE: Hero Section */}
-            <div className="hidden lg:flex lg:w-3/5 flex-col justify-between p-16 relative overflow-hidden">
+            <div className="flex w-full lg:w-3/5 flex-col justify-between p-8 sm:p-12 lg:p-16 relative overflow-hidden">
                 {/* Decorative Gradients */}
-                <div className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-indigo-600/10 rounded-full blur-[120px] animate-pulse"></div>
-                <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-[120px] delay-1000"></div>
+                <div className="absolute top-[-20%] left-[-10%] w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] bg-indigo-600/10 rounded-full blur-[80px] lg:blur-[120px] animate-pulse"></div>
+                <div className="absolute bottom-[-20%] right-[-10%] w-[250px] sm:w-[400px] lg:w-[600px] h-[250px] sm:h-[400px] lg:h-[600px] bg-violet-600/10 rounded-full blur-[80px] lg:blur-[120px] delay-1000"></div>
 
                 <div className="relative z-10 animate-reveal">
-                    <div className="flex items-center space-x-3 text-white font-display font-medium text-2xl mb-32 tracking-tight group cursor-pointer">
+                    <div className="flex items-center space-x-3 text-white font-display font-medium text-xl sm:text-2xl mb-12 sm:mb-20 lg:mb-32 tracking-tight group cursor-pointer text-center sm:text-left justify-center sm:justify-start">
                         <div className="relative">
                             <div className="w-3 h-3 bg-indigo-500 rounded-full shadow-[0_0_15px_rgba(99,102,241,0.6)]"></div>
                             <div className="absolute inset-0 w-3 h-3 bg-indigo-400 rounded-full animate-ping opacity-75"></div>
@@ -168,28 +168,28 @@ const Login = () => {
                         <span className="opacity-90 group-hover:opacity-100 transition-opacity">CRM Portal</span>
                     </div>
 
-                    <div className="max-w-xl">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-8 animate-reveal" style={{ animationDelay: '0.2s' }}>
+                    <div className="max-w-xl mx-auto sm:mx-0 text-center sm:text-left">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] mb-6 sm:mb-8 animate-reveal" style={{ animationDelay: '0.2s' }}>
                             Enterprise Solutions
                         </div>
-                        <h1 className="text-7xl font-display font-bold text-white leading-[1.1] mb-8 text-gradient animate-reveal" style={{ animationDelay: '0.4s' }}>
+                        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-display font-bold text-white leading-[1.1] mb-6 sm:mb-8 text-gradient animate-reveal" style={{ animationDelay: '0.4s' }}>
                             Precision in Every <br />
                             <span className="text-indigo-400">Connection.</span>
                         </h1>
-                        <p className="text-slate-400 text-xl leading-relaxed max-w-lg mb-12 animate-reveal" style={{ animationDelay: '0.6s' }}>
+                        <p className="text-slate-400 text-base sm:text-lg lg:text-xl leading-relaxed max-w-lg mb-8 sm:mb-12 animate-reveal" style={{ animationDelay: '0.6s' }}>
                             A unified dashboard for teams to manage projects, staff, and clients with ease.
                         </p>
                     </div>
                 </div>
 
-                <div className="relative z-10 text-slate-500 text-sm font-medium tracking-widest uppercase opacity-50 flex items-center gap-4 animate-reveal" style={{ animationDelay: '0.8s' }}>
-                    <div className="w-12 h-[1px] bg-slate-800"></div>
+                <div className="relative z-10 text-slate-500 text-[10px] sm:text-sm font-medium tracking-widest uppercase opacity-50 flex items-center gap-3 sm:gap-4 justify-center sm:justify-start animate-reveal mt-8 lg:mt-0" style={{ animationDelay: '0.8s' }}>
+                    <div className="w-8 sm:w-12 h-[1px] bg-slate-800"></div>
                     v2.4 Core Release
                 </div>
             </div>
 
             {/* RIGHT SIDE: Authentication Card */}
-            <div className="w-full lg:w-2/5 flex items-center justify-center p-8 sm:p-12 relative z-10">
+            <div className="w-full lg:w-2/5 flex items-center justify-center p-6 sm:p-12 relative z-10">
                 <div className="w-full max-w-md animate-reveal" style={{ animationDelay: '0.5s' }}>
                     <div className="glass-dark p-10 sm:p-12 rounded-[3rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden">
                         {/* Card Glow */}
