@@ -62,14 +62,14 @@ const StaffDashboard = () => {
     return (
         <div className="space-y-10 animate-reveal">
             {/* ── Header ── */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">My Dashboard</h1>
-                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Your projects and progress at a glance.</p>
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+                <div className="text-center lg:text-left">
+                    <h1 className="text-4xl md:text-5xl font-display font-bold text-white tracking-tight leading-tight text-gradient">My Dashboard</h1>
+                    <p className="text-slate-500 mt-3 font-medium text-base md:text-lg italic">Your projects and progress at a glance.</p>
                 </div>
                 <Link
                     to="/staff/projects"
-                    className="group flex items-center gap-3 px-8 py-5 bg-white/5 border border-white/10 hover:border-white/20 text-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all hover:bg-white/10 shadow-2xl"
+                    className="self-center lg:self-end group flex items-center gap-3 px-8 py-4 md:py-5 bg-white/5 border border-white/10 hover:border-white/20 text-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all hover:bg-white/10 shadow-2xl"
                 >
                     View All Projects
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -77,16 +77,16 @@ const StaffDashboard = () => {
             </div>
 
             {/* ── Stats Grid ── */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
                 {cards.map((card) => (
-                    <div key={card.label} className="glass p-6 rounded-[2.5rem] border border-white/5 shadow-xl group hover:border-indigo-500/30 transition-all duration-500">
-                        <div className="flex flex-col gap-5">
-                            <div className={`${card.bg} ${card.color} w-14 h-14 rounded-2xl flex items-center justify-center border border-white/5 ring-1 ring-white/5 group-hover:scale-110 transition-transform`}>
-                                <card.icon className="w-7 h-7" />
+                    <div key={card.label} className="glass p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-white/5 shadow-xl group hover:border-indigo-500/30 transition-all duration-500">
+                        <div className="flex flex-row sm:flex-col items-center sm:items-start gap-5">
+                            <div className={`${card.bg} ${card.color} w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center border border-white/5 ring-1 ring-white/5 group-hover:scale-110 transition-transform`}>
+                                <card.icon className="w-6 h-6 md:w-7 md:h-7" />
                             </div>
                             <div>
-                                <h3 className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.2em] group-hover:text-slate-400 transition-colors">{card.label}</h3>
-                                <p className="text-4xl font-display font-bold text-white mt-1 tracking-tighter">{card.value}</p>
+                                <h3 className="text-slate-600 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] group-hover:text-slate-400 transition-colors">{card.label}</h3>
+                                <p className="text-3xl md:text-4xl font-display font-bold text-white mt-1 tracking-tighter">{card.value}</p>
                             </div>
                         </div>
                     </div>

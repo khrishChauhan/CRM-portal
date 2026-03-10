@@ -391,7 +391,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
     return (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-500" onClick={onClose}></div>
-            <div className="glass-dark border border-white/10 rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
+            <div className="glass-dark border border-white/10 rounded-3xl md:rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-[95%] sm:w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
                 <div className="flex items-center justify-between px-10 py-8 border-b border-white/5">
                     <div>
                         <h2 className="text-3xl font-display font-bold text-white tracking-tight">{isEdit ? 'Edit Staff' : 'Add Staff'}</h2>
@@ -462,9 +462,9 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-end gap-4 p-4 sticky bottom-0 bg-slate-950/20 backdrop-blur-md rounded-3xl border border-white/5">
-                        <button type="button" onClick={onClose} className="px-8 py-4 bg-white/5 text-[11px] font-bold text-slate-400 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Cancel</button>
-                        <button type="submit" disabled={saving} className="px-10 py-4 bg-indigo-600 text-[11px] font-bold text-white uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:bg-indigo-500 transition-all disabled:opacity-30">
+                    <div className="flex flex-col sm:flex-row items-center justify-end gap-3 md:gap-4 p-4 md:p-6 sticky bottom-0 bg-slate-950/20 backdrop-blur-md rounded-3xl border border-white/5 mt-auto">
+                        <button type="button" onClick={onClose} className="w-full sm:w-auto px-8 py-4 bg-white/5 text-[11px] font-bold text-slate-400 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Cancel</button>
+                        <button type="submit" disabled={saving} className="w-full sm:w-auto px-10 py-4 bg-indigo-600 text-[11px] font-bold text-white uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:bg-indigo-500 transition-all disabled:opacity-30">
                             {saving ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : (isEdit ? 'Save Changes' : 'Add Staff')}
                         </button>
                     </div>

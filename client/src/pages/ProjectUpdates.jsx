@@ -189,19 +189,19 @@ const ProjectUpdates = () => {
             )}
 
             {/* ── Header ── */}
-            <div className="flex items-center gap-6 mb-8">
+            <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <button
                     onClick={goBack}
-                    className="w-14 h-14 rounded-2xl glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-indigo-500/30 transition-all active:scale-95"
+                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-indigo-500/30 transition-all active:scale-95 flex-shrink-0"
                 >
-                    <ArrowLeft className="w-6 h-6" />
+                    <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
-                <div className="flex-1">
-                    <h1 className="text-3xl md:text-4xl font-display font-bold text-white tracking-tight text-gradient">
-                        {project?.projectName || 'Project'} Updates
+                <div className="flex-1 min-w-0">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight text-gradient truncate">
+                        {project?.projectName || 'Project'}
                     </h1>
-                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-2 italic font-mono">
-                        {project?.projectCode} // {updates.length} Update{updates.length !== 1 ? 's' : ''} Logged
+                    <p className="text-slate-500 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] mt-1 italic font-mono truncate">
+                        {project?.projectCode} // {updates.length} Updates
                     </p>
                 </div>
             </div>
@@ -228,12 +228,22 @@ const ProjectUpdates = () => {
 
                             <div className="relative z-10">
                                 {/* ── Author row ── */}
-                                <div className="flex items-center gap-5 mb-6">
-                                    <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-display font-bold text-sm flex-shrink-0 group-hover:scale-110 transition-transform">
-                                        {update.createdBy?.name?.charAt(0)?.toUpperCase() || '?'}
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5 mb-6">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-display font-bold text-xs sm:text-sm flex-shrink-0 group-hover:scale-110 transition-transform">
+                                            {update.createdBy?.name?.charAt(0)?.toUpperCase() || '?'}
+                                        </div>
+                                        <div className="sm:hidden">
+                                            <span className="font-display font-bold text-white text-base tracking-tight group-hover:text-indigo-400 transition-colors block">
+                                                {update.createdBy?.name || 'Unknown'}
+                                            </span>
+                                            <span className={`inline-flex px-2 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-widest border mt-1 ${roleBadge(update.role)}`}>
+                                                {update.role}
+                                            </span>
+                                        </div>
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-3 flex-wrap">
+                                        <div className="hidden sm:flex items-center gap-3 flex-wrap">
                                             <span className="font-display font-bold text-white text-lg tracking-tight group-hover:text-indigo-400 transition-colors">
                                                 {update.createdBy?.name || 'Unknown'}
                                             </span>
@@ -312,13 +322,13 @@ const ProjectUpdates = () => {
                         </div>
                     )}
 
-                    <div className="flex items-end gap-4 relative z-10">
+                    <div className="flex flex-col gap-4 relative z-10">
                         <textarea
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             placeholder="Write a project update..."
                             rows={2}
-                            className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all resize-none font-medium"
+                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all resize-none font-medium"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                                     handlePost();
@@ -326,11 +336,11 @@ const ProjectUpdates = () => {
                             }}
                         />
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                             {/* Image upload */}
-                            <label className="group/upload h-12 px-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-3 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30 transition-all cursor-pointer active:scale-95">
+                            <label className="flex-1 group/upload h-12 px-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center sm:justify-start gap-3 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30 transition-all cursor-pointer active:scale-[0.98]">
                                 <Camera className="w-5 h-5 group-hover/upload:scale-110 transition-transform" />
-                                <span className="text-[9px] font-bold uppercase tracking-widest hidden sm:block">Attach Image</span>
+                                <span className="text-[9px] font-bold uppercase tracking-widest">Attach Image</span>
                                 <input
                                     type="file"
                                     accept="image/jpeg,image/png,image/webp"
@@ -344,17 +354,17 @@ const ProjectUpdates = () => {
                                 onClick={captureLocation}
                                 disabled={locLoading}
                                 title="Pin Location"
-                                className={`h-12 px-4 rounded-2xl border flex items-center gap-3 transition-all active:scale-95 ${location ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-white/5 border-white/10 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30'}`}
+                                className={`flex-1 h-12 px-4 rounded-2xl border flex items-center justify-center sm:justify-start gap-3 transition-all active:scale-[0.98] ${location ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-white/5 border-white/10 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30'}`}
                             >
                                 {locLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
-                                <span className="text-[9px] font-bold uppercase tracking-widest hidden sm:block">{location ? 'Pinned' : 'Pin Grid'}</span>
+                                <span className="text-[9px] font-bold uppercase tracking-widest">{location ? 'Pinned' : 'Pin Location'}</span>
                             </button>
 
                             {/* Post */}
                             <button
                                 onClick={handlePost}
                                 disabled={posting || !message.trim()}
-                                className="h-12 px-8 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl shadow-indigo-600/20 disabled:opacity-30 disabled:pointer-events-none flex items-center gap-3 active:scale-95"
+                                className="sm:flex-[0.5] h-12 px-8 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl shadow-indigo-600/20 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-3 active:scale-[0.98]"
                             >
                                 {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                                 Post

@@ -56,18 +56,18 @@ const AdminDashboard = () => {
     return (
         <div className="space-y-12 animate-in fade-in duration-700">
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight text-gradient">Overview</h1>
-                    <p className="text-slate-500 mt-2 font-medium text-lg">Real-time stats and recent activity.</p>
+                <div className="text-center md:text-left">
+                    <h1 className="text-4xl md:text-5xl font-display font-bold text-white tracking-tight text-gradient leading-tight">Overview</h1>
+                    <p className="text-slate-500 mt-2 font-medium text-base md:text-lg">Real-time stats and recent activity.</p>
                 </div>
-                <div className="px-5 py-2.5 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex items-center gap-3">
+                <div className="self-center md:self-end px-5 py-2.5 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex items-center gap-3">
                     <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.6)]"></div>
                     <span className="text-xs font-bold text-indigo-300 uppercase tracking-widest">Live Data</span>
                 </div>
             </header>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
                 {cards.map((card, idx) => (
                     <div key={card.name} className={`glass p-8 rounded-[3rem] group hover:border-indigo-500/30 transition-all duration-500 hover:-translate-y-2 ${card.glow} animate-reveal`} style={{ animationDelay: `${idx * 0.1}s` }}>
                         <div className="flex flex-col gap-6">
@@ -87,8 +87,8 @@ const AdminDashboard = () => {
             </div>
 
             {/* Recent Activities Section */}
-            <div className="glass rounded-[3.5rem] overflow-hidden animate-reveal shadow-2xl" style={{ animationDelay: '0.4s' }}>
-                <div className="px-10 py-10 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
+            <div className="glass rounded-[2rem] md:rounded-[3.5rem] overflow-hidden animate-reveal shadow-2xl" style={{ animationDelay: '0.4s' }}>
+                <div className="px-6 py-6 md:px-10 md:py-10 border-b border-white/5 flex flex-col sm:flex-row items-center justify-between bg-white/[0.01] gap-6">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
                             <Activity className="w-6 h-6 text-indigo-400" />
@@ -135,9 +135,9 @@ const ActivityRow = ({ log }) => {
     };
 
     return (
-        <div className="px-10 py-8 hover:bg-white/[0.02] transition-colors group cursor-default">
-            <div className="flex items-center justify-between gap-6">
-                <div className="flex items-center gap-6">
+        <div className="px-6 py-6 md:px-10 md:py-8 hover:bg-white/[0.02] transition-colors group cursor-default">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                <div className="flex items-start sm:items-center gap-4 sm:gap-6">
                     <div className="relative">
                         <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-white/5 border border-white/5 group-hover:bg-white/10 transition-all duration-500 group-hover:scale-105 ring-1 ring-white/5`}>
                             <User className="w-6 h-6 text-slate-500 group-hover:text-indigo-400 transition-colors" />

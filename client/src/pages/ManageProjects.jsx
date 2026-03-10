@@ -125,7 +125,7 @@ const ManageProjects = () => {
 
             {/* ── Dashboard Stats ── */}
             {dashboard && (
-                <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4">
                     <MiniStat label="Total" value={ov.total || 0} icon={FolderOpen} color="text-indigo-400" bgColor="bg-indigo-500/10" />
                     <MiniStat label="Active" value={ov.active || 0} icon={TrendingUp} color="text-emerald-400" bgColor="bg-emerald-500/10" />
                     <MiniStat label="Completed" value={ov.completed || 0} icon={CheckCircle} color="text-sky-400" bgColor="bg-sky-500/10" />
@@ -358,7 +358,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
     return (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-500" onClick={onClose}></div>
-            <div className="glass-dark border border-white/10 rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
+            <div className="glass-dark border border-white/10 rounded-3xl md:rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-[95%] sm:w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
                 <div className="flex items-center justify-between px-10 py-10 border-b border-white/5 bg-white/[0.01]">
                     <div>
                         <h2 className="text-3xl font-display font-bold text-white tracking-tight">{isEdit ? 'Edit Project' : 'New Project'}</h2>
@@ -434,9 +434,9 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-end gap-5 p-5 bg-white/[0.01] border-t border-white/5 -mx-10 -mb-10 mt-10 px-10 py-8 sticky bottom-0 backdrop-blur-md">
-                        <button type="button" onClick={onClose} className="px-10 py-5 bg-white/5 text-[11px] font-bold text-slate-500 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Cancel</button>
-                        <button type="submit" disabled={saving} className="px-12 py-5 bg-indigo-600 text-[11px] font-bold text-white uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:bg-indigo-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+                    <div className="flex flex-col sm:flex-row items-center justify-end gap-3 md:gap-4 p-4 md:p-6 sticky bottom-0 bg-slate-950/20 backdrop-blur-md rounded-3xl border border-white/5 mt-auto">
+                        <button type="button" onClick={onClose} className="w-full sm:w-auto px-10 py-5 bg-white/5 text-[11px] font-bold text-slate-500 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Cancel</button>
+                        <button type="submit" disabled={saving} className="w-full sm:w-auto px-12 py-5 bg-indigo-600 text-[11px] font-bold text-white uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:bg-indigo-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed">
                             {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : (isEdit ? 'Save Changes' : 'Create Project')}
                         </button>
                     </div>
