@@ -52,11 +52,11 @@
 
 @layer utilities {
   .glass {
-    @apply bg-slate-900/40 backdrop-blur-xl border border-white/5;
+    @apply bg-slate-900/60 backdrop-blur-2xl border border-white/5;
   }
 
   .glass-dark {
-    @apply bg-slate-950/60 backdrop-blur-2xl border border-white/5;
+    @apply bg-slate-950/80 backdrop-blur-3xl border border-white/5;
   }
 
   .text-gradient {

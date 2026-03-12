@@ -381,7 +381,7 @@ const ProjectUpdates = () => {
             {/* ── Lightbox Modal ── */}
             {lightbox && (
                 <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-2xl animate-in fade-in duration-500" onClick={() => setLightbox(null)}></div>
+                    <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-3xl animate-in fade-in duration-500" onClick={() => setLightbox(null)}></div>
                     <div className="relative z-[210] w-full max-w-4xl animate-in zoom-in-95 duration-500">
                         <div className="glass-dark border border-white/10 rounded-[3rem] overflow-hidden shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)]">
                             {/* Image */}
