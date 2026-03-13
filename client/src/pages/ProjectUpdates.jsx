@@ -343,7 +343,8 @@ const ProjectUpdates = () => {
                                 <span className="text-[9px] font-bold uppercase tracking-widest">Attach Image</span>
                                 <input
                                     type="file"
-                                    accept="image/jpeg,image/png,image/webp"
+                                    accept="image/*"
+                                    capture="environment"
                                     onChange={handleImageSelect}
                                     className="hidden"
                                 />
