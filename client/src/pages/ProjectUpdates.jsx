@@ -68,16 +68,113 @@ const ProjectUpdates = () => {
         );
     };
 
+    // ── Canvas watermark stamping ──
+    const stampImageWithWatermark = (file, latitude, longitude) => {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            const objectUrl = URL.createObjectURL(file);
+
+            img.onload = () => {
+                URL.revokeObjectURL(objectUrl);
+
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+
+                // Draw the original image
+                ctx.drawImage(img, 0, 0);
+
+                // Format timestamp: "13 Mar 2026 18:30"
+                const now = new Date();
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                const timeStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} `
+                    + `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+                // Build watermark lines
+                const lines = [];
+                if (latitude != null && longitude != null) {
+                    lines.push(`Lat/Lng: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+                }
+                lines.push(`Time: ${timeStr}`);
+
+                // Calculate sizing relative to image dimensions
+                const fontSize = Math.max(Math.round(img.width * 0.03), 16);
+                const padding = Math.max(Math.round(img.width * 0.02), 12);
+                const lineHeight = fontSize * 1.6;
+                const boxHeight = lines.length * lineHeight + padding * 2;
+                const boxY = img.height - boxHeight;
+
+                // Draw semi-transparent dark rectangle at bottom
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+                ctx.fillRect(0, boxY, img.width, boxHeight);
+
+                // Draw white watermark text
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = `bold ${fontSize}px Arial, Helvetica, sans-serif`;
+                ctx.textBaseline = 'top';
+                lines.forEach((line, i) => {
+                    ctx.fillText(line, padding, boxY + padding + i * lineHeight);
+                });
+
+                // Convert canvas to JPEG blob
+                canvas.toBlob(
+                    (blob) => {
+                        if (blob) resolve(blob);
+                        else reject(new Error('Canvas toBlob failed'));
+                    },
+                    'image/jpeg',
+                    0.92
+                );
+            };
+
+            img.onerror = () => {
+                URL.revokeObjectURL(objectUrl);
+                reject(new Error('Failed to load image'));
+            };
+            img.src = objectUrl;
+        });
+    };
+
     // ── Image handling ──
-    const handleImageSelect = (e) => {
+    const handleImageSelect = async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
         if (file.size > 5 * 1024 * 1024) {
             showToast('Image must be under 5MB', 'error');
             return;
         }
-        setImageFile(file);
-        setImagePreview(URL.createObjectURL(file));
+
+        // Get GPS coordinates for watermark
+        let lat = null, lng = null;
+        if (navigator.geolocation) {
+            try {
+                const pos = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                    });
+                });
+                lat = pos.coords.latitude;
+                lng = pos.coords.longitude;
+                setLocation({ latitude: lat, longitude: lng });
+            } catch {
+                console.warn('Geolocation unavailable — watermark will include timestamp only');
+            }
+        }
+
+        // Stamp watermark onto image using Canvas
+        try {
+            const stampedBlob = await stampImageWithWatermark(file, lat, lng);
+            const stampedFile = new File([stampedBlob], file.name, { type: 'image/jpeg' });
+            setImageFile(stampedFile);
+            setImagePreview(URL.createObjectURL(stampedBlob));
+        } catch (err) {
+            console.error('Watermark stamping failed, using original file:', err);
+            setImageFile(file);
+            setImagePreview(URL.createObjectURL(file));
+        }
     };
 
     const clearImage = () => {
