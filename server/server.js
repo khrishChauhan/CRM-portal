@@ -18,6 +18,7 @@ const projectRoutes = require('./routes/projectRoutes');
 const accessRequestRoutes = require('./routes/accessRequestRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const projectUpdateRoutes = require('./routes/projectUpdateRoutes');
+const projectQueryRoutes = require('./routes/projectQueryRoutes');
 
 // ── Debug: Verify environment variables loaded (dev only) ──
 if (process.env.NODE_ENV !== 'production') {
@@ -86,6 +87,7 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/access-requests', accessRequestRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/projects/:projectId/updates', projectUpdateRoutes);
+app.use('/api', projectQueryRoutes);
 
 // ── Health check ──
 app.get('/', (req, res) => {
