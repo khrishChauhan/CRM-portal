@@ -68,12 +68,25 @@ const ProjectUpdates = () => {
         });
     };
 
+    const fetchAddress = async (lat, lng) => {
+        try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+            if (!res.ok) throw new Error('Network response was not ok');
+            const data = await res.json();
+            return data.display_name || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        } catch (e) {
+            console.error('Failed to fetch address:', e);
+            return `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        }
+    };
+
     // ── Manual location capture ──
     const captureLocation = async () => {
         setLocLoading(true);
         try {
             const loc = await requestGPS(10000);
-            setLocation(loc);
+            const address = await fetchAddress(loc.latitude, loc.longitude);
+            setLocation({ ...loc, address });
             showToast('Location captured');
         } catch {
             showToast('Could not get location. Please allow location access and try again.', 'error');
@@ -82,8 +95,17 @@ const ProjectUpdates = () => {
         }
     };
 
+    // Mobile auto-capture
+    useEffect(() => {
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile && canPost) {
+            captureLocation();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [canPost]);
+
     // ── Canvas watermark stamping ──
-    const stampImageWithWatermark = (file, latitude, longitude) => {
+    const stampImageWithWatermark = (file, address) => {
         return new Promise((resolve, reject) => {
             const img = new Image();
             const objectUrl = URL.createObjectURL(file);
@@ -99,19 +121,18 @@ const ProjectUpdates = () => {
                 // Draw the original image
                 ctx.drawImage(img, 0, 0);
 
-                // Format timestamp: "13 Mar 2026 • 18:30"
+                // Format timestamp: "14 Mar 2026 13:15"
                 const now = new Date();
                 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                const timeStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`
-                    + ` \u2022 ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                const timeStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
                 // Build watermark lines
                 const lines = [];
-                if (latitude != null && longitude != null) {
-                    lines.push({ icon: '\uD83D\uDCCD', text: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}` });
+                if (address) {
+                    lines.push({ icon: '📍', text: address });
                 }
-                lines.push({ icon: '\uD83D\uDD52', text: timeStr });
+                lines.push({ icon: '🕒', text: timeStr });
 
                 // Calculate sizing relative to image dimensions
                 const fontSize = Math.max(Math.round(img.width * 0.028), 14);
@@ -163,19 +184,21 @@ const ProjectUpdates = () => {
         setStamping(true);
 
         // Get GPS coordinates for watermark + auto-capture location
-        let lat = null, lng = null;
-        try {
-            const loc = await requestGPS(5000);
-            lat = loc.latitude;
-            lng = loc.longitude;
-            setLocation(loc);
-        } catch {
-            console.warn('Geolocation unavailable — watermark will include timestamp only');
+        let currentLoc = location;
+        if (!currentLoc) {
+            try {
+                const loc = await requestGPS(5000);
+                const address = await fetchAddress(loc.latitude, loc.longitude);
+                currentLoc = { ...loc, address };
+                setLocation(currentLoc);
+            } catch {
+                console.warn('Geolocation unavailable — watermark will include timestamp only');
+            }
         }
 
         // Stamp watermark onto image using Canvas
         try {
-            const stampedBlob = await stampImageWithWatermark(file, lat, lng);
+            const stampedBlob = await stampImageWithWatermark(file, currentLoc?.address);
             const stampedFile = new File([stampedBlob], file.name, { type: 'image/jpeg' });
             setImageFile(stampedFile);
             setImagePreview(URL.createObjectURL(stampedBlob));
@@ -201,17 +224,8 @@ const ProjectUpdates = () => {
         }
 
         // ── Location is REQUIRED ──
-        // If not yet captured, try one last auto-capture
         if (!location) {
-            setPosting(true);
-            try {
-                const loc = await requestGPS(5000);
-                setLocation(loc);
-                await submitUpdate(loc);
-            } catch {
-                setPosting(false);
-                showToast('Location is required to post an update. Please tap "Pin Location".', 'error');
-            }
+            showToast('Please pin your location before posting an update.', 'error');
             return;
         }
 
@@ -464,7 +478,7 @@ const ProjectUpdates = () => {
                             {/* Post */}
                             <button
                                 onClick={handlePost}
-                                disabled={posting || !message.trim() || stamping}
+                                disabled={posting || !message.trim() || stamping || !location}
                                 className="sm:flex-[0.6] h-10 sm:h-11 px-6 sm:px-8 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl shadow-indigo-600/20 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-2.5 active:scale-[0.98]"
                             >
                                 {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
