@@ -173,7 +173,7 @@ const ProjectItem = ({ project, mode, onSelect }) => {
                         className="flex items-center gap-2 text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] hover:text-emerald-400 transition-colors"
                     >
                         <MessageSquare className="w-4 h-4" />
-                        Updates
+                        Queries
                     </button>
                     <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 group-hover:bg-indigo-600 group-hover:border-indigo-500 flex items-center justify-center transition-all duration-500 shadow-inner group-hover:shadow-[0_0_20px_rgba(79,70,229,0.4)]">
                         <ChevronRight className="w-5 h-5 text-indigo-500 group-hover:text-white transition-colors" />
@@ -244,7 +244,7 @@ const ProjectDetailsModal = ({ project, onClose }) => {
                         <div className="flex-1 relative z-10">
                             <span className="text-[9px] font-bold text-slate-600 uppercase tracking-[0.3em] block mb-2 italic">Project Manager</span>
                             <span className="text-xl font-display font-bold text-white uppercase tracking-tight group-hover/manager:text-indigo-400 transition-colors">{project.assignedManager?.name || 'Not assigned'}</span>
-                            <p className="text-[11px] text-slate-500 font-medium mt-2 leading-relaxed italic opacity-70">Contact your project manager for any questions or updates.</p>
+                            <p className="text-[11px] text-slate-500 font-medium mt-2 leading-relaxed italic opacity-70">Contact your project manager for any questions or queries.</p>
                         </div>
                     </div>
 

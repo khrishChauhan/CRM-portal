@@ -27,7 +27,7 @@ router.get('/dashboard', authorize('admin'), getDashboardStats);
 router.get('/dropdowns', authorize('admin'), getDropdowns);
 router.get('/', authorize('admin'), getAllProjects);
 router.post('/', authorize('admin'), createProject);
-router.get('/:id', authorize('admin', 'staff'), getProjectById);
+router.get('/:id', authorize('admin', 'staff', 'client'), getProjectById);
 router.put('/:id', authorize('admin'), updateProject);
 router.delete('/:id', authorize('admin'), deleteProject);
 

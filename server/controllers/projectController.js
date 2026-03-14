@@ -43,6 +43,18 @@ exports.getDropdowns = async (req, res) => {
 exports.getProjectById = async (req, res) => {
     try {
         const project = await ProjectService.getById(req.params.id);
+
+        if (req.user.role === 'client') {
+            const User = require('../models/User');
+            const client = await User.findById(req.user.id);
+            const isApproved = client.approvedProjects && client.approvedProjects.some(
+                pId => pId.toString() === req.params.id
+            );
+            if (!isApproved) {
+                return sendError(res, 'You are not approved to view this project', 403);
+            }
+        }
+
         return sendSuccess(res, project, 'Project fetched');
     } catch (error) {
         return sendError(res, error.message, error.statusCode || 500);

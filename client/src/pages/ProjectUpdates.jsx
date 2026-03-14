@@ -59,11 +59,13 @@ const ProjectUpdates = () => {
         try {
             const { data } = await api.get(`/projects/${id}`);
             setProject(data.data);
-            if (isClient) setLoading(false); // If client, we don't fetch updates, so stop loading here
         } catch (err) {
             console.error('Failed to fetch project details', err);
+        } finally {
+            if (isClient) setLoading(false);
         }
     }, [id, isClient]);
+
 
     const fetchQueries = useCallback(async () => {
         setQueriesLoading(true);
@@ -376,7 +378,7 @@ const ProjectUpdates = () => {
         return (
             <div className="flex flex-col items-center justify-center min-h-[500px]">
                 <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-6" />
-                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Loading Update Feed...</p>
+                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Loading Project Data...</p>
             </div>
         );
     }
