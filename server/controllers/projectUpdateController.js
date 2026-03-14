@@ -92,8 +92,9 @@ const getProjectUpdates = async (req, res) => {
             if (!isManager && !isAssigned) {
                 return sendError(res, 'You are not assigned to this project', 403);
             }
+        } else if (user.role === 'client') {
+            return sendError(res, 'Internal updates are not visible to clients', 403);
         }
-        // Clients: we allow viewing if they have approved access (checked at route level or can be extended)
 
         const updates = await ProjectUpdate.find({ projectId })
             .populate('createdBy', 'name role')

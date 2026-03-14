@@ -29,8 +29,11 @@ const ProjectUpdates = () => {
     const [toast, setToast] = useState(null);
     const [lightbox, setLightbox] = useState(null);
 
+    const canPost = user?.role === 'admin' || user?.role === 'staff';
+    const isClient = user?.role === 'client';
+
     // ── Queries State ──
-    const [activeTab, setActiveTab] = useState('updates'); // 'updates' or 'queries'
+    const [activeTab, setActiveTab] = useState(isClient ? 'overview' : 'updates'); // 'updates', 'queries', 'overview'
     const [queries, setQueries] = useState([]);
     const [queriesLoading, setQueriesLoading] = useState(false);
     const [newQuery, setNewQuery] = useState({ title: '', message: '' });
@@ -38,10 +41,9 @@ const ProjectUpdates = () => {
     const [responseMap, setResponseMap] = useState({}); // { queryId: responseText }
     const [submittingResponse, setSubmittingResponse] = useState(null); // queryId
 
-    const canPost = user?.role === 'admin' || user?.role === 'staff';
-
     // ── Fetch updates ──
     const fetchUpdates = useCallback(async () => {
+        if (isClient) return; // Don't fetch updates for clients
         try {
             const { data } = await api.get(`/projects/${id}/updates`);
             setUpdates(data.data.updates);
@@ -51,7 +53,17 @@ const ProjectUpdates = () => {
         } finally {
             setLoading(false);
         }
-    }, [id]);
+    }, [id, isClient]);
+
+    const fetchProjectDetails = useCallback(async () => {
+        try {
+            const { data } = await api.get(`/projects/${id}`);
+            setProject(data.data);
+            if (isClient) setLoading(false); // If client, we don't fetch updates, so stop loading here
+        } catch (err) {
+            console.error('Failed to fetch project details', err);
+        }
+    }, [id, isClient]);
 
     const fetchQueries = useCallback(async () => {
         setQueriesLoading(true);
@@ -66,11 +78,14 @@ const ProjectUpdates = () => {
     }, [id]);
 
     useEffect(() => {
-        fetchUpdates();
+        fetchProjectDetails();
+        if (!isClient) {
+            fetchUpdates();
+        }
         if (activeTab === 'queries') {
             fetchQueries();
         }
-    }, [fetchUpdates, fetchQueries, activeTab]);
+    }, [fetchUpdates, fetchQueries, fetchProjectDetails, activeTab, isClient]);
 
     // ── Toast ──
     const showToast = (msg, type = 'success') => {
@@ -395,24 +410,106 @@ const ProjectUpdates = () => {
 
                 {/* Tab Switcher */}
                 <div className="flex glass p-1 rounded-xl sm:rounded-2xl border border-white/5 shadow-2xl">
-                    <button
-                        onClick={() => setActiveTab('updates')}
-                        className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'updates' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
-                    >
-                        Updates
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('queries')}
-                        className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'queries' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
-                    >
-                        Queries
-                    </button>
+                    {!isClient ? (
+                        <>
+                            <button
+                                onClick={() => setActiveTab('updates')}
+                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'updates' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                            >
+                                Updates
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('queries')}
+                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'queries' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                            >
+                                Queries
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                onClick={() => setActiveTab('overview')}
+                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'overview' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                            >
+                                Overview
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('queries')}
+                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'queries' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                            >
+                                Project Chat
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
 
             {/* ── Feed Content ── */}
             <div className="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-thin mb-3">
-                {activeTab === 'updates' ? (
+                {activeTab === 'overview' ? (
+                    /* ── Overview Tab ── */
+                    <div className="space-y-6 animate-reveal">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="glass p-8 rounded-[2.5rem] border border-white/5 shadow-xl space-y-6">
+                                <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Project Information</h3>
+                                <div className="space-y-4">
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5">
+                                            <MapPin className="w-5 h-5 text-indigo-400" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Site Address</p>
+                                            <p className="text-white font-medium">{project?.siteAddress || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5">
+                                            <Clock className="w-5 h-5 text-indigo-400" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Expected Completion</p>
+                                            <p className="text-white font-medium">
+                                                {project?.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'TBD'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="glass p-8 rounded-[2.5rem] border border-white/5 shadow-xl flex flex-col justify-center gap-6">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Current Status</h3>
+                                    <span className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest ${
+                                        project?.projectStatus === 'Completed' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                                        project?.projectStatus === 'In Progress' ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' :
+                                        'bg-slate-500/10 text-slate-400 border border-slate-500/20'
+                                    }`}>
+                                        {project?.projectStatus || 'Planned'}
+                                    </span>
+                                </div>
+                                <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+                                    <p className="text-slate-400 text-sm leading-relaxed italic">
+                                        {project?.description || 'No project description available.'}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Project Manager Details */}
+                        <div className="glass p-6 rounded-3xl border border-white/5 shadow-xl flex items-center gap-6 group hover:border-indigo-500/20 transition-all">
+                            <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-display font-bold text-xl flex-shrink-0 group-hover:scale-110 transition-transform">
+                                {project?.projectManager?.name?.charAt(0)?.toUpperCase() || 'M'}
+                            </div>
+                            <div>
+                                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest italic leading-none mb-1.5">Your Project Manager</p>
+                                <p className="text-xl font-display font-bold text-white tracking-tight uppercase group-hover:text-indigo-400 transition-colors">
+                                    {project?.projectManager?.name || 'Not Assigned'}
+                                </p>
+                                <p className="text-xs text-slate-500 mt-1">Responsible for overseeing your project's progress and quality.</p>
+                            </div>
+                        </div>
+                    </div>
+                ) : activeTab === 'updates' ? (
                     updates.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-28 text-slate-600">
                             <div className="w-20 h-20 bg-white/5 border border-white/5 rounded-3xl flex items-center justify-center mb-6 ring-1 ring-white/10 shadow-inner">
@@ -539,64 +636,117 @@ const ProjectUpdates = () => {
                         ) : (
                             <div className="grid grid-cols-1 gap-4">
                                 {queries.map((q) => (
-                                    <div key={q._id} className="glass p-5 rounded-2xl border border-white/5 shadow-lg group hover:border-indigo-500/20 transition-all relative overflow-hidden">
-                                        <div className="flex items-start justify-between mb-3">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-xs">
-                                                    {q.clientId?.name?.charAt(0)?.toUpperCase()}
+                                    <div key={q._id} className={`${isClient ? 'bg-transparent' : 'glass p-5 rounded-2xl border border-white/5 shadow-lg group hover:border-indigo-500/20 transition-all relative overflow-hidden'}`}>
+                                        {isClient ? (
+                                            /* ── Chat Style for Client ── */
+                                            <div className="space-y-4 mb-8">
+                                                <div className="flex flex-col items-end">
+                                                    <div className="max-w-[85%] bg-indigo-600/20 border border-indigo-500/30 rounded-3xl rounded-tr-none p-5 shadow-lg relative">
+                                                        <div className="flex items-center justify-between gap-4 mb-2">
+                                                            <h4 className="text-white font-bold text-sm tracking-tight">{q.title}</h4>
+                                                            <span className="text-[9px] font-bold text-slate-500">{formatTime(q.createdAt)}</span>
+                                                        </div>
+                                                        <p className="text-slate-300 text-sm leading-relaxed">{q.message}</p>
+                                                        
+                                                        {/* Status Indicator */}
+                                                        <div className={`absolute -left-2 top-0 px-2 py-1 rounded-lg text-[7px] font-bold uppercase tracking-widest shadow-xl border ${
+                                                            q.status === 'open' ? 'bg-amber-500 text-white border-amber-400' : 'bg-emerald-500 text-white border-emerald-400'
+                                                        }`}>
+                                                            {q.status}
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <p className="text-white font-bold text-sm">{q.clientId?.name}</p>
-                                                    <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest flex items-center gap-1.5 mt-0.5">
-                                                        <Clock className="w-3 h-3" />
-                                                        {formatTime(q.createdAt)}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <span className={`px-2.5 py-1 rounded-lg text-[8px] font-bold uppercase tracking-widest border ${
-                                                q.status === 'open' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 
-                                                q.status === 'answered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-                                                'bg-slate-500/10 text-slate-400 border-slate-500/20'
-                                            }`}>
-                                                {q.status}
-                                            </span>
-                                        </div>
-                                        <h4 className="text-white font-bold text-base mb-2">{q.title}</h4>
-                                        <p className="text-slate-400 text-sm leading-relaxed mb-4">{q.message}</p>
 
-                                        {q.response ? (
-                                            <div className="mt-4 p-4 rounded-xl bg-white/5 border border-white/5 border-l-2 border-l-emerald-500/50">
-                                                <div className="flex items-center justify-between mb-2">
-                                                    <p className="text-[10px] font-bold text-emerald-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                                                        <CheckCircle2 className="w-3 h-3" />
-                                                        Response from Team
-                                                    </p>
-                                                    <span className="text-[9px] font-bold text-slate-600">{formatTime(q.respondedAt)}</span>
-                                                </div>
-                                                <p className="text-slate-300 text-sm italic">"{q.response}"</p>
-                                                <p className="text-[9px] font-bold text-slate-500 uppercase mt-2">By {q.respondedBy?.name}</p>
+                                                {q.response ? (
+                                                    <div className="flex flex-col items-start">
+                                                        <div className="max-w-[85%] glass-dark border border-white/10 rounded-3xl rounded-tl-none p-5 shadow-xl">
+                                                            <div className="flex items-center gap-3 mb-2">
+                                                                <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-[10px] font-bold">
+                                                                    {q.respondedBy?.name?.charAt(0) || 'T'}
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-emerald-400 text-[10px] font-bold lowercase tracking-widest flex items-center gap-1.5">
+                                                                        {q.respondedBy?.name} (Team)
+                                                                    </p>
+                                                                    <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest">{formatTime(q.respondedAt)}</p>
+                                                                </div>
+                                                            </div>
+                                                            <p className="text-slate-300 text-[13px] leading-relaxed italic border-l-2 border-emerald-500/30 pl-3">
+                                                                "{q.response}"
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="pl-4">
+                                                        <p className="text-[10px] font-bold text-slate-700 uppercase tracking-widest animate-pulse flex items-center gap-2">
+                                                            <Loader2 className="w-3 h-3 animate-spin" />
+                                                            Waiting for team response...
+                                                        </p>
+                                                    </div>
+                                                )}
                                             </div>
                                         ) : (
-                                            (user?.role === 'admin' || user?.role === 'staff') && (
-                                                <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
-                                                    <textarea
-                                                        placeholder="Write a response..."
-                                                        rows={2}
-                                                        value={responseMap[q._id] || ''}
-                                                        onChange={(e) => setResponseMap({ ...responseMap, [q._id]: e.target.value })}
-                                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 transition-all font-medium"
-                                                    />
-                                                    <button
-                                                        onClick={() => handleRespond(q._id)}
-                                                        disabled={submittingResponse === q._id || !(responseMap[q._id]?.trim())}
-                                                        className="w-full h-9 bg-emerald-600 hover:bg-emerald-50 text-emerald-600 rounded-xl font-bold text-[9px] uppercase tracking-widest transition-all disabled:opacity-30 flex items-center justify-center gap-2"
-                                                        style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.2)' }}
-                                                    >
-                                                        {submittingResponse === q._id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
-                                                        Send Reply
-                                                    </button>
+                                            /* ── Card Style for Admin/Staff ── */
+                                            <>
+                                                <div className="flex items-start justify-between mb-3">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-xs">
+                                                            {q.clientId?.name?.charAt(0)?.toUpperCase()}
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-white font-bold text-sm">{q.clientId?.name}</p>
+                                                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest flex items-center gap-1.5 mt-0.5">
+                                                                <Clock className="w-3 h-3" />
+                                                                {formatTime(q.createdAt)}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <span className={`px-2.5 py-1 rounded-lg text-[8px] font-bold uppercase tracking-widest border ${
+                                                        q.status === 'open' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 
+                                                        q.status === 'answered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
+                                                        'bg-slate-500/10 text-slate-400 border-slate-500/20'
+                                                    }`}>
+                                                        {q.status}
+                                                    </span>
                                                 </div>
-                                            )
+                                                <h4 className="text-white font-bold text-base mb-2">{q.title}</h4>
+                                                <p className="text-slate-400 text-sm leading-relaxed mb-4">{q.message}</p>
+
+                                                {q.response ? (
+                                                    <div className="mt-4 p-4 rounded-xl bg-white/5 border border-white/5 border-l-2 border-l-emerald-500/50">
+                                                        <div className="flex items-center justify-between mb-2">
+                                                            <p className="text-[10px] font-bold text-emerald-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                                                <CheckCircle2 className="w-3 h-3" />
+                                                                Response Sent
+                                                            </p>
+                                                            <span className="text-[9px] font-bold text-slate-600">{formatTime(q.respondedAt)}</span>
+                                                        </div>
+                                                        <p className="text-slate-300 text-sm italic">"{q.response}"</p>
+                                                        <p className="text-[9px] font-bold text-slate-500 uppercase mt-2">By {q.respondedBy?.name}</p>
+                                                    </div>
+                                                ) : (
+                                                    (user?.role === 'admin' || user?.role === 'staff') && (
+                                                        <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
+                                                            <textarea
+                                                                placeholder="Write a response..."
+                                                                rows={2}
+                                                                value={responseMap[q._id] || ''}
+                                                                onChange={(e) => setResponseMap({ ...responseMap, [q._id]: e.target.value })}
+                                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 transition-all font-medium"
+                                                            />
+                                                            <button
+                                                                onClick={() => handleRespond(q._id)}
+                                                                disabled={submittingResponse === q._id || !(responseMap[q._id]?.trim())}
+                                                                className="w-full h-9 bg-emerald-600 hover:bg-emerald-50 text-emerald-600 rounded-xl font-bold text-[9px] uppercase tracking-widest transition-all disabled:opacity-30 flex items-center justify-center gap-2"
+                                                                style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.2)' }}
+                                                            >
+                                                                {submittingResponse === q._id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+                                                                Send Reply
+                                                            </button>
+                                                        </div>
+                                                    )
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 ))}
