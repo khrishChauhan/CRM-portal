@@ -95,16 +95,7 @@ const AdminDashboard = () => {
                         </div>
                         <h2 className="text-2xl font-display font-bold text-white tracking-tight">Recent Activity</h2>
                     </div>
-                    <div className="hidden sm:flex items-center gap-4">
-                        <div className="flex -space-x-3">
-                            {[1, 2, 3].map(i => (
-                                <div key={i} className="w-8 h-8 rounded-full border-2 border-slate-950 bg-slate-900" />
-                            ))}
-                        </div>
-                        <span className="text-[10px] font-bold uppercase text-slate-500 tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/5">
-                            +42 others
-                        </span>
-                    </div>
+
                 </div>
 
                 <div className="divide-y divide-white/5">

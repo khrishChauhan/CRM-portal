@@ -47,9 +47,7 @@ function App() {
                 <Route path="/admin/access-requests" element={
                   <DashboardLayout><ManageAccessRequests /></DashboardLayout>
                 } />
-                <Route path="/admin/settings" element={
-                  <DashboardLayout><AdminDashboard /></DashboardLayout>
-                } />
+
                 <Route path="/admin/projects/:id/updates" element={
                   <DashboardLayout><ProjectUpdates /></DashboardLayout>
                 } />

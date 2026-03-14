@@ -23,7 +23,7 @@ const Sidebar = ({ role }) => {
         { name: 'Clients', path: '/admin/clients', icon: Briefcase },
         { name: 'Projects', path: '/admin/projects', icon: FolderOpen },
         { name: 'Access Requests', path: '/admin/access-requests', icon: FileText },
-        { name: 'Settings', path: '/admin/settings', icon: Settings },
+
     ];
 
     const staffLinks = [
