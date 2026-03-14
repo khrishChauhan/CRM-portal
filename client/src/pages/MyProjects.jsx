@@ -195,40 +195,41 @@ const ProjectDetailsModal = ({ project, onClose }) => {
     return (
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-2xl animate-in fade-in duration-700" onClick={onClose}></div>
-            <div className="glass-dark border border-white/10 rounded-[4rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-3xl relative z-[130] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700 overflow-hidden">
-                <div className="h-64 bg-slate-900 flex items-end p-14 relative overflow-hidden group">
+            <div className="glass-dark border border-white/10 rounded-[2rem] sm:rounded-[4rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-3xl relative z-[130] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700 overflow-hidden overflow-y-auto max-h-[90vh]">
+                <div className="h-auto sm:h-64 bg-slate-900 flex items-end p-6 sm:p-14 relative overflow-hidden group">
                     <div className="absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity">
                         <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-indigo-600/20 rounded-full mix-blend-multiply filter blur-[120px] -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
                         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-600/20 rounded-full mix-blend-multiply filter blur-[120px] translate-x-1/2 translate-y-1/2"></div>
                     </div>
-                    <div className="relative z-10 w-full flex justify-between items-end gap-10">
+                    <div className="relative z-10 w-full flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 sm:gap-10 pt-10 sm:pt-0">
                         <div>
-                            <p className="text-indigo-400 text-[10px] font-bold uppercase tracking-[0.4em] mb-4 font-mono shadow-sm">Project Details</p>
-                            <h2 className="text-5xl font-display font-bold text-white leading-none uppercase tracking-tighter">{project.projectName}</h2>
+                            <p className="text-indigo-400 text-[10px] font-bold uppercase tracking-[0.4em] mb-2 sm:mb-4 font-mono shadow-sm">Project Details</p>
+                            <h2 className="text-3xl sm:text-5xl font-display font-bold text-white leading-none uppercase tracking-tighter break-words">{project.projectName}</h2>
                         </div>
-                        <div className="text-right flex-shrink-0">
-                            <span className="text-slate-500 text-[9px] font-bold block mb-2 uppercase tracking-[0.3em] italic">Code</span>
-                            <span className="text-white font-mono font-black text-2xl tracking-tighter bg-white/5 border border-white/10 px-4 py-1.5 rounded-xl shadow-inner">#{project.projectCode}</span>
+                        <div className="text-left sm:text-right flex-shrink-0 w-full sm:w-auto flex justify-between sm:block items-center">
+                            <span className="text-slate-500 text-[9px] font-bold block sm:mb-2 uppercase tracking-[0.3em] italic">Code</span>
+                            <span className="text-white font-mono font-black text-xl sm:text-2xl tracking-tighter bg-white/5 border border-white/10 px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl shadow-inner">#{project.projectCode}</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="p-14 space-y-14">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                        <div className="space-y-8">
+                <div className="p-6 sm:p-14 space-y-10 sm:space-y-14">
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-16">
+                        <div className="space-y-6 sm:space-y-8">
                             <h4 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Project Info</h4>
-                            <div className="space-y-6">
+                            <div className="space-y-4 sm:space-y-6">
                                 <ModalDetail icon={MapPin} title="Location" value={project.siteAddress || 'Not specified'} />
                                 <ModalDetail icon={Calendar} title="Timeline" value={`${new Date(project.startDate).toLocaleDateString()} - ${project.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'TBD'}`} />
                                 <ModalDetail icon={FolderOpen} title="Category" value={project.projectCategory?.toUpperCase() || 'General'} />
                             </div>
                         </div>
-                        <div className="space-y-8">
+                        <div className="space-y-6 sm:space-y-8">
                             <h4 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Progress</h4>
-                            <div className="space-y-6">
-                                <div className="p-8 glass bg-white/5 rounded-[2rem] border border-white/5 flex items-center justify-between group/status">
+                            <div className="space-y-4 sm:space-y-6">
+                                <div className="p-6 sm:p-8 glass bg-white/5 rounded-[1.5rem] sm:rounded-[2rem] border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 group/status">
                                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest group-hover/status:text-indigo-400 transition-colors">Current Status</span>
-                                    <span className={`inline-flex px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus]?.replace('bg-', 'bg-transparent border border-').replace('text-', 'text-') || 'border-slate-500/20 text-slate-400'}`}>
+                                    <span className={`inline-flex px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest self-start sm:self-auto ${PROJECT_STATUS_COLORS[project.projectStatus]?.replace('bg-', 'bg-transparent border border-').replace('text-', 'text-') || 'border-slate-500/20 text-slate-400'}`}>
                                         {project.projectStatus}
                                     </span>
                                 </div>
@@ -236,15 +237,15 @@ const ProjectDetailsModal = ({ project, onClose }) => {
                         </div>
                     </div>
 
-                    <div className="p-10 glass-dark rounded-[2.5rem] border border-white/10 flex flex-col md:flex-row md:items-center gap-8 group/manager relative overflow-hidden">
+                    <div className="p-6 sm:p-10 glass-dark rounded-[2rem] sm:rounded-[2.5rem] border border-white/10 flex flex-col md:flex-row md:items-center gap-6 sm:gap-8 group/manager relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-[50px] -mr-16 -mt-16 group-hover/manager:bg-indigo-400/10 transition-colors"></div>
-                        <div className="w-16 h-16 rounded-[1.5rem] bg-indigo-600/10 flex-shrink-0 flex items-center justify-center border border-indigo-500/20 shadow-xl group-hover/manager:scale-110 transition-transform">
-                            <User className="w-8 h-8 text-indigo-400" />
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] sm:rounded-[1.5rem] bg-indigo-600/10 flex-shrink-0 flex items-center justify-center border border-indigo-500/20 shadow-xl group-hover/manager:scale-110 transition-transform">
+                            <User className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-400" />
                         </div>
                         <div className="flex-1 relative z-10">
-                            <span className="text-[9px] font-bold text-slate-600 uppercase tracking-[0.3em] block mb-2 italic">Project Manager</span>
-                            <span className="text-xl font-display font-bold text-white uppercase tracking-tight group-hover/manager:text-indigo-400 transition-colors">{project.assignedManager?.name || 'Not assigned'}</span>
-                            <p className="text-[11px] text-slate-500 font-medium mt-2 leading-relaxed italic opacity-70">Contact your project manager for any questions or queries.</p>
+                            <span className="text-[9px] font-bold text-slate-600 uppercase tracking-[0.3em] block mb-1.5 sm:mb-2 italic">Project Manager</span>
+                            <span className="text-lg sm:text-xl font-display font-bold text-white uppercase tracking-tight group-hover/manager:text-indigo-400 transition-colors">{project.assignedManager?.name || 'Not assigned'}</span>
+                            <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium mt-1.5 sm:mt-2 leading-relaxed italic opacity-70">Contact your project manager for any questions or queries.</p>
                         </div>
                     </div>
 

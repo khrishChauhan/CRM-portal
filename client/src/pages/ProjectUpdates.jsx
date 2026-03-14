@@ -394,24 +394,26 @@ const ProjectUpdates = () => {
             )}
 
             {/* ── Header ── */}
-            <div className="flex items-center gap-3 sm:gap-5 mb-4 sm:mb-5 flex-shrink-0">
-                <button
-                    onClick={goBack}
-                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-indigo-500/30 transition-all active:scale-95 flex-shrink-0"
-                >
-                    <ArrowLeft className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
-                </button>
-                <div className="flex-1 min-w-0">
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-white tracking-tight text-gradient truncate">
-                        {project?.projectName || 'Project'}
-                    </h1>
-                    <p className="text-slate-500 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] mt-0.5 italic font-mono truncate">
-                        {project?.projectCode} // {updates.length} Updates
-                    </p>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5 mb-4 sm:mb-5 flex-shrink-0">
+                <div className="flex items-center gap-3 w-full sm:w-auto flex-1 min-w-0">
+                    <button
+                        onClick={goBack}
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-indigo-500/30 transition-all active:scale-95 flex-shrink-0"
+                    >
+                        <ArrowLeft className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+                    </button>
+                    <div className="flex-1 min-w-0">
+                        <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-white tracking-tight text-gradient truncate">
+                            {project?.projectName || 'Project'}
+                        </h1>
+                        <p className="text-slate-500 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] mt-0.5 italic font-mono truncate">
+                            {project?.projectCode} // {updates.length} Updates
+                        </p>
+                    </div>
                 </div>
 
                 {/* Tab Switcher */}
-                <div className="flex glass p-1 rounded-xl sm:rounded-2xl border border-white/5 shadow-2xl">
+                <div className="flex glass p-1 rounded-xl sm:rounded-2xl border border-white/5 shadow-2xl w-full sm:w-auto overflow-x-auto scrollbar-none">
                     {!isClient ? (
                         <>
                             <button
@@ -450,9 +452,9 @@ const ProjectUpdates = () => {
             <div className="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-thin mb-3">
                 {activeTab === 'overview' ? (
                     /* ── Overview Tab ── */
-                    <div className="space-y-6 animate-reveal">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="glass p-8 rounded-[2.5rem] border border-white/5 shadow-xl space-y-6">
+                    <div className="space-y-4 sm:space-y-6 animate-reveal">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                            <div className="glass p-6 sm:p-8 rounded-3xl sm:rounded-[2.5rem] border border-white/5 shadow-xl space-y-6">
                                 <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Project Information</h3>
                                 <div className="space-y-4">
                                     <div className="flex items-start gap-4">
@@ -478,7 +480,7 @@ const ProjectUpdates = () => {
                                 </div>
                             </div>
 
-                            <div className="glass p-8 rounded-[2.5rem] border border-white/5 shadow-xl flex flex-col justify-center gap-6">
+                            <div className="glass p-6 sm:p-8 rounded-3xl sm:rounded-[2.5rem] border border-white/5 shadow-xl flex flex-col justify-center gap-6">
                                 <div className="flex items-center justify-between">
                                     <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Current Status</h3>
                                     <span className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest ${
@@ -498,16 +500,16 @@ const ProjectUpdates = () => {
                         </div>
 
                         {/* Project Manager Details */}
-                        <div className="glass p-6 rounded-3xl border border-white/5 shadow-xl flex items-center gap-6 group hover:border-indigo-500/20 transition-all">
-                            <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-display font-bold text-xl flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <div className="glass p-5 sm:p-6 rounded-3xl border border-white/5 shadow-xl flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 group hover:border-indigo-500/20 transition-all">
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-display font-bold text-xl flex-shrink-0 group-hover:scale-110 transition-transform">
                                 {project?.projectManager?.name?.charAt(0)?.toUpperCase() || 'M'}
                             </div>
                             <div>
                                 <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest italic leading-none mb-1.5">Your Project Manager</p>
-                                <p className="text-xl font-display font-bold text-white tracking-tight uppercase group-hover:text-indigo-400 transition-colors">
+                                <p className="text-lg sm:text-xl font-display font-bold text-white tracking-tight uppercase group-hover:text-indigo-400 transition-colors">
                                     {project?.projectManager?.name || 'Not Assigned'}
                                 </p>
-                                <p className="text-xs text-slate-500 mt-1">Responsible for overseeing your project's progress and quality.</p>
+                                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Responsible for overseeing your project's progress and quality.</p>
                             </div>
                         </div>
                     </div>
