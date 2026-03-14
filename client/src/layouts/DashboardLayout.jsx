@@ -3,11 +3,9 @@ import {
     LayoutDashboard,
     Users,
     Briefcase,
-    Settings,
     LogOut,
     Menu,
     X,
-    UserCircle,
     FolderOpen,
     FileText
 } from 'lucide-react';
