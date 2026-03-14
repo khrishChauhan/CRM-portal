@@ -437,7 +437,7 @@ const ProjectUpdates = () => {
                                 onClick={() => setActiveTab('queries')}
                                 className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'queries' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
                             >
-                                Project Chat
+                                Queries
                             </button>
                         </>
                     )}
