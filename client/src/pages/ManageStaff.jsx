@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 import {
-    UserPlus, Search, Filter, ChevronLeft, ChevronRight,
+    UserPlus, Search, ChevronLeft, ChevronRight,
     Edit3, Trash2, ToggleLeft, ToggleRight, X, Loader2,
-    Users, UserCheck, UserX, Building2, Phone, Mail,
+    Users, UserCheck, UserX, Building2, Phone,
     Calendar, Briefcase, DollarSign, AlertCircle, CheckCircle
 } from 'lucide-react';
 

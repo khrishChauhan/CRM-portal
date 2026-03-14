@@ -232,19 +232,6 @@ const ProjectDetailsModal = ({ project, onClose }) => {
                                         {project.projectStatus}
                                     </span>
                                 </div>
-                                <div className="p-8 glass bg-white/5 rounded-[2rem] border border-white/5 space-y-5">
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest font-mono">Progress</span>
-                                        <span className="text-xs font-bold text-indigo-400 font-mono">
-                                            {project.projectStatus === 'Completed' ? '100%' : '65%'}
-                                        </span>
-                                    </div>
-                                    <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden p-0.5 border border-white/5">
-                                        <div className={`h-full rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(79,70,229,0.3)] ${project.projectStatus === 'Completed' ? 'w-full bg-emerald-500' :
-                                            project.projectStatus === 'Delayed' ? 'w-1/3 bg-red-500' : 'w-2/3 bg-indigo-500'
-                                            }`}></div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
