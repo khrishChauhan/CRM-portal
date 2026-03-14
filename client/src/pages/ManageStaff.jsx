@@ -128,13 +128,13 @@ const ManageStaff = () => {
 
             {/* ── Header ── */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Staff</h1>
-                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Manage your team members and their details.</p>
+                <div className="text-center md:text-left">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient truncate max-w-full">Staff</h1>
+                    <p className="text-slate-500 mt-2 sm:mt-3 font-medium text-sm sm:text-lg italic">Manage your team members and their details.</p>
                 </div>
                 <button
                     onClick={() => openModal()}
-                    className="group relative inline-flex items-center gap-3 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold rounded-2xl transition-all shadow-[0_20px_40px_-12px_rgba(79,70,229,0.3)] hover:-translate-y-1 active:translate-y-0"
+                    className="w-full md:w-auto mt-4 md:mt-0 group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold rounded-2xl transition-all shadow-[0_20px_40px_-12px_rgba(79,70,229,0.3)] hover:-translate-y-1 active:translate-y-0"
                 >
                     <UserPlus className="w-5 h-5 transition-transform group-hover:scale-110" />
                     <span>Add Staff</span>
@@ -143,14 +143,14 @@ const ManageStaff = () => {
             </div>
 
             {/* ── Stats Cards ── */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-6">
                 <StatCard icon={Users} label="Total Staff" value={stats.total} color="indigo" />
                 <StatCard icon={UserCheck} label="Active" value={stats.active} color="emerald" />
                 <StatCard icon={UserX} label="Inactive" value={stats.inactive} color="red" />
             </div>
 
             {/* ── Filters Bar ── */}
-            <div className="glass p-2 rounded-[2rem] border border-white/5 shadow-xl">
+            <div className="glass p-2 rounded-[1.5rem] md:rounded-[2rem] border border-white/5 shadow-xl mt-6">
                 <div className="flex flex-col md:flex-row gap-2">
                     <div className="relative flex-1 group">
                         <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
@@ -158,15 +158,15 @@ const ManageStaff = () => {
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Search by name, email, or department..."
-                            className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm font-medium"
+                            placeholder="Search staff members..."
+                            className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-slate-600 focus:outline-none transition-all text-sm font-medium"
                         />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2 px-2 pb-2 md:p-0">
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
+                            className="w-full sm:w-auto px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
                         >
                             <option value="">All Status</option>
                             <option value="active">Active</option>
@@ -175,7 +175,7 @@ const ManageStaff = () => {
                         <select
                             value={deptFilter}
                             onChange={(e) => setDeptFilter(e.target.value)}
-                            className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
+                            className="w-full sm:w-auto px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-xs font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
                         >
                             <option value="">All Departments</option>
                             {DEPARTMENTS.map(d => <option key={d} value={d} className="bg-slate-900">{d}</option>)}
@@ -185,7 +185,7 @@ const ManageStaff = () => {
             </div>
 
             {/* ── Staff Table ── */}
-            <div className="glass rounded-[3rem] border border-white/5 shadow-2xl overflow-hidden min-h-[500px]">
+            <div className="glass rounded-[2rem] md:rounded-[3rem] border border-white/5 shadow-2xl overflow-hidden min-h-[500px] mt-6">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-40">
                         <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />
@@ -322,13 +322,13 @@ const StatCard = ({ icon: Icon, label, value, color }) => {
         red: 'bg-red-500/10 text-red-400 border-red-500/20',
     };
     return (
-        <div className="glass p-8 rounded-[3rem] border border-white/5 shadow-2xl group flex flex-col gap-6 hover:border-indigo-500/30 transition-all duration-500">
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${colors[color]} ring-4 ring-black ring-opacity-10 group-hover:scale-110 transition-transform duration-500`}>
-                <Icon className="w-7 h-7" />
+        <div className="glass p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] border border-white/5 shadow-2xl group flex flex-col gap-4 md:gap-6 hover:border-indigo-500/30 transition-all duration-500">
+            <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center border ${colors[color]} ring-4 ring-black ring-opacity-10 group-hover:scale-110 transition-transform duration-500`}>
+                <Icon className="w-6 h-6 md:w-7 md:h-7" />
             </div>
             <div>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">{label}</p>
-                <p className="text-5xl font-display font-bold text-white tracking-tighter">{value}</p>
+                <p className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">{label}</p>
+                <p className="text-4xl md:text-5xl font-display font-bold text-white tracking-tighter">{value}</p>
             </div>
         </div>
     );

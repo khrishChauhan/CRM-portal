@@ -95,7 +95,7 @@ const Navbar = ({ user, toggleSidebar, logout }) => {
                 </button>
 
                 <div className="flex flex-col">
-                    <h1 className="text-base sm:text-lg font-display font-bold text-white tracking-tight capitalize truncate max-w-[120px] sm:max-w-none">
+                    <h1 className="text-base sm:text-lg font-display font-bold text-white tracking-tight capitalize truncate max-w-[140px] sm:max-w-none">
                         {user?.role} Dashboard
                     </h1>
                 </div>
