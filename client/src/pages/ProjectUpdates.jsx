@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import {
-    ArrowLeft, Send, Image as ImageIcon, MapPin, Loader2,
+    ArrowLeft, Send, MapPin, Loader2,
     Clock, X, AlertCircle, CheckCircle, Maximize2, ExternalLink, Camera
 } from 'lucide-react';
 
@@ -23,6 +23,7 @@ const ProjectUpdates = () => {
     const [imagePreview, setImagePreview] = useState(null);
     const [location, setLocation] = useState(null);
     const [locLoading, setLocLoading] = useState(false);
+    const [stamping, setStamping] = useState(false);
 
     const [toast, setToast] = useState(null);
     const [lightbox, setLightbox] = useState(null);
@@ -46,26 +47,39 @@ const ProjectUpdates = () => {
         fetchUpdates();
     }, [fetchUpdates]);
 
-    // ── Geolocation ──
-    const captureLocation = () => {
-        if (!navigator.geolocation) {
-            showToast('Geolocation is not supported by your browser', 'error');
-            return;
-        }
+    // ── Toast ──
+    const showToast = (msg, type = 'success') => {
+        setToast({ message: msg, type });
+        setTimeout(() => setToast(null), 4000);
+    };
+
+    // ── Geolocation helper (returns a promise) ──
+    const requestGPS = (timeout = 10000) => {
+        return new Promise((resolve, reject) => {
+            if (!navigator.geolocation) {
+                reject(new Error('Geolocation not supported'));
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(
+                (pos) => resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
+                (err) => reject(err),
+                { enableHighAccuracy: true, timeout }
+            );
+        });
+    };
+
+    // ── Manual location capture ──
+    const captureLocation = async () => {
         setLocLoading(true);
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                setLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude });
-                setLocLoading(false);
-                showToast('Location captured');
-            },
-            (err) => {
-                console.warn('Geolocation error:', err.message);
-                setLocLoading(false);
-                showToast('Location unavailable — update will be posted without it', 'error');
-            },
-            { enableHighAccuracy: true, timeout: 10000 }
-        );
+        try {
+            const loc = await requestGPS(10000);
+            setLocation(loc);
+            showToast('Location captured');
+        } catch {
+            showToast('Could not get location. Please allow location access and try again.', 'error');
+        } finally {
+            setLocLoading(false);
+        }
     };
 
     // ── Canvas watermark stamping ──
@@ -85,29 +99,29 @@ const ProjectUpdates = () => {
                 // Draw the original image
                 ctx.drawImage(img, 0, 0);
 
-                // Format timestamp: "13 Mar 2026 18:30"
+                // Format timestamp: "13 Mar 2026 • 18:30"
                 const now = new Date();
                 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                const timeStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} `
-                    + `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                const timeStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`
+                    + ` \u2022 ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
                 // Build watermark lines
                 const lines = [];
                 if (latitude != null && longitude != null) {
-                    lines.push(`Lat/Lng: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+                    lines.push({ icon: '\uD83D\uDCCD', text: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}` });
                 }
-                lines.push(`Time: ${timeStr}`);
+                lines.push({ icon: '\uD83D\uDD52', text: timeStr });
 
                 // Calculate sizing relative to image dimensions
-                const fontSize = Math.max(Math.round(img.width * 0.03), 16);
-                const padding = Math.max(Math.round(img.width * 0.02), 12);
-                const lineHeight = fontSize * 1.6;
+                const fontSize = Math.max(Math.round(img.width * 0.028), 14);
+                const padding = Math.max(Math.round(img.width * 0.02), 10);
+                const lineHeight = fontSize * 1.7;
                 const boxHeight = lines.length * lineHeight + padding * 2;
                 const boxY = img.height - boxHeight;
 
                 // Draw semi-transparent dark rectangle at bottom
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
                 ctx.fillRect(0, boxY, img.width, boxHeight);
 
                 // Draw white watermark text
@@ -115,7 +129,7 @@ const ProjectUpdates = () => {
                 ctx.font = `bold ${fontSize}px Arial, Helvetica, sans-serif`;
                 ctx.textBaseline = 'top';
                 lines.forEach((line, i) => {
-                    ctx.fillText(line, padding, boxY + padding + i * lineHeight);
+                    ctx.fillText(`${line.icon} ${line.text}`, padding, boxY + padding + i * lineHeight);
                 });
 
                 // Convert canvas to JPEG blob
@@ -146,22 +160,17 @@ const ProjectUpdates = () => {
             return;
         }
 
-        // Get GPS coordinates for watermark
+        setStamping(true);
+
+        // Get GPS coordinates for watermark + auto-capture location
         let lat = null, lng = null;
-        if (navigator.geolocation) {
-            try {
-                const pos = await new Promise((resolve, reject) => {
-                    navigator.geolocation.getCurrentPosition(resolve, reject, {
-                        enableHighAccuracy: true,
-                        timeout: 5000,
-                    });
-                });
-                lat = pos.coords.latitude;
-                lng = pos.coords.longitude;
-                setLocation({ latitude: lat, longitude: lng });
-            } catch {
-                console.warn('Geolocation unavailable — watermark will include timestamp only');
-            }
+        try {
+            const loc = await requestGPS(5000);
+            lat = loc.latitude;
+            lng = loc.longitude;
+            setLocation(loc);
+        } catch {
+            console.warn('Geolocation unavailable — watermark will include timestamp only');
         }
 
         // Stamp watermark onto image using Canvas
@@ -174,6 +183,8 @@ const ProjectUpdates = () => {
             console.error('Watermark stamping failed, using original file:', err);
             setImageFile(file);
             setImagePreview(URL.createObjectURL(file));
+        } finally {
+            setStamping(false);
         }
     };
 
@@ -189,52 +200,52 @@ const ProjectUpdates = () => {
             return;
         }
 
-        setPosting(true);
-
-        // Capture location automatically before posting
-        const postUpdate = async (loc) => {
+        // ── Location is REQUIRED ──
+        // If not yet captured, try one last auto-capture
+        if (!location) {
+            setPosting(true);
             try {
-                const formData = new FormData();
-                formData.append('message', message.trim());
-                if (imageFile) formData.append('image', imageFile);
-                if (loc) {
-                    formData.append('latitude', loc.latitude);
-                    formData.append('longitude', loc.longitude);
-                }
-
-                await api.post(`/projects/${id}/updates`, formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
-
-                showToast('Update posted successfully');
-                setMessage('');
-                clearImage();
-                setLocation(null);
-                fetchUpdates();
-            } catch (err) {
-                showToast(err.response?.data?.message || 'Failed to post update', 'error');
-            } finally {
+                const loc = await requestGPS(5000);
+                setLocation(loc);
+                await submitUpdate(loc);
+            } catch {
                 setPosting(false);
+                showToast('Location is required to post an update. Please tap "Pin Location".', 'error');
             }
-        };
+            return;
+        }
 
-        // Try to get location, post regardless
-        if (navigator.geolocation && !location) {
-            navigator.geolocation.getCurrentPosition(
-                (pos) => postUpdate({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
-                () => postUpdate(null),
-                { enableHighAccuracy: true, timeout: 5000 }
-            );
-        } else {
-            postUpdate(location);
+        setPosting(true);
+        await submitUpdate(location);
+    };
+
+    const submitUpdate = async (loc) => {
+        try {
+            const formData = new FormData();
+            formData.append('message', message.trim());
+            if (imageFile) formData.append('image', imageFile);
+            if (loc) {
+                formData.append('latitude', loc.latitude);
+                formData.append('longitude', loc.longitude);
+            }
+
+            await api.post(`/projects/${id}/updates`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+
+            showToast('Update posted successfully');
+            setMessage('');
+            clearImage();
+            setLocation(null);
+            fetchUpdates();
+        } catch (err) {
+            showToast(err.response?.data?.message || 'Failed to post update', 'error');
+        } finally {
+            setPosting(false);
         }
     };
 
-    const showToast = (msg, type = 'success') => {
-        setToast({ message: msg, type });
-        setTimeout(() => setToast(null), 4000);
-    };
-
+    // ── Format time ──
     const formatTime = (date) => {
         const d = new Date(date);
         const now = new Date();
@@ -276,80 +287,70 @@ const ProjectUpdates = () => {
     }
 
     return (
-        <div className="animate-reveal pb-8 flex flex-col h-[calc(100vh-8rem)]">
+        <div className="animate-reveal flex flex-col h-[calc(100vh-6rem)]">
             {/* ── Toast ── */}
             {toast && (
-                <div className={`fixed top-8 right-8 z-[100] flex items-center gap-4 px-6 py-4 rounded-3xl shadow-2xl glass-dark border border-white/10 text-sm font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-400' : 'text-emerald-400'}`}>
-                    {toast.type === 'error' ? <AlertCircle className="w-5 h-5" /> : <CheckCircle className="w-5 h-5" />}
-                    {toast.message}
+                <div className={`fixed top-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl glass-dark border border-white/10 text-xs font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 max-w-[90vw] ${toast.type === 'error' ? 'text-red-400' : 'text-emerald-400'}`}>
+                    {toast.type === 'error' ? <AlertCircle className="w-4 h-4 flex-shrink-0" /> : <CheckCircle className="w-4 h-4 flex-shrink-0" />}
+                    <span className="truncate">{toast.message}</span>
                 </div>
             )}
 
             {/* ── Header ── */}
-            <div className="flex items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <div className="flex items-center gap-3 sm:gap-5 mb-4 sm:mb-5 flex-shrink-0">
                 <button
                     onClick={goBack}
-                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-indigo-500/30 transition-all active:scale-95 flex-shrink-0"
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-indigo-500/30 transition-all active:scale-95 flex-shrink-0"
                 >
-                    <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <ArrowLeft className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
                 </button>
                 <div className="flex-1 min-w-0">
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white tracking-tight text-gradient truncate">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-white tracking-tight text-gradient truncate">
                         {project?.projectName || 'Project'}
                     </h1>
-                    <p className="text-slate-500 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] mt-1 italic font-mono truncate">
+                    <p className="text-slate-500 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] mt-0.5 italic font-mono truncate">
                         {project?.projectCode} // {updates.length} Updates
                     </p>
                 </div>
             </div>
 
             {/* ── Feed ── */}
-            <div ref={feedRef} className="flex-1 overflow-y-auto space-y-6 pr-2 scrollbar-thin mb-6">
+            <div ref={feedRef} className="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-thin mb-3">
                 {updates.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-40 text-slate-600">
-                        <div className="w-24 h-24 bg-white/5 border border-white/5 rounded-[2.5rem] flex items-center justify-center mb-8 ring-1 ring-white/10 shadow-inner">
-                            <Send className="w-10 h-10 opacity-30" />
+                    <div className="flex flex-col items-center justify-center py-28 text-slate-600">
+                        <div className="w-20 h-20 bg-white/5 border border-white/5 rounded-3xl flex items-center justify-center mb-6 ring-1 ring-white/10 shadow-inner">
+                            <Send className="w-8 h-8 opacity-30" />
                         </div>
-                        <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">No Updates Yet</h3>
-                        <p className="text-sm mt-3 font-medium">Be the first to post an update for this project.</p>
+                        <h3 className="text-lg font-display font-bold text-white/50 tracking-tight">No Updates Yet</h3>
+                        <p className="text-sm mt-2 font-medium">Be the first to post an update for this project.</p>
                     </div>
                 ) : (
                     updates.map((update, idx) => (
                         <div
                             key={update._id}
-                            className="glass p-8 rounded-[2.5rem] border border-white/5 shadow-xl group hover:border-indigo-500/20 transition-all duration-500 relative overflow-hidden"
-                            style={{ animationDelay: `${idx * 0.05}s` }}
+                            className="glass p-4 sm:p-5 rounded-2xl border border-white/5 shadow-lg group hover:border-indigo-500/20 transition-all duration-500 relative overflow-hidden"
+                            style={{ animationDelay: `${idx * 0.04}s` }}
                         >
                             {/* Decorative glow */}
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-[60px] -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                            <div className="absolute top-0 right-0 w-28 h-28 bg-indigo-500/5 blur-[50px] -mr-14 -mt-14 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
 
                             <div className="relative z-10">
                                 {/* ── Author row ── */}
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5 mb-6">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-display font-bold text-xs sm:text-sm flex-shrink-0 group-hover:scale-110 transition-transform">
-                                            {update.createdBy?.name?.charAt(0)?.toUpperCase() || '?'}
-                                        </div>
-                                        <div className="sm:hidden">
-                                            <span className="font-display font-bold text-white text-base tracking-tight group-hover:text-indigo-400 transition-colors block">
-                                                {update.createdBy?.name || 'Unknown'}
-                                            </span>
-                                            <span className={`inline-flex px-2 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-widest border mt-1 ${roleBadge(update.role)}`}>
-                                                {update.role}
-                                            </span>
-                                        </div>
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-display font-bold text-xs flex-shrink-0 group-hover:scale-110 transition-transform">
+                                        {update.createdBy?.name?.charAt(0)?.toUpperCase() || '?'}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <div className="hidden sm:flex items-center gap-3 flex-wrap">
-                                            <span className="font-display font-bold text-white text-lg tracking-tight group-hover:text-indigo-400 transition-colors">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            <span className="font-display font-bold text-white text-sm sm:text-base tracking-tight group-hover:text-indigo-400 transition-colors">
                                                 {update.createdBy?.name || 'Unknown'}
                                             </span>
-                                            <span className={`inline-flex px-3 py-1 rounded-xl text-[9px] font-bold uppercase tracking-widest border ${roleBadge(update.role)}`}>
+                                            <span className={`inline-flex px-2 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-widest border ${roleBadge(update.role)}`}>
                                                 {update.role}
                                             </span>
                                         </div>
-                                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.15em] mt-1 flex items-center gap-2">
-                                            <Clock className="w-3.5 h-3.5" />
+                                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.12em] mt-0.5 flex items-center gap-1.5">
+                                            <Clock className="w-3 h-3" />
                                             {formatTime(update.createdAt)}
                                         </p>
                                     </div>
@@ -360,30 +361,30 @@ const ProjectUpdates = () => {
                                             href={`https://www.google.com/maps?q=${update.location.latitude},${update.location.longitude}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-2 px-4 py-2.5 glass-dark border border-white/10 rounded-2xl text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 transition-all flex-shrink-0"
+                                            className="flex items-center gap-1.5 px-3 py-2 glass-dark border border-white/10 rounded-xl text-[8px] sm:text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 transition-all flex-shrink-0"
                                         >
-                                            <MapPin className="w-3.5 h-3.5" />
-                                            <span className="hidden sm:inline">View Location</span>
-                                            <ExternalLink className="w-3 h-3" />
+                                            <MapPin className="w-3 h-3" />
+                                            <span className="hidden sm:inline">Location</span>
+                                            <ExternalLink className="w-2.5 h-2.5" />
                                         </a>
                                     )}
                                 </div>
 
                                 {/* ── Message ── */}
-                                <p className="text-slate-300 text-[15px] font-medium leading-relaxed whitespace-pre-wrap mb-2">
+                                <p className="text-slate-300 text-sm sm:text-[15px] font-medium leading-relaxed whitespace-pre-wrap">
                                     {update.message}
                                 </p>
 
                                 {/* ── Image ── */}
                                 {update.imageUrl && (
-                                    <div className="mt-6 relative group/img cursor-pointer" onClick={() => setLightbox(update)}>
+                                    <div className="mt-3 relative group/img cursor-pointer" onClick={() => setLightbox(update)}>
                                         <img
                                             src={update.imageUrl}
                                             alt="Update attachment"
-                                            className="w-full max-h-80 object-cover rounded-2xl border border-white/10 shadow-lg group-hover/img:border-indigo-500/30 transition-all"
+                                            className="w-full max-h-[220px] sm:max-h-[280px] object-cover rounded-xl border border-white/10 shadow-lg group-hover/img:border-indigo-500/30 transition-all"
                                         />
-                                        <div className="absolute inset-0 bg-slate-950/0 group-hover/img:bg-slate-950/40 rounded-2xl flex items-center justify-center transition-all">
-                                            <Maximize2 className="w-8 h-8 text-white opacity-0 group-hover/img:opacity-100 transition-opacity" />
+                                        <div className="absolute inset-0 bg-slate-950/0 group-hover/img:bg-slate-950/40 rounded-xl flex items-center justify-center transition-all">
+                                            <Maximize2 className="w-6 h-6 text-white opacity-0 group-hover/img:opacity-100 transition-opacity" />
                                         </div>
                                     </div>
                                 )}
@@ -395,37 +396,37 @@ const ProjectUpdates = () => {
 
             {/* ── Input Panel (Admin/Staff only) ── */}
             {canPost && (
-                <div className="glass-dark border border-white/10 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-48 h-48 bg-indigo-500/5 blur-[80px] -ml-24 -mt-24 pointer-events-none"></div>
+                <div className="glass-dark border border-white/10 rounded-2xl p-4 sm:p-5 shadow-2xl relative overflow-hidden flex-shrink-0">
+                    <div className="absolute top-0 left-0 w-40 h-40 bg-indigo-500/5 blur-[70px] -ml-20 -mt-20 pointer-events-none"></div>
 
                     {/* Image Preview */}
                     {imagePreview && (
-                        <div className="mb-6 relative inline-block">
-                            <img src={imagePreview} alt="Preview" className="h-24 w-auto rounded-2xl border border-white/10 shadow-lg" />
+                        <div className="mb-3 relative inline-block">
+                            <img src={imagePreview} alt="Preview" className="h-20 sm:h-24 w-auto rounded-xl border border-white/10 shadow-lg" />
                             <button
                                 onClick={clearImage}
-                                className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-400 transition-colors shadow-lg"
+                                className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-400 transition-colors shadow-lg"
                             >
-                                <X className="w-4 h-4" />
+                                <X className="w-3.5 h-3.5" />
                             </button>
                         </div>
                     )}
 
-                    {/* Location indicator */}
-                    {location && (
-                        <div className="mb-4 flex items-center gap-2 text-emerald-400 text-[10px] font-bold uppercase tracking-widest">
-                            <MapPin className="w-3.5 h-3.5" />
-                            Location captured ({location.latitude.toFixed(4)}, {location.longitude.toFixed(4)})
+                    {/* Stamping indicator */}
+                    {stamping && (
+                        <div className="mb-3 flex items-center gap-2 text-indigo-400 text-[10px] font-bold uppercase tracking-widest">
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            Processing image...
                         </div>
                     )}
 
-                    <div className="flex flex-col gap-4 relative z-10">
+                    <div className="flex flex-col gap-3 relative z-10">
                         <textarea
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             placeholder="Write a project update..."
                             rows={2}
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all resize-none font-medium"
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 sm:px-5 py-3 text-sm text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all resize-none font-medium"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                                     handlePost();
@@ -433,11 +434,11 @@ const ProjectUpdates = () => {
                             }}
                         />
 
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
                             {/* Image upload */}
-                            <label className="flex-1 group/upload h-12 px-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center sm:justify-start gap-3 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30 transition-all cursor-pointer active:scale-[0.98]">
-                                <Camera className="w-5 h-5 group-hover/upload:scale-110 transition-transform" />
-                                <span className="text-[9px] font-bold uppercase tracking-widest">Attach Image</span>
+                            <label className="flex-1 group/upload h-10 sm:h-11 px-3 sm:px-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center sm:justify-start gap-2.5 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30 transition-all cursor-pointer active:scale-[0.98]">
+                                <Camera className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover/upload:scale-110 transition-transform" />
+                                <span className="text-[9px] font-bold uppercase tracking-widest">Add Photo</span>
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -447,41 +448,52 @@ const ProjectUpdates = () => {
                                 />
                             </label>
 
-                            {/* Location */}
+                            {/* Pin Location */}
                             <button
                                 onClick={captureLocation}
                                 disabled={locLoading}
                                 title="Pin Location"
-                                className={`flex-1 h-12 px-4 rounded-2xl border flex items-center justify-center sm:justify-start gap-3 transition-all active:scale-[0.98] ${location ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-white/5 border-white/10 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30'}`}
+                                className={`flex-1 h-10 sm:h-11 px-3 sm:px-4 rounded-xl border flex items-center justify-center sm:justify-start gap-2.5 transition-all active:scale-[0.98] ${location ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-white/5 border-white/10 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30'}`}
                             >
-                                {locLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
-                                <span className="text-[9px] font-bold uppercase tracking-widest">{location ? 'Pinned' : 'Pin Location'}</span>
+                                {locLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
+                                <span className="text-[9px] font-bold uppercase tracking-widest">
+                                    {location ? `Pinned (${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)})` : 'Pin Location'}
+                                </span>
                             </button>
 
                             {/* Post */}
                             <button
                                 onClick={handlePost}
-                                disabled={posting || !message.trim()}
-                                className="sm:flex-[0.5] h-12 px-8 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl shadow-indigo-600/20 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-3 active:scale-[0.98]"
+                                disabled={posting || !message.trim() || stamping}
+                                className="sm:flex-[0.6] h-10 sm:h-11 px-6 sm:px-8 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl shadow-indigo-600/20 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-2.5 active:scale-[0.98]"
                             >
                                 {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                                 Post
                             </button>
                         </div>
-                    </div>
 
-                    <p className="text-[10px] text-slate-700 mt-4 font-medium text-center">
-                        Ctrl + Enter to post · Location auto-captured on send
-                    </p>
+                        {/* Status bar */}
+                        <div className="flex items-center justify-between">
+                            <p className="text-[10px] text-slate-700 font-medium">
+                                Ctrl + Enter to post
+                            </p>
+                            {!location && (
+                                <p className="text-[10px] text-amber-500/70 font-bold uppercase tracking-widest flex items-center gap-1.5">
+                                    <MapPin className="w-3 h-3" />
+                                    Location required
+                                </p>
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
 
             {/* ── Lightbox Modal ── */}
             {lightbox && (
-                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4">
                     <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-3xl animate-in fade-in duration-500" onClick={() => setLightbox(null)}></div>
                     <div className="relative z-[210] w-full max-w-4xl animate-in zoom-in-95 duration-500">
-                        <div className="glass-dark border border-white/10 rounded-[3rem] overflow-hidden shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)]">
+                        <div className="glass-dark border border-white/10 rounded-2xl sm:rounded-[2.5rem] overflow-hidden shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)]">
                             {/* Image */}
                             <img
                                 src={lightbox.imageUrl}
@@ -490,9 +502,9 @@ const ProjectUpdates = () => {
                             />
 
                             {/* Info bar */}
-                            <div className="p-8 flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-xs">
+                            <div className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-xs flex-shrink-0">
                                         {lightbox.createdBy?.name?.charAt(0)?.toUpperCase()}
                                     </div>
                                     <div>
@@ -501,23 +513,23 @@ const ProjectUpdates = () => {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
                                     {lightbox.location?.latitude && lightbox.location?.longitude && (
                                         <a
                                             href={`https://www.google.com/maps?q=${lightbox.location.latitude},${lightbox.location.longitude}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center gap-2 px-6 py-3 glass border border-white/10 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 transition-all"
+                                            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 glass border border-white/10 rounded-xl text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 transition-all"
                                         >
-                                            <MapPin className="w-4 h-4" />
+                                            <MapPin className="w-3.5 h-3.5" />
                                             View Location
                                         </a>
                                     )}
                                     <button
                                         onClick={() => setLightbox(null)}
-                                        className="w-12 h-12 rounded-2xl glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-all"
+                                        className="w-10 h-10 rounded-xl glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-all flex-shrink-0"
                                     >
-                                        <X className="w-6 h-6" />
+                                        <X className="w-5 h-5" />
                                     </button>
                                 </div>
                             </div>
