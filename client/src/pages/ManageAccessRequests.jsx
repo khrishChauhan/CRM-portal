@@ -92,47 +92,49 @@ const ManageAccessRequests = () => {
                 </div>
             )}
 
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Access Requests</h1>
-                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Review and manage client access requests.</p>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div className="text-center md:text-left">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient truncate max-w-full">Access Requests</h1>
+                    <p className="text-slate-500 mt-2 sm:mt-3 font-medium text-sm sm:text-lg italic">Review and manage client access requests.</p>
                 </div>
             </div>
 
             {/* Dashboard Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatCard label="Total Requests" value={stats.total} icon={FileText} color="text-indigo-400" bgColor="bg-indigo-500/10" />
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mt-6">
+                <StatCard label="Total" value={stats.total} icon={FileText} color="text-indigo-400" bgColor="bg-indigo-500/10" />
                 <StatCard label="Pending" value={stats.pending} icon={Clock} color="text-amber-400" bgColor="bg-amber-500/10" />
                 <StatCard label="Approved" value={stats.approved} icon={CheckCircle} color="text-emerald-400" bgColor="bg-emerald-500/10" />
                 <StatCard label="Declined" value={stats.rejected} icon={XCircle} color="text-red-400" bgColor="bg-red-500/10" />
             </div>
 
             {/* Filters */}
-            <div className="glass p-2 rounded-[2rem] border border-white/5 shadow-xl flex flex-col md:flex-row gap-2">
+            <div className="glass p-2 rounded-[1.5rem] md:rounded-[2rem] border border-white/5 shadow-xl flex flex-col md:flex-row gap-2 mt-6">
                 <div className="relative flex-1 group">
                     <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search by client name or project..."
-                        className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm font-medium"
+                        placeholder="Search requests..."
+                        className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-slate-600 focus:outline-none transition-all text-sm font-medium"
                     />
                 </div>
-                <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
-                >
-                    <option value="" className="bg-slate-900">All Status</option>
-                    <option value="pending" className="bg-slate-900">PENDING</option>
-                    <option value="approved" className="bg-slate-900">APPROVED</option>
-                    <option value="rejected" className="bg-slate-900">REJECTED</option>
-                </select>
+                <div className="px-2 pb-2 md:p-0">
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="w-full md:w-auto px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
+                    >
+                        <option value="" className="bg-slate-900">All Status</option>
+                        <option value="pending" className="bg-slate-900">PENDING</option>
+                        <option value="approved" className="bg-slate-900">APPROVED</option>
+                        <option value="rejected" className="bg-slate-900">REJECTED</option>
+                    </select>
+                </div>
             </div>
 
             {/* Requests List */}
-            <div className="glass rounded-[3rem] border border-white/5 shadow-2xl overflow-hidden min-h-[500px]">
+            <div className="glass rounded-[2rem] md:rounded-[3rem] border border-white/5 shadow-2xl overflow-hidden min-h-[500px] mt-6">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-40">
                         <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />

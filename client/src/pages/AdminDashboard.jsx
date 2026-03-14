@@ -67,17 +67,17 @@ const AdminDashboard = () => {
             </header>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-8 mt-6">
                 {cards.map((card, idx) => (
-                    <div key={card.name} className={`glass p-8 rounded-[3rem] group hover:border-indigo-500/30 transition-all duration-500 hover:-translate-y-2 ${card.glow} animate-reveal`} style={{ animationDelay: `${idx * 0.1}s` }}>
-                        <div className="flex flex-col gap-6">
-                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-white/5 border border-white/5 ${card.color} group-hover:scale-110 transition-transform duration-500 ring-1 ring-white/5`}>
-                                <card.icon className="w-7 h-7" />
+                    <div key={card.name} className={`glass p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] group md:hover:border-indigo-500/30 transition-all duration-500 md:hover:-translate-y-2 ${card.glow} animate-reveal`} style={{ animationDelay: `${idx * 0.1}s` }}>
+                        <div className="flex flex-col gap-4 md:gap-6">
+                            <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center bg-white/5 border border-white/5 ${card.color} md:group-hover:scale-110 transition-transform duration-500 ring-1 ring-white/5`}>
+                                <card.icon className="w-6 h-6 md:w-7 md:h-7" />
                             </div>
                             <div>
                                 <h3 className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">{card.name}</h3>
                                 <div className="flex items-baseline gap-3">
-                                    <p className="text-5xl font-display font-bold text-white tracking-tighter">{card.value}</p>
+                                    <p className="text-4xl md:text-5xl font-display font-bold text-white tracking-tighter">{card.value}</p>
                                     <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{card.subtitle}</span>
                                 </div>
                             </div>

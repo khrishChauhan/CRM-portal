@@ -109,14 +109,14 @@ const ManageProjects = () => {
             )}
 
             {/* ── Header ── */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-                <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">Projects</h1>
-                    <p className="text-slate-500 mt-3 font-medium text-lg italic">Create and manage all your projects.</p>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div className="text-center md:text-left">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient truncate max-w-full">Projects</h1>
+                    <p className="text-slate-500 mt-2 sm:mt-3 font-medium text-sm sm:text-lg italic leading-relaxed">Create and manage all your projects.</p>
                 </div>
                 <button
                     onClick={() => { setEditingProject(null); setShowModal(true); }}
-                    className="group relative inline-flex items-center gap-3 px-8 py-5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-[0_0_30px_rgba(79,70,229,0.3)] hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full md:w-auto mt-4 md:mt-0 group relative inline-flex items-center justify-center gap-3 px-8 py-4 md:py-5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-[0_0_30px_rgba(79,70,229,0.3)] hover:scale-[1.02] active:scale-[0.98]"
                 >
                     <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" />
                     New Project
@@ -125,7 +125,7 @@ const ManageProjects = () => {
 
             {/* ── Dashboard Stats ── */}
             {dashboard && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 md:gap-4 mt-6">
                     <MiniStat label="Total" value={ov.total || 0} icon={FolderOpen} color="text-indigo-400" bgColor="bg-indigo-500/10" />
                     <MiniStat label="Active" value={ov.active || 0} icon={TrendingUp} color="text-emerald-400" bgColor="bg-emerald-500/10" />
                     <MiniStat label="Completed" value={ov.completed || 0} icon={CheckCircle} color="text-sky-400" bgColor="bg-sky-500/10" />
@@ -136,22 +136,22 @@ const ManageProjects = () => {
             )}
 
             {/* ── Control Center (Filters) ── */}
-            <div className="glass p-2 rounded-[2rem] border border-white/5 shadow-xl flex flex-col lg:flex-row gap-2">
+            <div className="glass p-2 rounded-[1.5rem] md:rounded-[2rem] border border-white/5 shadow-xl flex flex-col lg:flex-row gap-2 mt-6">
                 <div className="relative flex-1 group">
                     <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search projects by name or code..."
-                        className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm font-medium"
+                        placeholder="Search projects by name..."
+                        className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-slate-600 focus:outline-none transition-all text-sm font-medium"
                     />
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2 px-2 pb-2 md:p-0">
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
+                        className="w-full sm:w-auto px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
                     >
                         <option value="" className="bg-slate-900">All Status</option>
                         {STATUSES.map((s) => <option key={s} value={s} className="bg-slate-900 uppercase">{s}</option>)}
@@ -159,7 +159,7 @@ const ManageProjects = () => {
                     <select
                         value={priorityFilter}
                         onChange={(e) => setPriorityFilter(e.target.value)}
-                        className="px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
+                        className="w-full sm:w-auto px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
                     >
                         <option value="" className="bg-slate-900">All Priority</option>
                         {PRIORITIES.map((p) => <option key={p} value={p} className="bg-slate-900 uppercase">{p}</option>)}
@@ -168,7 +168,7 @@ const ManageProjects = () => {
             </div>
 
             {/* ── Main Data Mesh ── */}
-            <div className="glass rounded-[3rem] border border-white/5 shadow-2xl overflow-hidden min-h-[500px]">
+            <div className="glass rounded-[2rem] md:rounded-[3rem] border border-white/5 shadow-2xl overflow-hidden min-h-[500px] mt-6">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-40">
                         <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />
