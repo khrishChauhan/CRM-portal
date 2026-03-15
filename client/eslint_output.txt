@@ -1,0 +1,72 @@
+﻿
+> client@0.0.0 lint
+> eslint .
+
+
+K:\code\intern\CRM portal\client\src\context\AuthContext.jsx
+   25:18  error  'err' is defined but never used                                                                                                 no-unused-vars
+  153:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+K:\code\intern\CRM portal\client\src\layouts\DashboardLayout.jsx
+    1:10  error  'useNavigate' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            no-unused-vars
+  133:9   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  131 |     // Close sidebar on route change (for mobile)
+  132 |     useEffect(() => {
+> 133 |         setSidebarOpen(false);
+      |         ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  134 |     }, [location]);
+  135 |
+  136 |     return (  react-hooks/set-state-in-effect
+
+K:\code\intern\CRM portal\client\src\pages\ClientDashboard.jsx
+   61:18  error  'err' is defined but never used   no-unused-vars
+  324:41  error  'Icon' is defined but never used  no-unused-vars
+
+K:\code\intern\CRM portal\client\src\pages\Login.jsx
+   28:11  error    'navigate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                 no-unused-vars
+   78:8   warning  React Hook useEffect has a missing dependency: 'handleGoogleResponse'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   89:18  error    'err' is defined but never used                                                                                          no-unused-vars
+  108:18  error    'err' is defined but never used                                                                                          no-unused-vars
+  126:18  error    'err' is defined but never used                                                                                          no-unused-vars
+  144:18  error    'err' is defined but never used                                                                                          no-unused-vars
+
+K:\code\intern\CRM portal\client\src\pages\ManageAccessRequests.jsx
+   36:18  error  'err' is defined but never used   no-unused-vars
+  296:41  error  'Icon' is defined but never used  no-unused-vars
+
+K:\code\intern\CRM portal\client\src\pages\ManageClients.jsx
+   34:18  error  'err' is defined but never used   no-unused-vars
+   86:18  error  'err' is defined but never used   no-unused-vars
+  300:27  error  'Icon' is defined but never used  no-unused-vars
+  320:26  error  'Icon' is defined but never used  no-unused-vars
+
+K:\code\intern\CRM portal\client\src\pages\ManageProjects.jsx
+   45:18  error  'err' is defined but never used   no-unused-vars
+   87:18  error  'err' is defined but never used   no-unused-vars
+  289:41  error  'Icon' is defined but never used  no-unused-vars
+
+K:\code\intern\CRM portal\client\src\pages\ManageStaff.jsx
+   45:18  error    'err' is defined but never used                                                                                no-unused-vars
+   72:8   warning  React Hook useEffect has a missing dependency: 'fetchStaff'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   81:43  error    'name' is defined but never used                                                                               no-unused-vars
+  318:27  error    'Icon' is defined but never used                                                                               no-unused-vars
+
+K:\code\intern\CRM portal\client\src\pages\ManageStaffProjects.jsx
+  255:29  error  'Icon' is defined but never used  no-unused-vars
+
+K:\code\intern\CRM portal\client\src\pages\MyProjects.jsx
+  187:28  error  'Icon' is defined but never used  no-unused-vars
+  264:30  error  'Icon' is defined but never used  no-unused-vars
+
+K:\code\intern\CRM portal\client\src\pages\ProjectUpdates.jsx
+  15:11  error  'feedRef' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+Γ£û 29 problems (27 errors, 2 warnings)
+
