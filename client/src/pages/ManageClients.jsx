@@ -252,21 +252,21 @@ const ManageClients = () => {
 
             {/* ── Client Detail Modal ── */}
             {selectedClient && (
-                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-[110] flex items-start sm:items-center justify-center p-4 pt-10 sm:pt-4">
                     <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-500" onClick={() => setSelectedClient(null)}></div>
-                    <div className="glass-dark border border-white/10 rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
-                        <div className="px-10 py-10 overflow-y-auto">
-                            <div className="flex items-center justify-between mb-10">
-                                <div>
-                                    <h2 className="text-3xl font-display font-bold text-white tracking-tight">{selectedClient.name}</h2>
-                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic">Client Details</p>
-                                </div>
-                                <button onClick={() => setSelectedClient(null)} className="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 text-slate-500 hover:text-white transition-all duration-300">
-                                    <X className="w-5 h-5 mx-auto" />
-                                </button>
+                    <div className="glass-dark border border-white/10 rounded-3xl md:rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-lg max-h-[85vh] sm:max-h-[90vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 duration-700">
+                        <div className="flex items-center justify-between px-6 py-6 md:px-10 md:py-10 border-b border-white/5 shrink-0">
+                            <div>
+                                <h2 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight leading-tight">{selectedClient.name}</h2>
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic">Client Details</p>
                             </div>
-
-                            <div className="space-y-6">
+                            <button onClick={() => setSelectedClient(null)} className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 text-slate-500 hover:text-white transition-all duration-300">
+                                <X className="w-4 h-4 md:w-5 md:h-5 mx-auto" />
+                            </button>
+                        </div>
+                        
+                        <div className="px-6 py-6 md:px-10 md:py-10 overflow-y-auto custom-scrollbar">
+                            <div className="space-y-4 md:space-y-6">
                                 <InfoRow icon={Mail} label="Email" value={selectedClient.email} />
                                 <InfoRow icon={Building2} label="Company" value={selectedClient.company || '—'} />
                                 <InfoRow icon={ShieldCheck} label="Status" value={selectedClient.clientStatus.toUpperCase()} />
@@ -274,21 +274,24 @@ const ManageClients = () => {
                             </div>
 
                             {selectedClient.approvedProjects?.length > 0 && (
-                                <div className="mt-12">
-                                    <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.3em] mb-6 px-1">Approved Projects ({selectedClient.approvedProjects.length})</h3>
+                                <div className="mt-8 md:mt-12">
+                                    <h3 className="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.3em] mb-4 md:mb-6 px-1">Approved Projects ({selectedClient.approvedProjects.length})</h3>
                                     <div className="space-y-3">
                                         {selectedClient.approvedProjects.map(p => (
-                                            <div key={p._id} className="flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-3xl group hover:bg-white/10 transition-all cursor-default">
-                                                <div>
-                                                    <p className="font-bold text-white group-hover:text-indigo-400 transition-colors text-sm">{p.projectName}</p>
+                                            <div key={p._id} className="flex items-center justify-between p-4 md:p-5 bg-white/5 border border-white/5 rounded-2xl md:rounded-3xl group hover:bg-white/10 transition-all cursor-default">
+                                                <div className="pr-4">
+                                                    <p className="font-bold text-white group-hover:text-indigo-400 transition-colors text-sm leading-snug">{p.projectName}</p>
                                                     <p className="text-[10px] font-mono text-slate-500 uppercase mt-1">{p.projectCode}</p>
                                                 </div>
-                                                <span className="text-[9px] font-bold text-slate-400 border border-white/5 px-3 py-1 rounded-lg uppercase tracking-widest">{p.projectStatus}</span>
+                                                <span className="shrink-0 text-[8px] md:text-[9px] font-bold text-slate-400 border border-white/5 px-2 md:px-3 py-1 rounded-lg uppercase tracking-widest">{p.projectStatus}</span>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             )}
+                        </div>
+                        <div className="shrink-0 p-4 md:p-6 border-t border-white/5 bg-slate-900/50">
+                            <button onClick={() => setSelectedClient(null)} className="w-full px-8 py-4 bg-white/5 text-[11px] font-bold text-slate-400 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Close</button>
                         </div>
                     </div>
                 </div>

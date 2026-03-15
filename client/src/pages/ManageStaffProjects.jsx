@@ -163,28 +163,28 @@ const ManageStaffProjects = () => {
 
             {/* Update Modal */}
             {selectedProject && (
-                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-[110] flex items-start sm:items-center justify-center p-4 pt-10 sm:pt-4">
                     <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-500" onClick={() => setSelectedProject(null)}></div>
-                    <div className="glass-dark border border-white/10 rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-xl relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700 overflow-hidden">
-                        <form onSubmit={handleUpdate} className="p-12">
-                            <div className="flex items-center justify-between mb-12">
-                                <div>
-                                    <h3 className="text-3xl font-display font-bold text-white tracking-tight">Update Project</h3>
-                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic font-mono">Updating: {selectedProject.projectName.toUpperCase()}</p>
-                                </div>
-                                <button type="button" onClick={() => setSelectedProject(null)} className="p-4 hover:bg-white/10 rounded-2xl transition-all text-slate-500 hover:text-white">
-                                    <X className="w-7 h-7" />
-                                </button>
+                    <div className="glass-dark border border-white/10 rounded-3xl md:rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-xl relative z-[120] animate-in zoom-in-95 duration-700 overflow-hidden flex flex-col max-h-[85vh] sm:max-h-[90vh]">
+                        <div className="flex items-center justify-between px-6 py-6 md:px-12 md:py-10 border-b border-white/5 shrink-0">
+                            <div>
+                                <h3 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">Update Project</h3>
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic font-mono truncate max-w-[200px] sm:max-w-none">Updating: {selectedProject.projectName.toUpperCase()}</p>
                             </div>
+                            <button type="button" onClick={() => setSelectedProject(null)} className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 text-slate-500 hover:text-white transition-all duration-300">
+                                <X className="w-4 h-4 md:w-6 md:h-6 mx-auto" />
+                            </button>
+                        </div>
 
-                            <div className="space-y-8">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <form onSubmit={handleUpdate} className="flex flex-col overflow-hidden min-h-0">
+                            <div className="px-6 py-6 md:px-12 md:py-10 space-y-6 md:space-y-8 overflow-y-auto custom-scrollbar">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                                     <div>
-                                        <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Status</label>
+                                        <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3 sm:mb-4">Status</label>
                                         <select
                                             value={editForm.projectStatus}
                                             onChange={e => setEditForm({ ...editForm, projectStatus: e.target.value })}
-                                            className="w-full px-6 py-5 bg-white/5 border border-white/10 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-white outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all cursor-pointer"
+                                            className="w-full px-5 sm:px-6 py-4 sm:py-5 bg-white/5 border border-white/10 rounded-2xl text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-white outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all cursor-pointer"
                                         >
                                             <option value="Planned" className="bg-slate-900">PLANNED</option>
                                             <option value="In Progress" className="bg-slate-900">IN PROGRESS</option>
@@ -196,25 +196,25 @@ const ManageStaffProjects = () => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Completion Date</label>
+                                        <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3 sm:mb-4">Completion Date</label>
                                         <input
                                             type="date"
                                             value={editForm.actualCompletion}
                                             onChange={e => setEditForm({ ...editForm, actualCompletion: e.target.value })}
-                                            className="w-full px-6 py-5 bg-white/5 border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all font-mono"
+                                            className="w-full px-5 sm:px-6 py-4 sm:py-5 bg-white/5 border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all font-mono"
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Risk Level</label>
-                                    <div className="grid grid-cols-3 gap-4">
+                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3 sm:mb-4">Risk Level</label>
+                                    <div className="grid grid-cols-3 gap-3 sm:gap-4">
                                         {['Low', 'Medium', 'High'].map(level => (
                                             <button
                                                 key={level}
                                                 type="button"
                                                 onClick={() => setEditForm({ ...editForm, riskLevel: level })}
-                                                className={`py-4 rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] border transition-all ${editForm.riskLevel === level
+                                                className={`py-3 sm:py-4 rounded-2xl text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] border transition-all ${editForm.riskLevel === level
                                                     ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_0_30px_rgba(79,70,229,0.3)]'
                                                     : 'bg-white/5 border-white/5 text-slate-600 hover:border-white/20'
                                                     }`}
@@ -226,21 +226,24 @@ const ManageStaffProjects = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4">Notes / Delay Reason</label>
+                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3 sm:mb-4">Notes / Delay Reason</label>
                                     <textarea
                                         value={editForm.delayReason}
                                         onChange={e => setEditForm({ ...editForm, delayReason: e.target.value })}
                                         placeholder="Add any notes or explain delays..."
-                                        className="w-full px-8 py-6 bg-white/5 border border-white/10 rounded-[2rem] text-sm text-white focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all h-32 resize-none placeholder:text-slate-800 font-mono"
+                                        className="w-full px-6 sm:px-8 py-5 sm:py-6 bg-white/5 border border-white/10 rounded-3xl text-sm text-white focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all h-28 sm:h-32 resize-none placeholder:text-slate-800 font-mono"
                                     />
                                 </div>
+                            </div>
 
+                            <div className="shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sm:gap-4 p-4 md:p-8 border-t border-white/5 bg-slate-900/50">
+                                <button type="button" onClick={() => setSelectedProject(null)} className="w-full sm:w-auto px-10 py-4 sm:py-5 bg-white/5 text-[11px] font-bold text-slate-500 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Cancel</button>
                                 <button
                                     type="submit"
                                     disabled={updating}
-                                    className="w-full py-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-3xl transition-all shadow-[0_0_40px_rgba(79,70,229,0.3)] flex items-center justify-center gap-4 disabled:opacity-30 pt-6"
+                                    className="w-full sm:w-auto px-12 py-4 sm:py-5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] uppercase tracking-[0.3em] rounded-2xl transition-all shadow-[0_0_40px_rgba(79,70,229,0.3)] flex items-center justify-center gap-3 disabled:opacity-30"
                                 >
-                                    {updating ? <Loader2 className="w-6 h-6 animate-spin" /> : <Save className="w-6 h-6" />}
+                                    {updating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                                     Save Changes
                                 </button>
                             </div>

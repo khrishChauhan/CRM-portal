@@ -273,46 +273,46 @@ const ClientDashboard = () => {
 
             {/* Request Modal */}
             {requestModal && (
-                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-[110] flex items-start sm:items-center justify-center p-4 pt-10 sm:pt-4">
                     <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-500" onClick={() => { setRequestModal(null); setRequestMessage(''); }}></div>
-                    <div className="glass-dark border border-white/10 rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-md relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700 overflow-hidden">
-                        <div className="p-12">
-                            <div className="text-center mb-10">
-                                <div className="w-24 h-24 glass border border-indigo-500/30 text-indigo-400 flex items-center justify-center rounded-[2.5rem] mx-auto mb-8 shadow-[0_0_50px_rgba(79,70,229,0.1)] ring-1 ring-white/10">
-                                    <Send className="w-10 h-10" />
+                    <div className="glass-dark border border-white/10 rounded-3xl md:rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-md relative z-[120] animate-in zoom-in-95 duration-700 overflow-hidden flex flex-col max-h-[85vh] sm:max-h-[90vh]">
+                        <div className="overflow-y-auto px-6 py-8 sm:p-12 space-y-8 sm:space-y-10 custom-scrollbar">
+                            <div className="text-center">
+                                <div className="w-20 h-20 sm:w-24 sm:h-24 glass border border-indigo-500/30 text-indigo-400 flex items-center justify-center rounded-[2rem] sm:rounded-[2.5rem] mx-auto mb-6 sm:mb-8 shadow-[0_0_50px_rgba(79,70,229,0.1)] ring-1 ring-white/10">
+                                    <Send className="w-8 h-8 sm:w-10 sm:h-10" />
                                 </div>
-                                <h3 className="text-3xl font-display font-bold text-white tracking-tight">Request Access</h3>
-                                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-3 italic font-mono">Requesting access to: {requestModal.projectName.toUpperCase()}</p>
+                                <h3 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">Request Access</h3>
+                                <p className="text-slate-500 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] mt-3 italic font-mono leading-relaxed">Requesting access to: <br/> {requestModal.projectName.toUpperCase()}</p>
                             </div>
 
-                            <div className="space-y-8">
-                                <div>
-                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-4 text-center">Message (Optional)</label>
+                            <div className="space-y-6 sm:space-y-8">
+                                <div className="space-y-4">
+                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest text-center">Message (Optional)</label>
                                     <textarea
                                         value={requestMessage}
                                         onChange={(e) => setRequestMessage(e.target.value)}
                                         placeholder="Why do you need access to this project?"
-                                        className="w-full p-8 bg-white/5 border border-white/10 rounded-[2.5rem] text-sm text-white focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 h-40 resize-none transition-all placeholder:text-slate-800 font-medium font-mono"
+                                        className="w-full p-6 sm:p-8 bg-white/5 border border-white/10 rounded-3xl sm:rounded-[2.5rem] text-sm text-white focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 h-32 sm:h-40 resize-none transition-all placeholder:text-slate-800 font-medium font-mono"
                                     />
                                 </div>
-
-                                <div className="flex flex-col gap-5 pt-4">
-                                    <button
-                                        onClick={handleRequestAccess}
-                                        disabled={requesting}
-                                        className="w-full py-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-3xl transition-all shadow-[0_0_40px_rgba(79,70,229,0.3)] flex items-center justify-center gap-4 disabled:opacity-30"
-                                    >
-                                        {requesting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
-                                        Send Request
-                                    </button>
-                                    <button
-                                        onClick={() => { setRequestModal(null); setRequestMessage(''); }}
-                                        className="text-slate-600 font-bold text-[10px] uppercase tracking-[0.2em] hover:text-white transition-colors duration-300"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
                             </div>
+                        </div>
+
+                        <div className="shrink-0 p-6 md:p-10 border-t border-white/5 bg-slate-900/50 flex flex-col gap-4">
+                            <button
+                                onClick={handleRequestAccess}
+                                disabled={requesting}
+                                className="w-full py-5 sm:py-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] uppercase tracking-[0.3em] rounded-2xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-3 disabled:opacity-30"
+                            >
+                                {requesting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                                Send Request
+                            </button>
+                            <button
+                                onClick={() => { setRequestModal(null); setRequestMessage(''); }}
+                                className="text-slate-600 font-bold text-[10px] uppercase tracking-widest hover:text-white transition-colors duration-300 py-2"
+                            >
+                                Cancel
+                            </button>
                         </div>
                     </div>
                 </div>

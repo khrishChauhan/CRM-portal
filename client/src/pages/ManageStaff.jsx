@@ -389,20 +389,21 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[110] flex items-start sm:items-center justify-center p-4 pt-10 sm:pt-4">
             <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-2xl transition-opacity animate-in fade-in duration-500" onClick={onClose}></div>
-            <div className="glass-dark border border-white/10 rounded-3xl md:rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-[95%] sm:w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
-                <div className="flex items-center justify-between px-10 py-8 border-b border-white/5">
+            <div className="glass-dark border border-white/10 rounded-3xl md:rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-[92%] sm:w-full max-w-xl max-h-[90vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 duration-700">
+                <div className="flex items-center justify-between px-6 py-6 md:px-10 md:py-8 border-b border-white/5 shrink-0">
                     <div>
                         <h2 className="text-3xl font-display font-bold text-white tracking-tight">{isEdit ? 'Edit Staff' : 'Add Staff'}</h2>
                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic">Fill in the details below</p>
                     </div>
-                    <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 text-slate-500 hover:text-white transition-all duration-300">
-                        <X className="w-5 h-5 mx-auto" />
+                    <button type="button" onClick={onClose} className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 text-slate-500 hover:text-white transition-all duration-300">
+                        <X className="w-4 h-4 md:w-5 md:h-5 mx-auto" />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-10 space-y-8 overflow-y-auto">
+                <form onSubmit={handleSubmit} className="flex flex-col overflow-hidden min-h-0">
+                    <div className="px-5 py-6 md:px-10 md:py-10 space-y-4 md:space-y-6 overflow-y-auto custom-scrollbar">
                     {error && (
                         <div className="flex items-center gap-4 p-5 bg-red-500/5 border border-red-500/20 rounded-3xl text-red-400 text-[11px] font-bold uppercase tracking-widest animate-shake">
                             <AlertCircle className="w-5 h-5 flex-shrink-0" />
@@ -410,19 +411,19 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         </div>
                     )}
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                         <FormField icon={Users} label="Full Name" name="name" value={form.name} onChange={handleChange} required placeholder="Enter name" />
                         <FormField icon={Mail} label="Email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="Enter email" disabled={isEdit} />
                     </div>
 
                     <FormField icon={Briefcase} label={isEdit ? 'New Password (optional)' : 'Password'} name="password" type="password" value={form.password} onChange={handleChange} required={!isEdit} placeholder={isEdit ? '•••••••• (unchanged)' : 'Create a password'} />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                         <FormField icon={Phone} label="Phone" name="phone" value={form.phone} onChange={handleChange} placeholder="+1 234 567 890" />
                         <FormField icon={Phone} label="Alternate Phone" name="alternatePhone" value={form.alternatePhone} onChange={handleChange} placeholder="Optional" />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                         <FormField icon={Briefcase} label="Job Title" name="designation" value={form.designation} onChange={handleChange} placeholder="e.g. Project Manager" />
                         <div className="space-y-2">
                             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
@@ -435,7 +436,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                         <FormField icon={Calendar} label="Joining Date" name="joiningDate" type="date" value={form.joiningDate} onChange={handleChange} className="inverted-date-picker" />
                         <div className="space-y-2">
                             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
@@ -447,7 +448,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pb-2 md:pb-6">
                         <FormField icon={DollarSign} label="Salary Band" name="salaryBand" value={form.salaryBand} onChange={handleChange} placeholder="e.g. Level 5" />
                         <div className="space-y-2">
                             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1 flex items-center gap-2">
@@ -462,7 +463,9 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center justify-end gap-3 md:gap-4 p-4 md:p-6 sticky bottom-0 bg-slate-950/20 backdrop-blur-md rounded-3xl border border-white/5 mt-auto">
+                    </div>
+                    
+                    <div className="shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sm:gap-4 p-4 md:p-6 border-t border-white/5 bg-slate-900/50">
                         <button type="button" onClick={onClose} className="w-full sm:w-auto px-8 py-4 bg-white/5 text-[11px] font-bold text-slate-400 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Cancel</button>
                         <button type="submit" disabled={saving} className="w-full sm:w-auto px-10 py-4 bg-indigo-600 text-[11px] font-bold text-white uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:bg-indigo-500 transition-all disabled:opacity-30">
                             {saving ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : (isEdit ? 'Save Changes' : 'Add Staff')}

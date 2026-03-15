@@ -856,30 +856,32 @@ const ProjectUpdates = () => {
 
             {/* ── Lightbox Modal ── */}
             {lightbox && (
-                <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4">
+                <div className="fixed inset-0 z-[200] flex items-start sm:items-center justify-center p-3 sm:p-4 pt-10 sm:pt-4">
                     <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-3xl animate-in fade-in duration-500" onClick={() => setLightbox(null)}></div>
-                    <div className="relative z-[210] w-full max-w-4xl animate-in zoom-in-95 duration-500">
-                        <div className="glass-dark border border-white/10 rounded-2xl sm:rounded-[2.5rem] overflow-hidden shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)]">
-                            {/* Image */}
-                            <img
-                                src={lightbox.imageUrl}
-                                alt="Full size"
-                                className="w-full max-h-[70vh] object-contain bg-slate-900"
-                            />
+                    <div className="relative z-[210] w-full max-w-4xl animate-in zoom-in-95 duration-500 max-h-[90vh] flex flex-col">
+                        <div className="glass-dark border border-white/10 rounded-2xl sm:rounded-[2.5rem] overflow-hidden shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] flex flex-col">
+                            {/* Image container with flex-1 and min-h-0 to allow proper scaling */}
+                            <div className="flex-1 min-h-0 bg-slate-900 flex items-center justify-center">
+                                <img
+                                    src={lightbox.imageUrl}
+                                    alt="Full size"
+                                    className="max-w-full max-h-[60vh] sm:max-h-[70vh] object-contain"
+                                />
+                            </div>
 
                             {/* Info bar */}
-                            <div className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div className="shrink-0 p-4 sm:p-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-t border-white/5 bg-slate-950/20">
                                 <div className="flex items-center gap-3">
                                     <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-xs flex-shrink-0">
                                         {lightbox.createdBy?.name?.charAt(0)?.toUpperCase()}
                                     </div>
-                                    <div>
-                                        <p className="text-white font-bold text-sm">{lightbox.createdBy?.name}</p>
+                                    <div className="min-w-0">
+                                        <p className="text-white font-bold text-sm truncate">{lightbox.createdBy?.name}</p>
                                         <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">{formatTime(lightbox.createdAt)}</p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                                <div className="flex items-center gap-2 sm:gap-3">
                                     {lightbox.location?.latitude && lightbox.location?.longitude && (
                                         <a
                                             href={`https://www.google.com/maps?q=${lightbox.location.latitude},${lightbox.location.longitude}`}
@@ -888,7 +890,7 @@ const ProjectUpdates = () => {
                                             className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 glass border border-white/10 rounded-xl text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 transition-all"
                                         >
                                             <MapPin className="w-3.5 h-3.5" />
-                                            View Location
+                                            <span className="truncate">View Location</span>
                                         </a>
                                     )}
                                     <button

@@ -356,20 +356,21 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[110] flex items-start sm:items-center justify-center p-4 pt-10 sm:pt-4">
             <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-2xl transition-opacity animate-in fade-in duration-500" onClick={onClose}></div>
-            <div className="glass-dark border border-white/10 rounded-3xl md:rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-[95%] sm:w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 slide-in-from-bottom-10 duration-700">
-                <div className="flex items-center justify-between px-10 py-10 border-b border-white/5 bg-white/[0.01]">
+            <div className="glass-dark border border-white/10 rounded-3xl md:rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-[95%] sm:w-full max-w-3xl max-h-[85vh] sm:max-h-[90vh] overflow-hidden flex flex-col relative z-[120] animate-in zoom-in-95 duration-700">
+                <div className="flex items-center justify-between px-6 py-6 md:px-10 md:py-10 border-b border-white/5 bg-white/[0.01] shrink-0">
                     <div>
-                        <h2 className="text-3xl font-display font-bold text-white tracking-tight">{isEdit ? 'Edit Project' : 'New Project'}</h2>
+                        <h2 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">{isEdit ? 'Edit Project' : 'New Project'}</h2>
                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic font-mono">{isEdit ? project.projectCode : 'Fill in the project details'}</p>
                     </div>
-                    <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 text-slate-500 hover:text-white transition-all duration-300">
-                        <X className="w-5 h-5 mx-auto" />
+                    <button onClick={onClose} className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 text-slate-500 hover:text-white transition-all duration-300">
+                        <X className="w-4 h-4 md:w-5 md:h-5 mx-auto" />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="px-10 py-10 space-y-8 overflow-y-auto">
+                <form onSubmit={handleSubmit} className="flex flex-col overflow-hidden min-h-0">
+                    <div className="px-6 py-6 md:px-10 md:py-10 space-y-6 md:space-y-8 overflow-y-auto custom-scrollbar">
                     {error && (
                         <div className="flex items-center gap-4 p-5 bg-red-500/5 border border-red-500/20 rounded-3xl text-red-400 text-[11px] font-bold uppercase tracking-widest animate-shake">
                             <AlertCircle className="w-5 h-5 flex-shrink-0" />
@@ -377,7 +378,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                         </div>
                     )}
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                         <Field label="Project Name" name="projectName" value={form.projectName} onChange={handleChange} icon={FolderOpen} required placeholder="Enter project name" />
                         <Field label="Category" name="projectCategory" value={form.projectCategory} onChange={handleChange} icon={Briefcase} placeholder="e.g. Website, App" />
                     </div>
@@ -385,13 +386,13 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                     <Field label="Description" name="description" value={form.description} onChange={handleChange} textarea placeholder="Describe the project goals and scope..." />
                     <Field label="Location / Site Address" name="siteAddress" value={form.siteAddress} onChange={handleChange} icon={MapPin} placeholder="Enter site address" />
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                         <Field label="Start Date" name="startDate" type="date" value={form.startDate} onChange={handleChange} icon={Calendar} />
                         <Field label="Expected Completion" name="expectedCompletion" type="date" value={form.expectedCompletion} onChange={handleChange} icon={Calendar} />
                         {isEdit && <Field label="Actual Completion" name="actualCompletion" type="date" value={form.actualCompletion} onChange={handleChange} icon={Calendar} />}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                         <SelectField label="Status" name="projectStatus" value={form.projectStatus} onChange={handleChange} options={STATUSES} />
                         <SelectField label="Priority" name="priority" value={form.priority} onChange={handleChange} options={PRIORITIES} />
                         <SelectField label="Risk Level" name="riskLevel" value={form.riskLevel} onChange={handleChange} options={['Low', 'Medium', 'High']} />
@@ -434,9 +435,11 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center justify-end gap-3 md:gap-4 p-4 md:p-6 sticky bottom-0 bg-slate-950/20 backdrop-blur-md rounded-3xl border border-white/5 mt-auto">
-                        <button type="button" onClick={onClose} className="w-full sm:w-auto px-10 py-5 bg-white/5 text-[11px] font-bold text-slate-500 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Cancel</button>
-                        <button type="submit" disabled={saving} className="w-full sm:w-auto px-12 py-5 bg-indigo-600 text-[11px] font-bold text-white uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:bg-indigo-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+                    </div>
+
+                    <div className="shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sm:gap-4 p-4 md:p-6 border-t border-white/5 bg-slate-900/50">
+                        <button type="button" onClick={onClose} className="w-full sm:w-auto px-10 py-4 sm:py-5 bg-white/5 text-[11px] font-bold text-slate-500 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Cancel</button>
+                        <button type="submit" disabled={saving} className="w-full sm:w-auto px-12 py-4 sm:py-5 bg-indigo-600 text-[11px] font-bold text-white uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:bg-indigo-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed">
                             {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : (isEdit ? 'Save Changes' : 'Create Project')}
                         </button>
                     </div>
