@@ -51,11 +51,11 @@ const ManageAccessRequests = () => {
     };
 
     const handleApprove = async (id) => {
-        if (!window.confirm('Approve this access request? The client will get full access to the project.')) return;
+        if (!window.confirm('Approve this access request?')) return;
         setProcessingId(id);
         try {
             await api.patch(`/access-requests/${id}/approve`);
-            showToast('Request approved successfully');
+            showToast('Request approved');
             fetchRequests(pagination.page);
         } catch (err) {
             showToast(err.response?.data?.message || 'Failed to approve', 'error');
@@ -66,7 +66,7 @@ const ManageAccessRequests = () => {
 
     const handleReject = async (id) => {
         if (!rejectionReason.trim()) {
-            showToast('Please provide a reason for rejection', 'error');
+            showToast('Provide a reason', 'error');
             return;
         }
         setProcessingId(id);
@@ -84,178 +84,173 @@ const ManageAccessRequests = () => {
     };
 
     return (
-        <div className="space-y-10 animate-reveal pb-20">
+        <div className="space-y-8 animate-reveal pb-10">
             {toast && (
-                <div className={`fixed top-8 right-8 z-[100] flex items-center gap-4 px-6 py-4 rounded-3xl shadow-2xl glass-dark border border-white/10 text-sm font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-400' : 'text-emerald-400'}`}>
+                <div className={`fixed top-8 right-8 z-[100] flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl ${toast.type === 'error' ? 'bg-red-600 text-white' : 'blue-gradient text-white'} text-sm font-bold animate-in slide-in-from-right-10`}>
                     {toast.type === 'error' ? <AlertCircle className="w-5 h-5" /> : <CheckCircle className="w-5 h-5" />}
                     {toast.message}
                 </div>
             )}
 
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div className="text-center md:text-left">
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient truncate max-w-full">Access Requests</h1>
-                    <p className="text-slate-500 mt-2 sm:mt-3 font-medium text-sm sm:text-lg italic">Review and manage client access requests.</p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-display font-bold text-[#1A1A1A]">Access Requests</h1>
+                    <p className="text-[#6B7280] font-medium">Review and manage client project visibility.</p>
                 </div>
             </div>
 
             {/* Dashboard Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mt-6">
-                <StatCard label="Total" value={stats.total} icon={FileText} color="text-indigo-400" bgColor="bg-indigo-500/10" />
-                <StatCard label="Pending" value={stats.pending} icon={Clock} color="text-amber-400" bgColor="bg-amber-500/10" />
-                <StatCard label="Approved" value={stats.approved} icon={CheckCircle} color="text-emerald-400" bgColor="bg-emerald-500/10" />
-                <StatCard label="Declined" value={stats.rejected} icon={XCircle} color="text-red-400" bgColor="bg-red-500/10" />
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <StatCard label="Total" value={stats.total} icon={FileText} color="text-blue-600" bgColor="bg-blue-50" />
+                <StatCard label="Pending" value={stats.pending} icon={Clock} color="text-amber-600" bgColor="bg-amber-50" />
+                <StatCard label="Approved" value={stats.approved} icon={CheckCircle} color="text-emerald-600" bgColor="bg-emerald-50" />
+                <StatCard label="Declined" value={stats.rejected} icon={XCircle} color="text-red-600" bgColor="bg-red-50" />
             </div>
 
             {/* Filters */}
-            <div className="glass p-2 rounded-[1.5rem] md:rounded-[2rem] border border-white/5 shadow-xl flex flex-col md:flex-row gap-2 mt-6">
+            <div className="bg-white p-2 rounded-[22px] card-shadow flex flex-col md:flex-row gap-2">
                 <div className="relative flex-1 group">
-                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search requests..."
-                        className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-slate-600 focus:outline-none transition-all text-sm font-medium"
+                        placeholder="Search by client or project..."
+                        className="w-full bg-[#1A1A1A] pl-14 pr-6 py-4 rounded-[18px] text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 text-sm font-medium"
                     />
                 </div>
-                <div className="px-2 pb-2 md:p-0">
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="w-full md:w-auto px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-slate-400 focus:outline-none focus:bg-white/10 hover:border-indigo-500/30 transition-all cursor-pointer"
-                    >
-                        <option value="" className="bg-slate-900">All Status</option>
-                        <option value="pending" className="bg-slate-900">PENDING</option>
-                        <option value="approved" className="bg-slate-900">APPROVED</option>
-                        <option value="rejected" className="bg-slate-900">REJECTED</option>
-                    </select>
-                </div>
+                <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="md:w-48 px-6 py-4 bg-gray-50 border-none rounded-[18px] text-xs font-bold uppercase tracking-wider text-gray-700 outline-none focus:ring-2 focus:ring-blue-500/30 cursor-pointer"
+                >
+                    <option value="">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
             </div>
 
             {/* Requests List */}
-            <div className="glass rounded-[2rem] md:rounded-[3rem] border border-white/5 shadow-2xl overflow-hidden min-h-[500px] mt-6">
+            <div className="bg-white rounded-[24px] card-shadow overflow-hidden min-h-[400px]">
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-40">
-                        <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />
-                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Loading...</p>
+                    <div className="flex flex-col items-center justify-center py-32">
+                        <Loader2 className="w-10 h-10 animate-spin text-blue-600 mb-4" />
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Loading requests...</p>
                     </div>
                 ) : requests.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-40 text-slate-600">
-                        <div className="w-24 h-24 bg-white/5 border border-white/5 rounded-[2.5rem] flex items-center justify-center mb-8 ring-1 ring-white/10 shadow-inner">
-                            <FileText className="w-10 h-10 opacity-30" />
+                    <div className="flex flex-col items-center justify-center py-32 text-gray-400">
+                        <div className="w-20 h-20 bg-gray-50 rounded-[22px] flex items-center justify-center mb-6">
+                            <FileText className="w-10 h-10 opacity-20" />
                         </div>
-                        <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">No requests</h3>
-                        <p className="text-sm mt-3 font-medium">No access requests to show right now.</p>
+                        <h3 className="text-lg font-display font-bold text-gray-900">No requests found</h3>
+                        <p className="text-sm font-medium mt-1">Check back later for new access requests.</p>
                     </div>
                 ) : (
-                    <div className="divide-y divide-white/5">
+                    <div className="divide-y divide-gray-100">
                         {requests.map(req => (
-                            <div key={req._id} className="p-10 group hover:bg-white/[0.02] transition-all duration-500">
-                                <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-10">
-                                    <div className="space-y-8 flex-1">
-                                        <div className="flex items-center gap-6">
-                                            <span className={`inline-flex px-3 py-1.5 rounded-xl text-[9px] font-bold uppercase tracking-widest ${STATUS_COLORS[req.status]?.replace('bg-', 'bg-transparent border border-').replace('text-', 'text-') || 'border-slate-500/20 text-slate-400'}`}>
+                            <div key={req._id} className="p-8 hover:bg-gray-50/50 transition-all duration-300">
+                                <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8">
+                                    <div className="space-y-6 flex-1">
+                                        <div className="flex items-center gap-4">
+                                            <span className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${STATUS_COLORS[req.status] || 'bg-gray-100 text-gray-600'}`}>
                                                 {req.status}
                                             </span>
-                                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] italic font-mono flex items-center gap-2">
+                                            <span className="text-[11px] font-bold text-gray-400 flex items-center gap-1.5">
                                                 <Clock className="w-3.5 h-3.5" />
-                                                Logged {new Date(req.createdAt).toLocaleDateString()}
-                                            </p>
+                                                {new Date(req.createdAt).toLocaleDateString()}
+                                            </span>
                                         </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                                            <div className="flex gap-5">
-                                                <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                                                    <Briefcase className="w-7 h-7" />
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <div className="flex gap-4">
+                                                <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                                                    <Briefcase className="w-6 h-6" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1.5">Project</p>
-                                                    <h3 className="font-display font-bold text-white text-xl tracking-tight leading-tight group-hover:text-indigo-400 transition-colors uppercase">{req.project?.projectName}</h3>
-                                                    <p className="text-xs font-mono font-bold text-indigo-500/70 mt-1 uppercase tracking-tighter">{req.project?.projectCode}</p>
+                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Project</p>
+                                                    <h3 className="font-display font-bold text-[#1A1A1A] text-lg leading-tight uppercase">{req.project?.projectName}</h3>
+                                                    <p className="text-xs font-bold text-blue-600/70 mt-0.5">{req.project?.projectCode}</p>
                                                 </div>
                                             </div>
 
-                                            <div className="flex gap-5">
-                                                <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/5 text-slate-400 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                                                    <Users className="w-7 h-7" />
+                                            <div className="flex gap-4">
+                                                <div className="w-12 h-12 rounded-xl bg-gray-50 text-gray-400 flex items-center justify-center flex-shrink-0">
+                                                    <Users className="w-6 h-6" />
                                                 </div>
                                                 <div>
-                                                    <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1.5">Requested By</p>
-                                                    <h3 className="font-display font-bold text-white text-xl tracking-tight leading-tight group-hover:text-indigo-400 transition-colors uppercase">{req.client?.name}</h3>
-                                                    <p className="text-xs font-medium text-slate-500 mt-1">{req.client?.email}</p>
-                                                    {req.client?.company && <p className="text-[10px] font-bold text-indigo-400/50 mt-1 uppercase tracking-widest">{req.client.company}</p>}
+                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Client</p>
+                                                    <h3 className="font-display font-bold text-[#1A1A1A] text-lg leading-tight uppercase">{req.client?.name}</h3>
+                                                    <p className="text-xs text-gray-500 font-medium">{req.client?.email}</p>
                                                 </div>
                                             </div>
                                         </div>
 
                                         {req.message && (
-                                            <div className="relative p-6 glass border border-white/5 rounded-[2rem] group/msg overflow-hidden">
-                                                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-[50px] -mr-16 -mt-16 group-hover/msg:bg-indigo-500/10 transition-colors"></div>
-                                                <div className="flex gap-4 items-start relative z-10">
-                                                    <MessageSquare className="w-4 h-4 text-indigo-500/50 mt-1 flex-shrink-0" />
-                                                    <p className="text-sm text-slate-400 leading-relaxed italic font-medium">"{req.message}"</p>
+                                            <div className="p-5 bg-gray-50 rounded-2xl border border-gray-100">
+                                                <div className="flex gap-3 items-start">
+                                                    <MessageSquare className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                                                    <p className="text-sm text-gray-600 leading-relaxed italic font-medium">"{req.message}"</p>
                                                 </div>
                                             </div>
                                         )}
 
                                         {req.status === 'rejected' && req.rejectionReason && (
-                                            <div className="p-6 bg-red-500/5 border border-red-500/20 rounded-[2rem]">
-                                                <div className="flex gap-4 items-start">
-                                                    <XCircle className="w-4 h-4 text-red-400 mt-1 flex-shrink-0" />
+                                            <div className="p-5 bg-red-50 rounded-2xl border border-red-100">
+                                                <div className="flex gap-3 items-start">
+                                                    <XCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
                                                     <div>
-                                                        <p className="text-[9px] font-bold text-red-400 uppercase tracking-widest mb-2">Reason for Decline</p>
-                                                        <p className="text-sm text-slate-400 leading-relaxed font-medium italic">"{req.rejectionReason}"</p>
+                                                        <p className="text-[10px] font-bold text-red-600 uppercase tracking-wider mb-1">Rejection Reason</p>
+                                                        <p className="text-sm text-gray-600 leading-relaxed font-medium italic">"{req.rejectionReason}"</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         )}
                                     </div>
 
-                                    <div className="flex flex-col sm:flex-row lg:flex-col items-center gap-3 w-full lg:w-auto">
+                                    <div className="flex flex-row lg:flex-col gap-3 w-full lg:w-auto">
                                         {req.status === 'pending' ? (
                                             <>
                                                 <button
                                                     onClick={() => handleApprove(req._id)}
                                                     disabled={processingId === req._id}
-                                                    className="w-full lg:w-48 px-8 py-5 bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded-2xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-3 disabled:opacity-30"
+                                                    className="flex-1 lg:w-40 px-6 py-4 blue-gradient text-white text-[10px] font-bold uppercase tracking-wider rounded-xl transition-all btn-shadow flex items-center justify-center gap-2 disabled:opacity-50"
                                                 >
                                                     {processingId === req._id ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
                                                     Approve
                                                 </button>
                                                 <button
                                                     onClick={() => { setRejectingId(req._id); setRejectionReason(''); }}
-                                                    className="w-full lg:w-48 px-8 py-5 bg-white/5 border border-white/5 hover:border-red-500/30 hover:bg-red-500/10 text-slate-500 hover:text-red-400 text-[10px] font-bold uppercase tracking-[0.2em] rounded-2xl transition-all"
+                                                    className="flex-1 lg:w-40 px-6 py-4 bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 text-[10px] font-bold uppercase tracking-wider rounded-xl transition-all"
                                                 >
                                                     Decline
                                                 </button>
                                             </>
                                         ) : (
-                                            <div className="text-right glass-dark px-6 py-4 rounded-2xl border border-white/5">
-                                                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1">Reviewed</p>
-                                                <p className="text-sm font-bold text-white font-mono tracking-tighter">{req.reviewedAt ? new Date(req.reviewedAt).toLocaleDateString() : '---'}</p>
+                                            <div className="text-center px-6 py-4 bg-gray-50 rounded-xl border border-gray-100 min-w-[140px]">
+                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Reviewed On</p>
+                                                <p className="text-sm font-bold text-[#1A1A1A]">{req.reviewedAt ? new Date(req.reviewedAt).toLocaleDateString() : '---'}</p>
                                             </div>
                                         )}
                                     </div>
                                 </div>
 
-                                {/* Rejection UI */}
                                 {rejectingId === req._id && (
-                                    <div className="mt-8 p-10 glass border border-red-500/20 rounded-[3rem] space-y-6 animate-in slide-in-from-top-4 duration-500">
+                                    <div className="mt-6 p-8 bg-gray-50 border border-gray-200 rounded-[20px] space-y-4 animate-reveal">
                                         <div className="flex items-center justify-between">
-                                            <h4 className="text-xl font-display font-bold text-white uppercase tracking-tight">Decline Request</h4>
-                                            <button onClick={() => setRejectingId(null)} className="text-[10px] font-bold text-slate-600 uppercase tracking-widest hover:text-white transition-colors">Cancel</button>
+                                            <h4 className="text-lg font-display font-bold text-[#1A1A1A]">Provide Reason</h4>
+                                            <button onClick={() => setRejectingId(null)} className="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-red-600 transition-colors">Cancel</button>
                                         </div>
                                         <textarea
                                             value={rejectionReason}
                                             onChange={(e) => setRejectionReason(e.target.value)}
-                                            placeholder="Why is this request being declined?"
-                                            className="w-full p-8 bg-white/5 border border-white/10 rounded-[2rem] text-sm text-white focus:outline-none focus:border-red-500/50 focus:ring-4 focus:ring-red-500/10 h-32 resize-none transition-all placeholder:text-slate-800 font-mono"
+                                            placeholder="Why are you declining this request?"
+                                            className="w-full p-5 bg-white border-none rounded-2xl text-sm focus:ring-2 focus:ring-red-500/20 h-28 resize-none transition-all placeholder:text-gray-400"
                                         />
                                         <button
                                             onClick={() => handleReject(req._id)}
                                             disabled={processingId === req._id}
-                                            className="w-full py-5 bg-red-600 hover:bg-red-500 text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded-2xl transition-all shadow-xl shadow-red-600/20 disabled:opacity-30"
+                                            className="w-full py-4 bg-red-600 text-white text-[10px] font-bold uppercase tracking-wider rounded-xl hover:bg-red-700 transition-all shadow-lg shadow-red-600/20 disabled:opacity-50"
                                         >
                                             Confirm Decline
                                         </button>
@@ -268,20 +263,20 @@ const ManageAccessRequests = () => {
 
                 {/* Pagination */}
                 {pagination.totalPages > 1 && (
-                    <div className="flex items-center justify-between px-10 py-10 bg-white/[0.01] border-t border-white/5">
-                        <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Page {pagination.page} of {pagination.totalPages}</p>
-                        <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-between px-8 py-8 bg-gray-50/50 border-t border-gray-100">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Page {pagination.page} of {pagination.totalPages}</p>
+                        <div className="flex items-center gap-2">
                             <button
                                 onClick={() => fetchRequests(pagination.page - 1)}
                                 disabled={!pagination.hasPrev}
-                                className="p-3.5 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 text-slate-400 disabled:opacity-10 transition-all"
+                                className="p-3 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-400 disabled:opacity-30 transition-all"
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
                             <button
                                 onClick={() => fetchRequests(pagination.page + 1)}
                                 disabled={!pagination.hasNext}
-                                className="p-3.5 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 text-slate-400 disabled:opacity-10 transition-all"
+                                className="p-3 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-400 disabled:opacity-30 transition-all"
                             >
                                 <ChevronRight className="w-5 h-5" />
                             </button>
@@ -295,14 +290,14 @@ const ManageAccessRequests = () => {
 
 const StatCard = ({ label, value, icon: Icon, color, bgColor }) => {
     return (
-        <div className="glass p-6 rounded-[2.5rem] border border-white/5 shadow-xl group hover:border-indigo-500/30 transition-all duration-500">
-            <div className="flex flex-col gap-6">
-                <div className={`w-14 h-14 rounded-2xl ${bgColor} border border-white/5 ring-1 ring-white/5 flex items-center justify-center transition-transform group-hover:scale-110 duration-500`}>
-                    <Icon className={`w-7 h-7 ${color}`} />
+        <div className="bg-white p-6 rounded-[22px] card-shadow group hover:translate-y-[-2px] transition-all duration-300">
+            <div className="flex flex-col gap-4">
+                <div className={`w-12 h-12 rounded-xl ${bgColor} flex items-center justify-center transition-transform group-hover:scale-110 duration-500`}>
+                    <Icon className={`w-6 h-6 ${color}`} />
                 </div>
                 <div>
-                    <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-1.5 group-hover:text-slate-400 transition-colors">{label}</p>
-                    <p className="text-4xl font-display font-bold text-white tracking-tighter">{value}</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">{label}</p>
+                    <p className="text-3xl font-display font-bold text-[#1A1A1A] tracking-tight">{value}</p>
                 </div>
             </div>
         </div>

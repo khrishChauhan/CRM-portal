@@ -376,9 +376,9 @@ const ProjectUpdates = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[500px]">
-                <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-6" />
-                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Loading Project Data...</p>
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
+                <Loader2 className="w-10 h-10 animate-spin text-blue-600 mb-4" />
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest font-body">Syncing Project Data...</p>
             </div>
         );
     }
@@ -387,8 +387,8 @@ const ProjectUpdates = () => {
         <div className="animate-reveal flex flex-col h-[calc(100vh-6rem)]">
             {/* ── Toast ── */}
             {toast && (
-                <div className={`fixed top-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl glass-dark border border-white/10 text-xs font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 max-w-[90vw] ${toast.type === 'error' ? 'text-red-400' : 'text-emerald-400'}`}>
-                    {toast.type === 'error' ? <AlertCircle className="w-4 h-4 flex-shrink-0" /> : <CheckCircle className="w-4 h-4 flex-shrink-0" />}
+                <div className={`fixed top-6 right-6 z-[200] flex items-center gap-4 px-6 py-4 rounded-2xl bg-white border border-gray-100 shadow-2xl text-[10px] font-bold uppercase tracking-[0.15em] animate-in slide-in-from-right-10 duration-500 max-w-[90vw] ${toast.type === 'error' ? 'text-red-500' : 'text-emerald-500'}`}>
+                    {toast.type === 'error' ? <AlertCircle className="w-5 h-5 flex-shrink-0" /> : <CheckCircle className="w-5 h-5 flex-shrink-0" />}
                     <span className="truncate">{toast.message}</span>
                 </div>
             )}
@@ -398,33 +398,33 @@ const ProjectUpdates = () => {
                 <div className="flex items-center gap-3 w-full sm:w-auto flex-1 min-w-0">
                     <button
                         onClick={goBack}
-                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:border-indigo-500/30 transition-all active:scale-95 flex-shrink-0"
+                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white card-shadow border border-gray-100 flex items-center justify-center text-gray-400 hover:text-blue-600 transition-all active:scale-95 flex-shrink-0"
                     >
                         <ArrowLeft className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
                     </button>
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-white tracking-tight text-gradient truncate">
+                        <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-[#1A1A1A] tracking-tight truncate">
                             {project?.projectName || 'Project'}
                         </h1>
-                        <p className="text-slate-500 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] mt-0.5 italic font-mono truncate">
-                            {project?.projectCode} // {updates.length} Updates
+                        <p className="text-gray-400 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mt-1 truncate">
+                            ID: {project?.projectCode} • {updates.length} Updates
                         </p>
                     </div>
                 </div>
 
                 {/* Tab Switcher */}
-                <div className="flex glass p-1 rounded-xl sm:rounded-2xl border border-white/5 shadow-2xl w-full sm:w-auto overflow-x-auto scrollbar-none">
+                <div className="flex bg-gray-200 p-1.5 rounded-2xl w-full sm:w-auto overflow-x-auto scrollbar-none">
                     {!isClient ? (
                         <>
                             <button
                                 onClick={() => setActiveTab('updates')}
-                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'updates' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'updates' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
                             >
                                 Updates
                             </button>
                             <button
                                 onClick={() => setActiveTab('queries')}
-                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'queries' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'queries' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
                             >
                                 Queries
                             </button>
@@ -433,7 +433,7 @@ const ProjectUpdates = () => {
                         <>
                             <button
                                 onClick={() => setActiveTab('overview')}
-                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'overview' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'overview' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
                             >
                                 Overview
                             </button>
@@ -454,25 +454,25 @@ const ProjectUpdates = () => {
                     /* ── Overview Tab ── */
                     <div className="space-y-4 sm:space-y-6 animate-reveal">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                            <div className="glass p-6 sm:p-8 rounded-3xl sm:rounded-[2.5rem] border border-white/5 shadow-xl space-y-6">
+                            <div className="bg-white p-6 sm:p-10 rounded-[28px] card-shadow border border-gray-50 space-y-8">
                                 <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Project Information</h3>
                                 <div className="space-y-4">
                                     <div className="flex items-start gap-4">
-                                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5">
-                                            <MapPin className="w-5 h-5 text-indigo-400" />
+                                        <div className="w-11 h-11 rounded-[14px] bg-gray-50 flex items-center justify-center border border-gray-100">
+                                            <MapPin className="w-5 h-5 text-blue-600" />
                                         </div>
                                         <div>
                                             <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Site Address</p>
-                                            <p className="text-white font-medium">{project?.siteAddress || 'N/A'}</p>
+                                            <p className="text-[#1A1A1A] font-bold">{project?.siteAddress || 'N/A'}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-start gap-4">
-                                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5">
-                                            <Clock className="w-5 h-5 text-indigo-400" />
+                                        <div className="w-11 h-11 rounded-[14px] bg-gray-50 flex items-center justify-center border border-gray-100">
+                                            <Clock className="w-5 h-5 text-blue-600" />
                                         </div>
                                         <div>
                                             <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Expected Completion</p>
-                                            <p className="text-white font-medium">
+                                            <p className="text-[#1A1A1A] font-bold">
                                                 {project?.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'TBD'}
                                             </p>
                                         </div>
@@ -480,19 +480,19 @@ const ProjectUpdates = () => {
                                 </div>
                             </div>
 
-                            <div className="glass p-6 sm:p-8 rounded-3xl sm:rounded-[2.5rem] border border-white/5 shadow-xl flex flex-col justify-center gap-6">
+                            <div className="bg-white p-6 sm:p-10 rounded-[28px] card-shadow border border-gray-50 flex flex-col justify-center gap-8">
                                 <div className="flex items-center justify-between">
                                     <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Current Status</h3>
                                     <span className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest ${
-                                        project?.projectStatus === 'Completed' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                                        project?.projectStatus === 'In Progress' ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' :
-                                        'bg-slate-500/10 text-slate-400 border border-slate-500/20'
+                                        project?.projectStatus === 'Completed' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
+                                        project?.projectStatus === 'In Progress' ? 'bg-blue-50 text-blue-600 border border-blue-100' :
+                                        'bg-gray-100 text-gray-500 border border-gray-200'
                                     }`}>
                                         {project?.projectStatus || 'Planned'}
                                     </span>
                                 </div>
-                                <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
-                                    <p className="text-slate-400 text-sm leading-relaxed italic">
+                                <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                                    <p className="text-gray-500 text-sm leading-relaxed italic font-medium">
                                         {project?.description || 'No project description available.'}
                                     </p>
                                 </div>
@@ -500,47 +500,47 @@ const ProjectUpdates = () => {
                         </div>
 
                         {/* Project Manager Details */}
-                        <div className="glass p-5 sm:p-6 rounded-3xl border border-white/5 shadow-xl flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 group hover:border-indigo-500/20 transition-all">
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-display font-bold text-xl flex-shrink-0 group-hover:scale-110 transition-transform">
-                                {project?.projectManager?.name?.charAt(0)?.toUpperCase() || 'M'}
+                        <div className="bg-blue-50/50 p-6 sm:p-8 rounded-[28px] border border-blue-100 card-shadow flex flex-col sm:flex-row sm:items-center gap-6 group hover:-translate-y-1 transition-all duration-300">
+                            <div className="w-16 h-16 rounded-[20px] blue-gradient flex items-center justify-center text-white font-display font-bold text-2xl flex-shrink-0 shadow-lg group-hover:scale-105 transition-transform">
+                                {project?.projectManager?.name?.charAt(0) || 'M'}
                             </div>
                             <div>
-                                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest italic leading-none mb-1.5">Your Project Manager</p>
-                                <p className="text-lg sm:text-xl font-display font-bold text-white tracking-tight uppercase group-hover:text-indigo-400 transition-colors">
+                                <p className="text-[10px] font-bold text-blue-500 uppercase tracking-widest leading-none mb-1">Project Manager</p>
+                                <p className="text-xl font-display font-bold text-[#1A1A1A] tracking-tight transition-colors">
                                     {project?.projectManager?.name || 'Not Assigned'}
                                 </p>
-                                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Responsible for overseeing your project's progress and quality.</p>
+                                <p className="text-sm text-gray-500 font-medium mt-1 opacity-80">Overseeing progress and ensuring quality standards.</p>
                             </div>
                         </div>
                     </div>
                 ) : activeTab === 'updates' ? (
                     updates.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-28 text-slate-600">
-                            <div className="w-20 h-20 bg-white/5 border border-white/5 rounded-3xl flex items-center justify-center mb-6 ring-1 ring-white/10 shadow-inner">
-                                <Send className="w-8 h-8 opacity-30" />
+                        <div className="flex flex-col items-center justify-center py-32">
+                            <div className="w-20 h-20 bg-gray-50 rounded-[24px] flex items-center justify-center mb-6">
+                                <Send className="w-10 h-10 text-gray-200" />
                             </div>
-                            <h3 className="text-lg font-display font-bold text-white/50 tracking-tight">No Updates Yet</h3>
-                            <p className="text-sm mt-2 font-medium">Be the first to post an update for this project.</p>
+                            <h3 className="text-xl font-display font-bold text-[#1A1A1A]">No Updates Yet</h3>
+                            <p className="text-gray-400 font-medium mt-1">Be the first to post an update for this project.</p>
                         </div>
                     ) : (
                         updates.map((update, idx) => (
                             <div
                                 key={update._id}
-                                className="glass p-4 sm:p-5 rounded-2xl border border-white/5 shadow-lg group hover:border-indigo-500/20 transition-all duration-500 relative overflow-hidden"
+                                className="bg-white p-6 rounded-[24px] card-shadow border border-gray-50 group hover:border-blue-500/10 transition-all duration-300 relative overflow-hidden"
                                 style={{ animationDelay: `${idx * 0.04}s` }}
                             >
                                 {/* Decorative glow */}
-                                <div className="absolute top-0 right-0 w-28 h-28 bg-indigo-500/5 blur-[50px] -mr-14 -mt-14 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/5 blur-[50px] -mr-14 -mt-14 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
 
                                 <div className="relative z-10">
                                     {/* ── Author row ── */}
                                     <div className="flex items-center gap-3 mb-3">
-                                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-display font-bold text-xs flex-shrink-0 group-hover:scale-110 transition-transform">
+                                        <div className="w-10 h-10 rounded-full blue-gradient flex items-center justify-center text-white font-display font-bold text-sm flex-shrink-0 btn-shadow transition-transform group-hover:scale-105">
                                             {update.createdBy?.name?.charAt(0)?.toUpperCase() || '?'}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 flex-wrap">
-                                                <span className="font-display font-bold text-white text-sm sm:text-base tracking-tight group-hover:text-indigo-400 transition-colors">
+                                                <span className="font-display font-bold text-[#1A1A1A] text-sm sm:text-base tracking-tight group-hover:text-blue-600 transition-colors">
                                                     {update.createdBy?.name || 'Unknown'}
                                                 </span>
                                                 <span className={`inline-flex px-2 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-widest border ${roleBadge(update.role)}`}>
@@ -559,7 +559,7 @@ const ProjectUpdates = () => {
                                                 href={`https://www.google.com/maps?q=${update.location.latitude},${update.location.longitude}`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-1.5 px-3 py-2 glass-dark border border-white/10 rounded-xl text-[8px] sm:text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 transition-all flex-shrink-0"
+                                                className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 border border-gray-100 rounded-xl text-[9px] font-bold uppercase tracking-widest text-gray-500 hover:text-blue-600 hover:border-blue-500/20 hover:bg-white transition-all flex-shrink-0 shadow-sm"
                                             >
                                                 <MapPin className="w-3 h-3" />
                                                 <span className="hidden sm:inline">Location</span>
@@ -569,7 +569,7 @@ const ProjectUpdates = () => {
                                     </div>
 
                                     {/* ── Message ── */}
-                                    <p className="text-slate-300 text-sm sm:text-[15px] font-medium leading-relaxed whitespace-pre-wrap">
+                                    <p className="text-[#333333] text-sm sm:text-[15px] font-medium leading-relaxed whitespace-pre-wrap">
                                         {update.message}
                                     </p>
 
@@ -594,32 +594,34 @@ const ProjectUpdates = () => {
                     /* ── Queries Tab ── */
                     <div className="space-y-4">
                         {user?.role === 'client' && (
-                            <div className="glass-dark border border-white/10 rounded-2xl p-6 shadow-xl mb-6">
-                                <h3 className="text-lg font-display font-bold text-white mb-4 flex items-center gap-2">
-                                    <MessageSquare className="w-5 h-5 text-indigo-400" />
+                            <div className="bg-white border border-gray-100 rounded-[24px] p-6 shadow-xl mb-6">
+                                <h3 className="text-lg font-display font-bold text-[#1A1A1A] mb-4 flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                                        <MessageSquare className="w-5 h-5 text-blue-600" />
+                                    </div>
                                     Ask a Query
                                 </h3>
-                                <div className="space-y-3">
+                                <div className="space-y-4">
                                     <input
                                         type="text"
-                                        placeholder="Query Title"
+                                        placeholder="What's on your mind?"
                                         value={newQuery.title}
                                         onChange={(e) => setNewQuery({ ...newQuery, title: e.target.value })}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 transition-all font-medium"
+                                        className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-500/50 transition-all font-medium"
                                     />
                                     <textarea
-                                        placeholder="Your Question / Message"
+                                        placeholder="Describe your query in detail..."
                                         rows={3}
                                         value={newQuery.message}
                                         onChange={(e) => setNewQuery({ ...newQuery, message: e.target.value })}
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 transition-all resize-none font-medium"
+                                        className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-500/50 transition-all resize-none font-medium"
                                     />
                                     <button
                                         onClick={handleQuerySubmit}
                                         disabled={submitQueryLoading || !newQuery.title.trim() || !newQuery.message.trim()}
-                                        className="w-full h-11 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl shadow-indigo-600/20 disabled:opacity-30 flex items-center justify-center gap-2.5"
+                                        className="w-full h-12 blue-gradient text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all btn-shadow disabled:opacity-30 flex items-center justify-center gap-3"
                                     >
-                                        {submitQueryLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                                        {submitQueryLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-4.5 h-4.5" />}
                                         Submit Query
                                     </button>
                                 </div>
@@ -627,9 +629,9 @@ const ProjectUpdates = () => {
                         )}
 
                         {queriesLoading ? (
-                            <div className="flex flex-col items-center justify-center py-20">
-                                <Loader2 className="w-10 h-10 animate-spin text-indigo-500 mb-4" />
-                                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Loading Queries...</p>
+                            <div className="flex flex-col items-center justify-center py-24">
+                                <Loader2 className="w-10 h-10 animate-spin text-blue-600 mb-4" />
+                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Loading Queries...</p>
                             </div>
                         ) : queries.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-20 text-slate-600">
@@ -638,23 +640,23 @@ const ProjectUpdates = () => {
                                 <p className="text-sm mt-1">Questions related to this project will appear here.</p>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 gap-4">
+                            <div className="grid grid-cols-1 gap-6">
                                 {queries.map((q) => (
-                                    <div key={q._id} className={`${isClient ? 'bg-transparent' : 'glass p-5 rounded-2xl border border-white/5 shadow-lg group hover:border-indigo-500/20 transition-all relative overflow-hidden'}`}>
+                                    <div key={q._id} className={`${isClient ? 'bg-transparent' : 'bg-white p-6 rounded-[24px] border border-gray-50 shadow-lg group hover:border-blue-500/10 transition-all relative overflow-hidden'}`}>
                                         {isClient ? (
                                             /* ── Chat Style for Client ── */
-                                            <div className="space-y-4 mb-8">
+                                            <div className="space-y-4 mb-10">
                                                 <div className="flex flex-col items-end">
-                                                    <div className="max-w-[85%] bg-indigo-600/20 border border-indigo-500/30 rounded-3xl rounded-tr-none p-5 shadow-lg relative">
-                                                        <div className="flex items-center justify-between gap-4 mb-2">
-                                                            <h4 className="text-white font-bold text-sm tracking-tight">{q.title}</h4>
-                                                            <span className="text-[9px] font-bold text-slate-500">{formatTime(q.createdAt)}</span>
+                                                    <div className="max-w-[85%] bg-blue-600 text-white rounded-[24px] rounded-tr-none px-6 py-4 shadow-xl relative">
+                                                        <div className="flex items-center justify-between gap-6 mb-1.5">
+                                                            <h4 className="font-bold text-sm tracking-tight">{q.title}</h4>
+                                                            <span className="text-[8px] font-bold opacity-70">{formatTime(q.createdAt)}</span>
                                                         </div>
-                                                        <p className="text-slate-300 text-sm leading-relaxed">{q.message}</p>
+                                                        <p className="text-sm leading-relaxed opacity-90">{q.message}</p>
                                                         
                                                         {/* Status Indicator */}
-                                                        <div className={`absolute -left-2 top-0 px-2 py-1 rounded-lg text-[7px] font-bold uppercase tracking-widest shadow-xl border ${
-                                                            q.status === 'open' ? 'bg-amber-500 text-white border-amber-400' : 'bg-emerald-500 text-white border-emerald-400'
+                                                        <div className={`absolute -left-2 -top-2 px-2.5 py-1 rounded-lg text-[7px] font-bold uppercase tracking-widest shadow-lg border ${
+                                                            q.status === 'open' ? 'bg-amber-400 text-white border-amber-300' : 'bg-emerald-500 text-white border-emerald-400'
                                                         }`}>
                                                             {q.status}
                                                         </div>
@@ -662,28 +664,28 @@ const ProjectUpdates = () => {
                                                 </div>
 
                                                 {q.response ? (
-                                                    <div className="flex flex-col items-start">
-                                                        <div className="max-w-[85%] glass-dark border border-white/10 rounded-3xl rounded-tl-none p-5 shadow-xl">
+                                                    <div className="flex flex-col items-start translate-x-2">
+                                                        <div className="max-w-[85%] bg-white border border-gray-100 rounded-[24px] rounded-tl-none px-6 py-4 shadow-xl">
                                                             <div className="flex items-center gap-3 mb-2">
-                                                                <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-[10px] font-bold">
+                                                                <div className="w-7 h-7 rounded-full blue-gradient flex items-center justify-center text-white text-[10px] font-bold">
                                                                     {q.respondedBy?.name?.charAt(0) || 'T'}
                                                                 </div>
                                                                 <div>
-                                                                    <p className="text-emerald-400 text-[10px] font-bold lowercase tracking-widest flex items-center gap-1.5">
+                                                                    <p className="text-blue-600 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5">
                                                                         {q.respondedBy?.name} (Team)
                                                                     </p>
-                                                                    <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest">{formatTime(q.respondedAt)}</p>
+                                                                    <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">{formatTime(q.respondedAt)}</p>
                                                                 </div>
                                                             </div>
-                                                            <p className="text-slate-300 text-[13px] leading-relaxed italic border-l-2 border-emerald-500/30 pl-3">
+                                                            <p className="text-[#333333] text-sm leading-relaxed italic font-medium pr-2">
                                                                 "{q.response}"
                                                             </p>
                                                         </div>
                                                     </div>
                                                 ) : (
-                                                    <div className="pl-4">
-                                                        <p className="text-[10px] font-bold text-slate-700 uppercase tracking-widest animate-pulse flex items-center gap-2">
-                                                            <Loader2 className="w-3 h-3 animate-spin" />
+                                                    <div className="pl-6">
+                                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest animate-pulse flex items-center gap-2.5">
+                                                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
                                                             Waiting for team response...
                                                         </p>
                                                     </div>
@@ -692,59 +694,58 @@ const ProjectUpdates = () => {
                                         ) : (
                                             /* ── Card Style for Admin/Staff ── */
                                             <>
-                                                <div className="flex items-start justify-between mb-3">
+                                                <div className="flex items-start justify-between mb-4">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-xs">
+                                                        <div className="w-10 h-10 rounded-full blue-gradient flex items-center justify-center text-white font-bold text-xs shadow-md">
                                                             {q.clientId?.name?.charAt(0)?.toUpperCase()}
                                                         </div>
                                                         <div>
-                                                            <p className="text-white font-bold text-sm">{q.clientId?.name}</p>
-                                                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest flex items-center gap-1.5 mt-0.5">
+                                                            <p className="text-[#1A1A1A] font-bold text-sm">{q.clientId?.name}</p>
+                                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5 mt-0.5">
                                                                 <Clock className="w-3 h-3" />
                                                                 {formatTime(q.createdAt)}
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <span className={`px-2.5 py-1 rounded-lg text-[8px] font-bold uppercase tracking-widest border ${
-                                                        q.status === 'open' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 
-                                                        q.status === 'answered' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-                                                        'bg-slate-500/10 text-slate-400 border-slate-500/20'
+                                                    <span className={`px-3 py-1 rounded-lg text-[8px] font-bold uppercase tracking-widest border ${
+                                                        q.status === 'open' ? 'bg-amber-50 text-amber-600 border-amber-100' : 
+                                                        q.status === 'answered' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 
+                                                        'bg-gray-50 text-gray-400 border-gray-100'
                                                     }`}>
                                                         {q.status}
                                                     </span>
                                                 </div>
-                                                <h4 className="text-white font-bold text-base mb-2">{q.title}</h4>
-                                                <p className="text-slate-400 text-sm leading-relaxed mb-4">{q.message}</p>
+                                                <h4 className="text-[#1A1A1A] font-bold text-base mb-2">{q.title}</h4>
+                                                <p className="text-gray-600 text-sm leading-relaxed mb-6">{q.message}</p>
 
                                                 {q.response ? (
-                                                    <div className="mt-4 p-4 rounded-xl bg-white/5 border border-white/5 border-l-2 border-l-emerald-500/50">
+                                                    <div className="mt-4 p-5 rounded-2xl bg-gray-50 border border-gray-100 border-l-4 border-l-emerald-500">
                                                         <div className="flex items-center justify-between mb-2">
-                                                            <p className="text-[10px] font-bold text-emerald-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                                                                <CheckCircle2 className="w-3 h-3" />
+                                                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest flex items-center gap-2">
+                                                                <CheckCircle2 className="w-4 h-4" />
                                                                 Response Sent
                                                             </p>
-                                                            <span className="text-[9px] font-bold text-slate-600">{formatTime(q.respondedAt)}</span>
+                                                            <span className="text-[8px] font-bold text-gray-400">{formatTime(q.respondedAt)}</span>
                                                         </div>
-                                                        <p className="text-slate-300 text-sm italic">"{q.response}"</p>
-                                                        <p className="text-[9px] font-bold text-slate-500 uppercase mt-2">By {q.respondedBy?.name}</p>
+                                                        <p className="text-[#333333] text-sm italic font-medium">"{q.response}"</p>
+                                                        <p className="text-[9px] font-bold text-gray-400 uppercase mt-3">By {q.respondedBy?.name}</p>
                                                     </div>
                                                 ) : (
                                                     (user?.role === 'admin' || user?.role === 'staff') && (
-                                                        <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
+                                                        <div className="mt-6 pt-6 border-t border-gray-100 space-y-4">
                                                             <textarea
                                                                 placeholder="Write a response..."
                                                                 rows={2}
                                                                 value={responseMap[q._id] || ''}
                                                                 onChange={(e) => setResponseMap({ ...responseMap, [q._id]: e.target.value })}
-                                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 transition-all font-medium"
+                                                                className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-500/50 transition-all font-medium"
                                                             />
                                                             <button
                                                                 onClick={() => handleRespond(q._id)}
                                                                 disabled={submittingResponse === q._id || !(responseMap[q._id]?.trim())}
-                                                                className="w-full h-9 bg-emerald-600 hover:bg-emerald-50 text-emerald-600 rounded-xl font-bold text-[9px] uppercase tracking-widest transition-all disabled:opacity-30 flex items-center justify-center gap-2"
-                                                                style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.2)' }}
+                                                                className="w-full h-11 bg-emerald-50 text-emerald-600 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all border border-emerald-100 hover:bg-emerald-100 disabled:opacity-30 flex items-center justify-center gap-3"
                                                             >
-                                                                {submittingResponse === q._id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+                                                                {submittingResponse === q._id ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-4.5 h-4.5" />}
                                                                 Send Reply
                                                             </button>
                                                         </div>
@@ -762,37 +763,37 @@ const ProjectUpdates = () => {
 
             {/* ── Input Panel (Admin/Staff only) ── */}
             {canPost && activeTab === 'updates' && (
-                <div className="glass-dark border border-white/10 rounded-2xl p-4 sm:p-5 shadow-2xl relative overflow-hidden flex-shrink-0">
-                    <div className="absolute top-0 left-0 w-40 h-40 bg-indigo-500/5 blur-[70px] -ml-20 -mt-20 pointer-events-none"></div>
+                <div className="bg-white border border-gray-100 rounded-[28px] p-5 sm:p-6 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] relative overflow-hidden flex-shrink-0">
+                    <div className="absolute top-0 left-0 w-40 h-40 bg-blue-500/5 blur-[70px] -ml-20 -mt-20 pointer-events-none"></div>
 
                     {/* Image Preview */}
                     {imagePreview && (
-                        <div className="mb-3 relative inline-block">
-                            <img src={imagePreview} alt="Preview" className="h-20 sm:h-24 w-auto rounded-xl border border-white/10 shadow-lg" />
+                        <div className="mb-4 relative inline-block">
+                            <img src={imagePreview} alt="Preview" className="h-24 sm:h-28 w-auto rounded-2xl border-2 border-white shadow-xl" />
                             <button
                                 onClick={clearImage}
-                                className="absolute -top-1.5 -right-1.5 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-400 transition-colors shadow-lg"
+                                className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600 transition-colors shadow-lg border-2 border-white"
                             >
-                                <X className="w-3.5 h-3.5" />
+                                <X className="w-4 h-4" />
                             </button>
                         </div>
                     )}
 
                     {/* Stamping indicator */}
                     {stamping && (
-                        <div className="mb-3 flex items-center gap-2 text-indigo-400 text-[10px] font-bold uppercase tracking-widest">
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            Processing image...
+                        <div className="mb-4 flex items-center gap-3 text-blue-600 text-[10px] font-bold uppercase tracking-widest font-body">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Digitally stamping image...
                         </div>
                     )}
 
-                    <div className="flex flex-col gap-3 relative z-10">
+                    <div className="flex flex-col gap-4 relative z-10">
                         <textarea
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
-                            placeholder="Write a project update..."
+                            placeholder="Share progress with the client..."
                             rows={2}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 sm:px-5 py-3 text-sm text-white placeholder:text-slate-700 focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 transition-all resize-none font-medium"
+                            className="w-full bg-gray-50 border border-gray-100 rounded-[20px] px-5 py-4 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-500/30 focus:bg-white transition-all resize-none font-medium"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                                     handlePost();
@@ -800,11 +801,11 @@ const ProjectUpdates = () => {
                             }}
                         />
 
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                             {/* Image upload */}
-                            <label className="flex-1 group/upload h-10 sm:h-11 px-3 sm:px-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center sm:justify-start gap-2.5 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30 transition-all cursor-pointer active:scale-[0.98]">
-                                <Camera className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover/upload:scale-110 transition-transform" />
-                                <span className="text-[9px] font-bold uppercase tracking-widest">Add Photo</span>
+                            <label className="flex-1 group/upload h-12 px-5 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center sm:justify-start gap-3 text-gray-400 hover:text-blue-600 hover:border-blue-500/20 hover:bg-blue-50 transition-all cursor-pointer active:scale-95">
+                                <Camera className="w-5 h-5 group-hover/upload:scale-110 transition-transform" />
+                                <span className="text-[10px] font-bold uppercase tracking-[0.15em]">Capture Photo</span>
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -819,11 +820,11 @@ const ProjectUpdates = () => {
                                 onClick={captureLocation}
                                 disabled={locLoading}
                                 title="Pin Location"
-                                className={`flex-1 h-10 sm:h-11 px-3 sm:px-4 rounded-xl border flex items-center justify-center sm:justify-start gap-2.5 transition-all active:scale-[0.98] ${location ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-white/5 border-white/10 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/30'}`}
+                                className={`flex-1 h-12 px-5 rounded-2xl border flex items-center justify-center sm:justify-start gap-3 transition-all active:scale-95 ${location ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-gray-50 border-gray-100 text-gray-400 hover:text-blue-600 hover:border-blue-500/20 hover:bg-blue-50'}`}
                             >
-                                {locLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
-                                <span className="text-[9px] font-bold uppercase tracking-widest">
-                                    {location ? `Pinned (${location.latitude.toFixed(2)}, ${location.longitude.toFixed(2)})` : 'Pin Location'}
+                                {locLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
+                                <span className="text-[10px] font-bold uppercase tracking-[0.15em]">
+                                    {location ? `Located` : 'Pin Location'}
                                 </span>
                             </button>
 
@@ -831,22 +832,22 @@ const ProjectUpdates = () => {
                             <button
                                 onClick={handlePost}
                                 disabled={posting || !message.trim() || stamping || !location}
-                                className="sm:flex-[0.6] h-10 sm:h-11 px-6 sm:px-8 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl shadow-indigo-600/20 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-2.5 active:scale-[0.98]"
+                                className="sm:flex-[0.6] h-12 px-8 blue-gradient text-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all btn-shadow disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-3 active:scale-95"
                             >
-                                {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                                {posting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                                 Post
                             </button>
                         </div>
 
                         {/* Status bar */}
-                        <div className="flex items-center justify-between">
-                            <p className="text-[10px] text-slate-700 font-medium">
-                                Ctrl + Enter to post
+                        <div className="flex items-center justify-between px-1">
+                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest opacity-60">
+                                Press Ctrl + Enter to quickly post
                             </p>
                             {!location && (
-                                <p className="text-[10px] text-amber-500/70 font-bold uppercase tracking-widest flex items-center gap-1.5">
-                                    <MapPin className="w-3 h-3" />
-                                    Location required
+                                <p className="text-[10px] text-amber-500 font-bold uppercase tracking-widest flex items-center gap-2 animate-pulse">
+                                    <AlertCircle className="w-3.5 h-3.5" />
+                                    Location needed
                                 </p>
                             )}
                         </div>
@@ -858,47 +859,51 @@ const ProjectUpdates = () => {
             {lightbox && (
                 <div className="fixed inset-0 z-[200] flex items-start sm:items-center justify-center p-3 sm:p-4 pt-10 sm:pt-4">
                     <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-3xl animate-in fade-in duration-500" onClick={() => setLightbox(null)}></div>
-                    <div className="relative z-[210] w-full max-w-4xl animate-in zoom-in-95 duration-500 max-h-[90vh] flex flex-col">
-                        <div className="glass-dark border border-white/10 rounded-2xl sm:rounded-[2.5rem] overflow-hidden shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] flex flex-col">
-                            {/* Image container with flex-1 and min-h-0 to allow proper scaling */}
-                            <div className="flex-1 min-h-0 bg-slate-900 flex items-center justify-center">
+                    <div className="relative z-[210] w-full max-w-4xl animate-in zoom-in-95 duration-500 max-h-[90vh] flex flex-col p-4">
+                        <div className="bg-white rounded-[32px] overflow-hidden shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] flex flex-col">
+                            {/* Image container */}
+                            <div className="flex-1 min-h-0 bg-gray-50 flex items-center justify-center relative">
                                 <img
                                     src={lightbox.imageUrl}
                                     alt="Full size"
-                                    className="max-w-full max-h-[60vh] sm:max-h-[70vh] object-contain"
+                                    className="max-w-full max-h-[65vh] object-contain"
                                 />
+                                <button
+                                    onClick={() => setLightbox(null)}
+                                    className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/80 backdrop-blur-md border border-gray-100 flex items-center justify-center text-gray-800 hover:text-red-500 transition-all shadow-lg active:scale-90"
+                                >
+                                    <X className="w-6 h-6" />
+                                </button>
                             </div>
 
                             {/* Info bar */}
-                            <div className="shrink-0 p-4 sm:p-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-t border-white/5 bg-slate-950/20">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-xs flex-shrink-0">
+                            <div className="shrink-0 p-6 sm:p-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 border-t border-gray-50">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-full blue-gradient flex items-center justify-center text-white font-bold text-sm shadow-lg">
                                         {lightbox.createdBy?.name?.charAt(0)?.toUpperCase()}
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="text-white font-bold text-sm truncate">{lightbox.createdBy?.name}</p>
-                                        <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">{formatTime(lightbox.createdAt)}</p>
+                                        <p className="text-[#1A1A1A] font-bold text-base leading-none mb-1.5">{lightbox.createdBy?.name}</p>
+                                        <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                                            <Clock className="w-3.5 h-3.5" />
+                                            {formatTime(lightbox.createdAt)}
+                                        </p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-2 sm:gap-3">
+                                <div className="flex items-center gap-3">
                                     {lightbox.location?.latitude && lightbox.location?.longitude && (
                                         <a
                                             href={`https://www.google.com/maps?q=${lightbox.location.latitude},${lightbox.location.longitude}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 glass border border-white/10 rounded-xl text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 transition-all"
+                                            className="flex-1 sm:flex-initial flex items-center justify-center gap-3 px-6 h-12 bg-gray-50 border border-gray-100 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A] hover:bg-blue-50 hover:text-blue-600 transition-all shadow-sm"
                                         >
-                                            <MapPin className="w-3.5 h-3.5" />
-                                            <span className="truncate">View Location</span>
+                                            <MapPin className="w-4 h-4" />
+                                            <span>View Location</span>
+                                            <ExternalLink className="w-3.5 h-3.5" />
                                         </a>
                                     )}
-                                    <button
-                                        onClick={() => setLightbox(null)}
-                                        className="w-10 h-10 rounded-xl glass border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-all flex-shrink-0"
-                                    >
-                                        <X className="w-5 h-5" />
-                                    </button>
                                 </div>
                             </div>
                         </div>

@@ -1,45 +1,31 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import {
-    Search, ChevronLeft, ChevronRight, Loader2, FolderOpen,
-    AlertCircle, CheckCircle, Clock, XCircle, MapPin, Send, MessageSquare
+    Search, ChevronLeft, ChevronRight, Loader2,
+    AlertCircle, CheckCircle, Clock, MapPin, Send, MessageSquare
 } from 'lucide-react';
 
-const STATUS_COLORS = {
-    pending: 'bg-amber-50 text-amber-700',
-    approved: 'bg-emerald-50 text-emerald-700',
-    rejected: 'bg-red-50 text-red-600',
-};
-
 const PROJECT_STATUS_COLORS = {
-    Planned: 'bg-blue-50 text-blue-700',
-    'In Progress': 'bg-emerald-50 text-emerald-700',
-    'On Hold': 'bg-amber-50 text-amber-700',
-    Completed: 'bg-green-50 text-green-700',
-    Delayed: 'bg-red-50 text-red-700',
-    Cancelled: 'bg-slate-100 text-slate-500',
+    Planned: 'bg-blue-50 text-blue-600 border-blue-100',
+    'In Progress': 'bg-emerald-50 text-emerald-600 border-emerald-100',
+    'On Hold': 'bg-amber-50 text-amber-600 border-amber-100',
+    Completed: 'bg-green-50 text-green-600 border-green-100',
+    Delayed: 'bg-red-50 text-red-600 border-red-100',
+    Cancelled: 'bg-gray-50 text-gray-400 border-gray-100',
 };
 
 const ClientDashboard = () => {
-    const [stats, setStats] = useState(null);
     const [myRequests, setMyRequests] = useState([]);
     const [projects, setProjects] = useState([]);
     const [pagination, setPagination] = useState({ total: 0, page: 1, limit: 10, totalPages: 1 });
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
-    const [statusFilter, setStatusFilter] = useState('');
-    const [locationFilter, setLocationFilter] = useState('');
     const [toast, setToast] = useState(null);
     const [requestModal, setRequestModal] = useState(null);
     const [requestMessage, setRequestMessage] = useState('');
     const [requesting, setRequesting] = useState(false);
-
-    const fetchStats = useCallback(async () => {
-        try {
-            const { data } = await api.get('/dashboard/client');
-            setStats(data.data);
-        } catch (err) { console.error(err); }
-    }, []);
+    const navigate = useNavigate();
 
     const fetchMyRequests = useCallback(async () => {
         try {
@@ -53,8 +39,6 @@ const ClientDashboard = () => {
         try {
             const params = new URLSearchParams({ page, limit: 10 });
             if (search) params.append('search', search);
-            if (statusFilter) params.append('status', statusFilter);
-            if (locationFilter) params.append('location', locationFilter);
             const { data } = await api.get(`/access-requests/projects?${params}`);
             setProjects(data.data.projects);
             setPagination(data.data.pagination);
@@ -63,17 +47,16 @@ const ClientDashboard = () => {
         } finally {
             setLoading(false);
         }
-    }, [search, statusFilter, locationFilter]);
+    }, [search]);
 
     useEffect(() => {
-        fetchStats();
         fetchMyRequests();
-    }, [fetchStats, fetchMyRequests]);
+    }, [fetchMyRequests]);
 
     useEffect(() => {
         const t = setTimeout(() => fetchBrowseProjects(1), 400);
         return () => clearTimeout(t);
-    }, [search, statusFilter, locationFilter, fetchBrowseProjects]);
+    }, [search, fetchBrowseProjects]);
 
     const showToast = (message, type = 'success') => {
         setToast({ message, type });
@@ -91,7 +74,6 @@ const ClientDashboard = () => {
             showToast('Access request submitted!');
             setRequestModal(null);
             setRequestMessage('');
-            fetchStats();
             fetchMyRequests();
         } catch (err) {
             showToast(err.response?.data?.message || 'Failed to request access', 'error');
@@ -100,245 +82,204 @@ const ClientDashboard = () => {
         }
     };
 
-    // Build lookup of projectId → request
     const requestMap = {};
     myRequests.forEach(r => {
         if (r.projectId?._id) requestMap[r.projectId._id] = r;
     });
 
     return (
-        <div className="space-y-10 animate-reveal pb-20">
+        <div className="space-y-8 animate-reveal pb-20 font-body">
             {toast && (
-                <div className={`fixed top-8 right-8 z-[100] flex items-center gap-4 px-6 py-4 rounded-3xl shadow-2xl glass-dark border border-white/10 text-sm font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-400' : 'text-emerald-400'}`}>
-                    {toast.type === 'error' ? <AlertCircle className="w-5 h-5" /> : <CheckCircle className="w-5 h-5" />}
+                <div className={`fixed top-8 right-8 z-[150] flex items-center gap-4 px-6 py-4 rounded-[20px] shadow-2xl bg-white border border-gray-100 text-[10px] font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-500' : 'text-blue-600'}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${toast.type === 'error' ? 'bg-red-50' : 'bg-blue-50'}`}>
+                        {toast.type === 'error' ? <AlertCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
+                    </div>
                     {toast.message}
                 </div>
             )}
 
-            <div>
-                <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">My Dashboard</h1>
-                <p className="text-slate-500 mt-3 font-medium text-lg italic">Browse projects and manage your access requests.</p>
-            </div>
-
-            {/* Aggregated Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <StatCard
-                    label="Approved Projects"
-                    value={stats?.totalApprovedProjects || 0}
-                    icon={CheckCircle}
-                    color="sky"
-                    bgColor="bg-sky-500/10"
-                />
-                <StatCard
-                    label="Pending Requests"
-                    value={stats?.totalPendingRequests || 0}
-                    icon={Clock}
-                    color="amber"
-                    bgColor="bg-amber-500/10"
-                />
-                <StatCard
-                    label="Declined"
-                    value={stats?.totalRejectedRequests || 0}
-                    icon={XCircle}
-                    color="red"
-                    bgColor="bg-red-500/10"
-                />
-            </div>
-
-            {/* Browse & Request Section */}
-            <div className="space-y-6">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <h2 className="text-2xl font-display font-bold text-white uppercase tracking-tight">Available Projects</h2>
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] italic font-mono">{pagination.total} Projects</p>
-                </div>
-
-                <div className="glass p-2 rounded-[2.5rem] border border-white/5 shadow-xl flex flex-col lg:flex-row gap-2">
-                    <div className="relative flex-[2] group">
-                        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+            {/* MAIN CARD SECTION */}
+            <div className="bg-white rounded-[32px] border border-gray-100 shadow-2xl p-6 sm:p-10">
+                <div className="mb-10">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                        <div>
+                            <h2 className="text-3xl font-display font-bold text-[#1A1A1A] tracking-tight">Project Directory</h2>
+                            <p className="text-gray-500 font-medium text-sm mt-1">Browse and monitor infrastructure development.</p>
+                        </div>
+                    </div>
+                    
+                    {/* SEARCH BAR */}
+                    <div className="relative group max-w-2xl">
+                        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-blue-500 transition-colors z-10" />
                         <input
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Search projects by name..."
-                            className="w-full bg-transparent pl-14 pr-6 py-4 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm font-medium"
+                            placeholder="Search by project name or location..."
+                            className="w-full bg-gray-50 border border-transparent text-[#1A1A1A] pl-14 pr-6 py-4.5 rounded-2xl focus:bg-white focus:border-blue-500/20 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none placeholder:text-gray-400 text-sm font-medium"
                         />
-                    </div>
-                    <div className="flex flex-1 gap-2">
-                        <select
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                            className="flex-1 px-6 py-4 bg-white/5 border border-white/5 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-slate-400 focus:outline-none hover:border-indigo-500/30 transition-all cursor-pointer"
-                        >
-                            <option value="" className="bg-slate-900">All Status</option>
-                            <option value="Planned" className="bg-slate-900">PLANNED</option>
-                            <option value="In Progress" className="bg-slate-900">IN PROGRESS</option>
-                            <option value="On Hold" className="bg-slate-900">ON HOLD</option>
-                        </select>
-                        <div className="relative flex-1 group">
-                            <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
-                            <input
-                                type="text"
-                                value={locationFilter}
-                                onChange={(e) => setLocationFilter(e.target.value)}
-                                placeholder="Location..."
-                                className="w-full bg-transparent pl-14 pr-6 py-4 text-white placeholder-slate-600 focus:outline-none focus:ring-4 focus:ring-indigo-500/5 transition-all text-sm font-medium"
-                            />
-                        </div>
                     </div>
                 </div>
 
-                <div className="glass rounded-[3rem] border border-white/5 shadow-2xl overflow-hidden min-h-[400px]">
-                    {loading ? (
-                        <div className="flex flex-col items-center justify-center py-40">
-                            <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-4" />
-                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em]">Loading...</p>
+                {/* PROJECT LIST */}
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center py-20">
+                        <Loader2 className="w-12 h-12 animate-spin text-blue-600 mb-4" />
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compiling Database...</p>
+                    </div>
+                ) : projects.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+                        <div className="w-20 h-20 bg-gray-50 rounded-[32px] flex items-center justify-center mb-6">
+                            <Search className="w-8 h-8 opacity-20" />
                         </div>
-                    ) : projects.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-40 text-slate-600">
-                            <div className="w-24 h-24 bg-white/5 border border-white/5 rounded-[2.5rem] flex items-center justify-center mb-8 ring-1 ring-white/10 shadow-inner">
-                                <FolderOpen className="w-10 h-10 opacity-30" />
-                            </div>
-                            <h3 className="text-xl font-display font-bold text-white/50 tracking-tight">No projects found</h3>
-                            <p className="text-sm mt-3 font-medium">No projects match your search.</p>
-                        </div>
-                    ) : (
-                        <div className="divide-y divide-white/5">
-                            {projects.map(p => {
-                                const req = requestMap[p._id];
-                                const reqStatus = req?.status;
-                                return (
-                                    <div key={p._id} className="p-10 group hover:bg-white/[0.02] transition-all duration-500">
-                                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10">
-                                            <div className="flex-1 space-y-4">
-                                                <div className="flex items-center gap-5">
-                                                    <h3 className="font-display font-bold text-white text-2xl tracking-tight group-hover:text-indigo-400 transition-colors leading-none">{p.projectName}</h3>
-                                                    <span className={`inline-flex px-3 py-1.5 rounded-xl text-[9px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[p.projectStatus]?.replace('bg-', 'bg-transparent border border-').replace('text-', 'text-') || 'border-slate-500/20 text-slate-400'}`}>
-                                                        {p.projectStatus}
-                                                    </span>
-                                                </div>
-                                                <div className="flex flex-wrap items-center gap-x-8 gap-y-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
-                                                    <span className="text-indigo-400 font-mono tracking-tighter self-center">{p.projectCode}</span>
-                                                    <span className="flex items-center gap-2"><MapPin className="w-4 h-4 text-indigo-500/50" /> {p.siteAddress || 'No location'}</span>
-                                                    <span className="flex items-center gap-2 italic">{p.projectCategory || 'General'}</span>
-                                                </div>
+                        <h3 className="text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Matches Found</h3>
+                        <p className="text-sm mt-2 font-medium italic">Try broadening your search logic.</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 gap-6">
+                        {projects.map(p => {
+                            const req = requestMap[p._id];
+                            const reqStatus = req?.status;
+                            const isApproved = reqStatus === 'approved';
+
+                            return (
+                                <div key={p._id} className="bg-white border border-gray-100 rounded-[24px] p-6 sm:p-8 hover:border-blue-500/20 hover:shadow-xl transition-all duration-500 group">
+                                    <div className="flex justify-between items-start gap-4 mb-5">
+                                        <h3 className="text-xl font-display font-bold text-[#1A1A1A] leading-tight group-hover:text-blue-600 transition-colors">
+                                            {p.projectName}
+                                        </h3>
+                                        <span className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest flex-shrink-0 border ${
+                                            PROJECT_STATUS_COLORS[p.projectStatus] || 'bg-gray-50 text-gray-400 border-gray-100'
+                                        }`}>
+                                            {p.projectStatus}
+                                        </span>
+                                    </div>
+
+                                    <div className="flex items-center gap-3 mb-5">
+                                        <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                                            <MapPin className="w-4 h-4 text-blue-500" />
+                                        </div>
+                                        <span className="text-sm font-bold text-gray-500">{p.siteAddress || 'Location Undefined'}</span>
+                                    </div>
+
+                                    <p className="text-sm text-gray-400 font-medium line-clamp-2 mb-8 leading-relaxed">
+                                        {p.description || 'Information regarding this specific project initiative is currently being curated for the portal.'}
+                                    </p>
+
+                                    <div className="h-px bg-gray-50 w-full mb-8"></div>
+
+                                    <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                                        <div className="flex items-center gap-4">
+                                            <div className="flex flex-col">
+                                                <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Commencement</span>
+                                                <span className="text-sm font-bold text-gray-500">{p.startDate ? new Date(p.startDate).toLocaleDateString() : '---'}</span>
                                             </div>
-                                            <div className="flex-shrink-0 flex items-center">
-                                                {reqStatus === 'approved' ? (
-                                                    <div className="px-8 py-5 glass-dark border border-emerald-500/30 text-emerald-400 rounded-2xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-3 shadow-[0_0_20px_rgba(52,211,153,0.1)] transition-all group-hover:scale-105">
-                                                        <CheckCircle className="w-4 h-4" /> Access Granted
-                                                    </div>
-                                                ) : reqStatus === 'pending' ? (
-                                                    <div className="px-8 py-5 glass-dark border border-amber-500/30 text-amber-400 rounded-2xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-3 shadow-[0_0_20px_rgba(251,191,36,0.1)] transition-all group-hover:scale-105">
-                                                        <Clock className="w-4 h-4" /> Pending
-                                                    </div>
-                                                ) : (
-                                                    <button
-                                                        onClick={() => setRequestModal(p)}
-                                                        className="group relative px-10 py-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all shadow-[0_0_30px_rgba(79,70,229,0.25)] hover:scale-105 active:scale-95 flex items-center gap-3"
-                                                    >
-                                                        <Send className="w-4 h-4 text-white group-hover:rotate-12 transition-transform" />
-                                                        {reqStatus === 'rejected' ? 'Request Again' : 'Request Access'}
-                                                    </button>
-                                                )}
+                                            <div className="w-px h-8 bg-gray-100"></div>
+                                            <div className="flex flex-col">
+                                                <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Category</span>
+                                                <span className="text-sm font-bold text-gray-500">{p.projectCategory || 'General'}</span>
                                             </div>
                                         </div>
+                                        
+                                        {isApproved ? (
+                                            <button 
+                                                onClick={() => navigate(`/client/projects/${p._id}/updates`)}
+                                                className="w-full sm:w-auto px-8 py-3.5 blue-gradient text-white font-bold text-xs uppercase tracking-widest rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all btn-shadow flex items-center justify-center gap-2"
+                                            >
+                                                Intelligence Portal <ChevronRight className="w-4 h-4" />
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => setRequestModal(p)}
+                                                disabled={reqStatus === 'pending'}
+                                                className={`w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest border transition-all flex items-center justify-center gap-2 shadow-sm ${
+                                                    reqStatus === 'pending' 
+                                                    ? 'bg-amber-50 border-amber-100 text-amber-600 opacity-80' 
+                                                    : 'bg-white border-blue-500 text-blue-600 hover:bg-blue-50'
+                                                }`}
+                                            >
+                                                {reqStatus === 'pending' ? <Clock className="w-4 h-4" /> : <Send className="w-4 h-4" />}
+                                                {reqStatus === 'pending' ? 'Verification Pending' : 'Request Protocols'}
+                                            </button>
+                                        )}
                                     </div>
-                                );
-                            })}
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+
+                {/* PAGINATION */}
+                {pagination.totalPages > 1 && (
+                    <div className="mt-12 flex items-center justify-center gap-4">
+                        <button
+                            onClick={() => fetchBrowseProjects(pagination.page - 1)}
+                            disabled={!pagination.hasPrev}
+                            className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-blue-600 transition-all shadow-sm"
+                        >
+                            <ChevronLeft className="w-6 h-6" />
+                        </button>
+                        <div className="px-6 py-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                Page <span className="text-[#1A1A1A] mx-1">{pagination.page}</span> of {pagination.totalPages}
+                            </span>
                         </div>
-                    )}
-                    {pagination.totalPages > 1 && (
-                        <div className="px-10 py-10 flex items-center justify-between bg-white/[0.01] border-t border-white/5">
-                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Page {pagination.page} of {pagination.totalPages}</p>
-                            <div className="flex items-center gap-3">
-                                <button
-                                    onClick={() => fetchBrowseProjects(pagination.page - 1)}
-                                    disabled={!pagination.hasPrev}
-                                    className="p-3.5 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 text-slate-400 disabled:opacity-10 transition-all"
-                                >
-                                    <ChevronLeft className="w-5 h-5" />
-                                </button>
-                                <button
-                                    onClick={() => fetchBrowseProjects(pagination.page + 1)}
-                                    disabled={!pagination.hasNext}
-                                    className="p-3.5 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 text-slate-400 disabled:opacity-10 transition-all"
-                                >
-                                    <ChevronRight className="w-5 h-5" />
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                        <button
+                            onClick={() => fetchBrowseProjects(pagination.page + 1)}
+                            disabled={!pagination.hasNext}
+                            className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-blue-600 transition-all shadow-sm"
+                        >
+                            <ChevronRight className="w-6 h-6" />
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* Request Modal */}
             {requestModal && (
-                <div className="fixed inset-0 z-[110] flex items-start sm:items-center justify-center p-4 pt-10 sm:pt-4">
-                    <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-500" onClick={() => { setRequestModal(null); setRequestMessage(''); }}></div>
-                    <div className="glass-dark border border-white/10 rounded-3xl md:rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-md relative z-[120] animate-in zoom-in-95 duration-700 overflow-hidden flex flex-col max-h-[85vh] sm:max-h-[90vh]">
-                        <div className="overflow-y-auto px-6 py-8 sm:p-12 space-y-8 sm:space-y-10 custom-scrollbar">
-                            <div className="text-center">
-                                <div className="w-20 h-20 sm:w-24 sm:h-24 glass border border-indigo-500/30 text-indigo-400 flex items-center justify-center rounded-[2rem] sm:rounded-[2.5rem] mx-auto mb-6 sm:mb-8 shadow-[0_0_50px_rgba(79,70,229,0.1)] ring-1 ring-white/10">
-                                    <Send className="w-8 h-8 sm:w-10 sm:h-10" />
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity" onClick={() => { setRequestModal(null); setRequestMessage(''); }}></div>
+                    <div className="bg-white rounded-[32px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.15)] w-full max-w-lg relative z-[210] animate-in zoom-in-95 duration-500 overflow-hidden">
+                        <div className="p-8 sm:p-12">
+                            <div className="flex flex-col items-center text-center mb-10">
+                                <div className="w-20 h-20 blue-gradient text-white flex items-center justify-center rounded-[24px] mb-6 shadow-xl">
+                                    <Send className="w-10 h-10" />
                                 </div>
-                                <h3 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">Request Access</h3>
-                                <p className="text-slate-500 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] mt-3 italic font-mono leading-relaxed">Requesting access to: <br/> {requestModal.projectName.toUpperCase()}</p>
+                                <h3 className="text-3xl font-display font-bold text-[#1A1A1A] tracking-tight">Authorisation Request</h3>
+                                <p className="text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em] mt-3 py-1 px-4 bg-blue-50 rounded-full">{requestModal.projectName}</p>
                             </div>
 
-                            <div className="space-y-6 sm:space-y-8">
-                                <div className="space-y-4">
-                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest text-center">Message (Optional)</label>
-                                    <textarea
-                                        value={requestMessage}
-                                        onChange={(e) => setRequestMessage(e.target.value)}
-                                        placeholder="Why do you need access to this project?"
-                                        className="w-full p-6 sm:p-8 bg-white/5 border border-white/10 rounded-3xl sm:rounded-[2.5rem] text-sm text-white focus:outline-none focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 h-32 sm:h-40 resize-none transition-all placeholder:text-slate-800 font-medium font-mono"
-                                    />
-                                </div>
+                            <div className="space-y-4 mb-10">
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Optional Context</label>
+                                <textarea
+                                    value={requestMessage}
+                                    onChange={(e) => setRequestMessage(e.target.value)}
+                                    placeholder="Explain your interest in this project..."
+                                    className="w-full p-6 bg-gray-50 border border-gray-100 rounded-[20px] text-sm font-medium focus:outline-none focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 h-40 resize-none transition-all placeholder:text-gray-300"
+                                />
                             </div>
-                        </div>
 
-                        <div className="shrink-0 p-6 md:p-10 border-t border-white/5 bg-slate-900/50 flex flex-col gap-4">
-                            <button
-                                onClick={handleRequestAccess}
-                                disabled={requesting}
-                                className="w-full py-5 sm:py-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] uppercase tracking-[0.3em] rounded-2xl transition-all shadow-xl shadow-indigo-600/20 flex items-center justify-center gap-3 disabled:opacity-30"
-                            >
-                                {requesting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
-                                Send Request
-                            </button>
-                            <button
-                                onClick={() => { setRequestModal(null); setRequestMessage(''); }}
-                                className="text-slate-600 font-bold text-[10px] uppercase tracking-widest hover:text-white transition-colors duration-300 py-2"
-                            >
-                                Cancel
-                            </button>
+                            <div className="flex flex-col gap-4">
+                                <button
+                                    onClick={handleRequestAccess}
+                                    disabled={requesting}
+                                    className="w-full py-5 blue-gradient text-white font-bold text-xs uppercase tracking-widest rounded-2xl shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+                                >
+                                    {requesting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                                    Submit Request
+                                </button>
+                                
+                                <button
+                                    onClick={() => { setRequestModal(null); setRequestMessage(''); }}
+                                    className="w-full py-4 text-gray-400 font-bold text-[10px] uppercase tracking-widest hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all"
+                                >
+                                    Abort Process
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             )}
-        </div>
-    );
-};
-
-const StatCard = ({ label, value, icon: Icon, color, bgColor }) => {
-    const colors = {
-        sky: 'text-sky-400 group-hover:text-sky-300',
-        amber: 'text-amber-400 group-hover:text-amber-300',
-        red: 'text-red-400 group-hover:text-red-300',
-    };
-    return (
-        <div className="glass p-8 rounded-[3rem] border border-white/5 shadow-xl group hover:border-indigo-500/30 transition-all duration-500 relative overflow-hidden">
-            <div className={`absolute top-0 right-0 w-32 h-32 ${bgColor} blur-[60px] -mr-16 -mt-16 opacity-0 group-hover:opacity-100 transition-opacity duration-700`}></div>
-            <div className="flex flex-col gap-8 relative z-10">
-                <div className={`w-16 h-16 rounded-[1.5rem] ${bgColor} border border-white/5 flex items-center justify-center transition-transform group-hover:scale-110 duration-500`}>
-                    <Icon className={`w-8 h-8 ${colors[color]}`} />
-                </div>
-                <div>
-                    <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest group-hover:text-slate-400 transition-colors">{label}</p>
-                    <p className="text-5xl font-display font-bold text-white mt-3 tracking-tighter">{value}</p>
-                </div>
-            </div>
         </div>
     );
 };

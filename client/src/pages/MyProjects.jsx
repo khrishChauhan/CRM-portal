@@ -38,30 +38,30 @@ const MyProjects = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[500px]">
-                <Loader2 className="w-12 h-12 animate-spin text-indigo-500 mb-6" />
-                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.3em] font-mono">Loading...</p>
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
+                <Loader2 className="w-10 h-10 animate-spin text-blue-600 mb-4" />
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Loading Projects...</p>
             </div>
         );
     }
 
     return (
-        <div className="space-y-12 animate-reveal pb-24">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div className="space-y-8 animate-reveal pb-20 font-body">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
                 <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none uppercase text-gradient">My Projects</h1>
-                    <p className="text-slate-500 mt-4 font-medium text-lg italic tracking-tight">Your approved projects and their current status.</p>
+                    <h1 className="text-3xl font-display font-bold text-[#1A1A1A]">Project Gallery</h1>
+                    <p className="text-gray-500 mt-2 font-medium">Your approved projects and progress tracking.</p>
                 </div>
-                <div className="flex glass p-1.5 rounded-2xl border border-white/5 shadow-2xl">
+                <div className="flex bg-gray-200 p-1 rounded-xl">
                     <button
                         onClick={() => setViewMode('grid')}
-                        className={`p-3 rounded-xl transition-all duration-300 ${viewMode === 'grid' ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                        className={`p-2.5 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                     >
                         <LayoutGrid className="w-5 h-5" />
                     </button>
                     <button
                         onClick={() => setViewMode('list')}
-                        className={`p-3 rounded-xl transition-all duration-300 ${viewMode === 'list' ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                        className={`p-2.5 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                     >
                         <List className="w-5 h-5" />
                     </button>
@@ -69,26 +69,20 @@ const MyProjects = () => {
             </div>
 
             {error ? (
-                <div className="glass-dark p-8 rounded-[2rem] border border-red-500/20 flex items-center gap-6 text-red-400">
-                    <AlertCircle className="w-8 h-8 flex-shrink-0" />
-                    <div>
-                        <h3 className="font-bold uppercase tracking-widest text-[11px] mb-1">Something went wrong</h3>
-                        <p className="text-sm font-medium opacity-80">{error}</p>
-                    </div>
+                <div className="bg-red-50 p-6 rounded-[20px] border border-red-100 flex items-center gap-4 text-red-600">
+                    <AlertCircle className="w-6 h-6 flex-shrink-0" />
+                    <p className="font-semibold text-sm">{error}</p>
                 </div>
             ) : projects.length === 0 ? (
-                <div className="glass p-40 rounded-[4rem] border border-white/5 shadow-2xl flex flex-col items-center justify-center text-center">
-                    <div className="w-24 h-24 bg-white/5 border border-white/5 rounded-[2.5rem] flex items-center justify-center mb-10 ring-1 ring-white/10 shadow-inner">
-                        <FolderOpen className="w-12 h-12 text-slate-800" />
+                <div className="bg-white p-20 rounded-[32px] card-shadow flex flex-col items-center justify-center text-center">
+                    <div className="w-20 h-20 bg-gray-50 rounded-[24px] flex items-center justify-center mb-6">
+                        <FolderOpen className="w-10 h-10 text-gray-300" />
                     </div>
-                    <h3 className="text-2xl font-display font-bold text-white tracking-tight uppercase">No Projects Yet</h3>
-                    <p className="text-slate-500 max-w-sm font-medium mt-4 text-lg italic leading-relaxed">You don't have access to any projects yet. Request access from the dashboard.</p>
+                    <h3 className="text-xl font-display font-bold text-[#1A1A1A]">No Projects Yet</h3>
+                    <p className="text-gray-500 max-w-sm mt-2">You don't have access to any projects. Request access from the dashboard.</p>
                 </div>
             ) : (
-                <div className={viewMode === 'grid'
-                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                    : "space-y-4"
-                }>
+                <div className={viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
                     {projects.map(project => (
                         <ProjectItem
                             key={project._id}
@@ -100,7 +94,6 @@ const MyProjects = () => {
                 </div>
             )}
 
-            {/* Project Details Modal */}
             {selectedProject && (
                 <ProjectDetailsModal
                     project={selectedProject}
@@ -113,71 +106,63 @@ const MyProjects = () => {
 
 const ProjectItem = ({ project, mode, onSelect }) => {
     const navigate = useNavigate();
+    
     if (mode === 'list') {
         return (
-            <div className="glass p-8 rounded-3xl border border-white/5 shadow-xl hover:border-indigo-500/30 transition-all duration-500 cursor-pointer group flex items-center justify-between gap-8" onClick={onSelect}>
-                <div className="flex items-center gap-8">
-                    <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center font-mono font-bold text-indigo-400 text-xs shadow-inner group-hover:scale-110 transition-transform">
-                        {project.projectCode}
+            <div className="bg-white p-6 rounded-[20px] card-shadow border border-transparent hover:border-blue-500/20 transition-all cursor-pointer flex items-center justify-between gap-4" onClick={onSelect}>
+                <div className="flex items-center gap-6">
+                    <div className="w-12 h-12 rounded-[14px] bg-gray-50 flex items-center justify-center font-bold text-blue-600 text-xs shadow-inner">
+                        {project.projectCode.slice(-3)}
                     </div>
                     <div>
-                        <h3 className="text-xl font-display font-bold text-white group-hover:text-indigo-400 transition-colors uppercase tracking-tight">{project.projectName}</h3>
-                        <div className="flex items-center gap-6 mt-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest italic">
-                            <span className="flex items-center gap-2 text-slate-600"><MapPin className="w-3.5 h-3.5 text-indigo-500/30" /> {project.siteAddress || 'N/A'}</span>
-                            <span className="flex items-center gap-2 text-slate-600"><Calendar className="w-3.5 h-3.5 text-indigo-500/30" /> {new Date(project.startDate).toLocaleDateString()}</span>
+                        <h3 className="text-base font-display font-bold text-[#1A1A1A] group-hover:text-blue-600 transition-colors uppercase tracking-tight">{project.projectName}</h3>
+                        <div className="flex items-center gap-4 mt-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                            <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-blue-500" /> {project.siteAddress || 'N/A'}</span>
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center gap-10">
-                    <span className={`inline-flex px-3 py-1.5 rounded-xl text-[9px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus]?.replace('bg-', 'bg-transparent border border-').replace('text-', 'text-') || 'border-slate-500/20 text-slate-400'}`}>
+                <div className="flex items-center gap-6">
+                    <span className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus] || 'bg-gray-100 text-gray-500'}`}>
                         {project.projectStatus}
                     </span>
-                    <div className="w-12 h-12 rounded-full border border-white/5 flex items-center justify-center text-slate-500 group-hover:text-indigo-400 group-hover:bg-white/5 transition-all duration-500">
-                        <ChevronRight className="w-6 h-6 transform group-hover:translate-x-1 transition-transform" />
-                    </div>
+                    <ChevronRight className="w-5 h-5 text-gray-300" />
                 </div>
             </div>
         );
     }
 
     return (
-        <div
-            className="glass rounded-[3rem] border border-white/5 shadow-2xl hover:shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] hover:border-indigo-500/30 hover:-translate-y-2 transition-all duration-500 group overflow-hidden cursor-pointer relative"
-            onClick={onSelect}
-        >
-            <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/5 blur-[80px] -mr-24 -mt-24 group-hover:bg-indigo-500/10 transition-colors"></div>
-
-            <div className="p-10 relative z-10">
-                <div className="flex justify-between items-start mb-8">
-                    <div className="px-4 py-1.5 glass-dark border border-white/10 text-indigo-400 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] font-mono">
-                        ID // {project.projectCode}
+        <div className="bg-white rounded-[24px] card-shadow border border-transparent hover:border-blue-500/20 hover:-translate-y-1 transition-all duration-300 group overflow-hidden cursor-pointer flex flex-col h-full" onClick={onSelect}>
+            <div className="p-8 flex-1">
+                <div className="flex justify-between items-start mb-6">
+                    <div className="px-3 py-1 bg-gray-100 text-gray-500 rounded-lg text-[9px] font-bold uppercase tracking-widest">
+                        #{project.projectCode}
                     </div>
-                    <span className={`inline-flex px-3 py-1.5 rounded-xl text-[9px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus]?.replace('bg-', 'bg-transparent border border-').replace('text-', 'text-') || 'border-slate-500/20 text-slate-400'}`}>
+                    <span className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus] || 'bg-gray-100 text-gray-500'}`}>
                         {project.projectStatus}
                     </span>
                 </div>
 
-                <h3 className="text-2xl font-display font-bold text-white mb-6 group-hover:text-indigo-400 transition-colors leading-tight uppercase tracking-tight">
+                <h3 className="text-xl font-display font-bold text-[#1A1A1A] mb-4 group-hover:text-blue-600 transition-colors leading-tight">
                     {project.projectName}
                 </h3>
 
-                <div className="space-y-5">
+                <div className="space-y-4">
                     <DetailRow icon={MapPin} label={project.siteAddress || 'No location'} />
-                    <DetailRow icon={Calendar} label={`Started: ${new Date(project.startDate).toLocaleDateString()}`} />
-                    <DetailRow icon={User} label={`Manager: ${project.assignedManager?.name || 'Not assigned'}`} />
+                    <DetailRow icon={Calendar} label={`Started: ${new Date(project.startDate).toLocaleDateString('en-GB')}`} />
                 </div>
+            </div>
 
-                <div className="mt-10 pt-10 border-t border-white/5 flex items-center justify-between">
-                    <button
-                        onClick={(e) => { e.stopPropagation(); navigate(`/client/projects/${project._id}/updates`); }}
-                        className="flex items-center gap-2 text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] hover:text-emerald-400 transition-colors"
-                    >
-                        <MessageSquare className="w-4 h-4" />
-                        Queries
-                    </button>
-                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 group-hover:bg-indigo-600 group-hover:border-indigo-500 flex items-center justify-center transition-all duration-500 shadow-inner group-hover:shadow-[0_0_20px_rgba(79,70,229,0.4)]">
-                        <ChevronRight className="w-5 h-5 text-indigo-500 group-hover:text-white transition-colors" />
-                    </div>
+            <div className="px-8 py-6 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+                <button
+                    onClick={(e) => { e.stopPropagation(); navigate(`/client/projects/${project._id}/updates`); }}
+                    className="flex items-center gap-2 text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:text-blue-700 transition-colors"
+                >
+                    <MessageSquare className="w-4 h-4" />
+                    View Updates
+                </button>
+                <div className="w-10 h-10 rounded-xl bg-white card-shadow flex items-center justify-center transition-all group-hover:blue-gradient group-hover:text-white">
+                    <ChevronRight className="w-5 h-5" />
                 </div>
             </div>
         </div>
@@ -185,74 +170,67 @@ const ProjectItem = ({ project, mode, onSelect }) => {
 };
 
 const DetailRow = ({ icon: Icon, label }) => (
-    <div className="flex items-center gap-4 text-slate-500 group/item">
-        <Icon className="w-4.5 h-4.5 text-indigo-500/30 group-hover/item:text-indigo-400 transition-colors" />
-        <span className="text-sm font-medium tracking-tight group-hover/item:text-slate-300 transition-colors leading-none truncate">{label}</span>
+    <div className="flex items-center gap-3 text-gray-500">
+        <Icon className="w-4 h-4 text-blue-500" />
+        <span className="text-sm font-medium tracking-tight truncate">{label}</span>
     </div>
 );
 
 const ProjectDetailsModal = ({ project, onClose }) => {
     return (
-        <div className="fixed inset-0 z-[120] flex items-start sm:items-center justify-center p-4 pt-10 sm:pt-4">
-            <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-2xl animate-in fade-in duration-700" onClick={onClose}></div>
-            <div className="glass-dark border border-white/10 rounded-3xl md:rounded-[4rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-3xl relative z-[130] animate-in zoom-in-95 duration-700 overflow-hidden flex flex-col max-h-[85vh] sm:max-h-[90vh]">
-                <div className="shrink-0 h-auto sm:h-64 bg-slate-900 flex items-end p-6 sm:p-14 relative overflow-hidden group">
-                    <div className="absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity">
-                        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-indigo-600/20 rounded-full mix-blend-multiply filter blur-[120px] -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
-                        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-600/20 rounded-full mix-blend-multiply filter blur-[120px] translate-x-1/2 translate-y-1/2"></div>
-                    </div>
-                    <div className="relative z-10 w-full flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 sm:gap-10">
-                        <div className="flex-1 min-w-0 pr-4">
-                            <p className="text-indigo-400 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.4em] mb-2 sm:mb-4 font-mono shadow-sm">Project Details</p>
-                            <h2 className="text-2xl sm:text-5xl font-display font-bold text-white leading-tight sm:leading-none uppercase tracking-tighter break-words">{project.projectName}</h2>
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
+            <div className="bg-white rounded-[32px] card-shadow w-full max-w-2xl relative z-[210] animate-in zoom-in-95 duration-300 overflow-hidden flex flex-col max-h-[90vh]">
+                <div className="shrink-0 h-48 blue-gradient flex items-end p-10 relative">
+                    <div className="relative z-10 w-full flex justify-between items-end">
+                        <div className="text-white">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-80">Project Overview</p>
+                            <h2 className="text-3xl font-display font-bold leading-tight">{project.projectName}</h2>
                         </div>
-                        <div className="text-left sm:text-right flex-shrink-0 w-full sm:w-auto flex justify-between sm:block items-center">
-                            <span className="text-slate-500 text-[9px] font-bold block sm:mb-2 uppercase tracking-[0.3em] italic">Code</span>
-                            <span className="text-white font-mono font-black text-lg sm:text-2xl tracking-tighter bg-white/5 border border-white/10 px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl shadow-inner">#{project.projectCode}</span>
+                        <div className="bg-white/20 backdrop-blur-md rounded-xl px-4 py-2 border border-white/20">
+                            <span className="text-white font-bold text-lg font-mono">#{project.projectCode}</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="p-6 sm:p-14 space-y-8 sm:space-y-14 overflow-y-auto custom-scrollbar">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-16">
-                        <div className="space-y-6 sm:space-y-8">
-                            <h4 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Project Info</h4>
-                            <div className="space-y-4 sm:space-y-6">
+                <div className="p-10 space-y-10 overflow-y-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div className="space-y-6">
+                            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-l-4 border-blue-500 pl-3">General Information</h4>
+                            <div className="space-y-4">
                                 <ModalDetail icon={MapPin} title="Location" value={project.siteAddress || 'Not specified'} />
-                                <ModalDetail icon={Calendar} title="Timeline" value={`${new Date(project.startDate).toLocaleDateString()} - ${project.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'TBD'}`} />
-                                <ModalDetail icon={FolderOpen} title="Category" value={project.projectCategory?.toUpperCase() || 'General'} />
+                                <ModalDetail icon={Calendar} title="Start Date" value={new Date(project.startDate).toLocaleDateString('en-GB')} />
+                                <ModalDetail icon={FolderOpen} title="Category" value={project.projectCategory || 'General'} />
                             </div>
                         </div>
-                        <div className="space-y-6 sm:space-y-8">
-                            <h4 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Progress</h4>
-                            <div className="p-6 sm:p-8 glass bg-white/5 rounded-[1.5rem] sm:rounded-[2rem] border border-white/5 flex flex-row items-center justify-between gap-4 group/status">
-                                <span className="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-widest group-hover/status:text-indigo-400 transition-colors">Current Status</span>
-                                <span className={`inline-flex px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[8px] sm:text-[10px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus]?.replace('bg-', 'bg-transparent border border-').replace('text-', 'text-') || 'border-slate-500/20 text-slate-400'}`}>
+                        <div className="space-y-6">
+                            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-l-4 border-blue-500 pl-3">Status & Progress</h4>
+                            <div className="bg-gray-50 p-6 rounded-[20px] border border-gray-100 flex items-center justify-between">
+                                <span className="text-xs font-bold text-gray-500 uppercase">Current Status</span>
+                                <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus] || 'bg-gray-100 text-gray-500'}`}>
                                     {project.projectStatus}
                                 </span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="p-6 sm:p-10 glass-dark rounded-[2rem] sm:rounded-[2.5rem] border border-white/10 flex flex-col md:flex-row md:items-center gap-6 sm:gap-8 group/manager relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-[50px] -mr-16 -mt-16 group-hover/manager:bg-indigo-400/10 transition-colors"></div>
-                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[1.25rem] sm:rounded-[1.5rem] bg-indigo-600/10 flex-shrink-0 flex items-center justify-center border border-indigo-500/20 shadow-xl group-hover/manager:scale-110 transition-transform">
-                            <User className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-400" />
+                    <div className="bg-blue-50 p-8 rounded-[24px] border border-blue-100 flex items-center gap-6">
+                        <div className="w-14 h-14 rounded-[18px] bg-white flex items-center justify-center shadow-sm">
+                            <User className="w-7 h-7 text-blue-500" />
                         </div>
-                        <div className="flex-1 relative z-10">
-                            <span className="text-[9px] font-bold text-slate-600 uppercase tracking-[0.3em] block mb-1.5 sm:mb-2 italic">Project Manager</span>
-                            <span className="text-lg sm:text-xl font-display font-bold text-white uppercase tracking-tight group-hover/manager:text-indigo-400 transition-colors">{project.assignedManager?.name || 'Not assigned'}</span>
-                            <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium mt-1.5 sm:mt-2 leading-relaxed italic opacity-70">Contact your project manager for any questions or queries.</p>
+                        <div>
+                            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-widest block mb-1">Project Manager</span>
+                            <span className="text-lg font-bold text-[#1A1A1A]">{project.assignedManager?.name || 'Not assigned'}</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="shrink-0 p-6 md:p-10 border-t border-white/5 bg-slate-900/50">
+                <div className="shrink-0 p-8 border-t border-gray-100 bg-gray-50">
                     <button
                         onClick={onClose}
-                        className="w-full py-5 sm:py-6 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-[0.4em] rounded-2xl sm:rounded-3xl transition-all shadow-[0_20px_60px_-16px_rgba(79,70,229,0.4)] hover:shadow-[0_20px_80px_-16px_rgba(79,70,229,0.6)]"
+                        className="w-full py-5 blue-gradient text-white font-bold text-sm uppercase tracking-widest rounded-[18px] btn-shadow"
                     >
-                        Close
+                        Close Details
                     </button>
                 </div>
             </div>
@@ -261,15 +239,16 @@ const ProjectDetailsModal = ({ project, onClose }) => {
 };
 
 const ModalDetail = ({ icon: Icon, title, value }) => (
-    <div className="flex gap-6 group/detail">
-        <div className="w-14 h-14 rounded-2xl bg-white/5 flex-shrink-0 flex items-center justify-center border border-white/5 shadow-inner group-hover/detail:border-indigo-500/30 transition-colors">
-            <Icon className="w-6 h-6 text-indigo-500/30 group-hover/detail:text-indigo-400 transition-colors" />
+    <div className="flex gap-4">
+        <div className="w-10 h-10 rounded-xl bg-gray-50 flex-shrink-0 flex items-center justify-center border border-gray-100">
+            <Icon className="w-5 h-5 text-blue-500" />
         </div>
         <div>
-            <span className="text-[9px] font-bold text-slate-600 uppercase tracking-[0.3em] block mb-1.5 italic transition-colors leading-none">{title}</span>
-            <span className="text-lg font-display font-bold text-white uppercase tracking-tight group-hover/detail:text-indigo-300 transition-colors">{value}</span>
+            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block mb-1">{title}</span>
+            <span className="text-sm font-bold text-[#1A1A1A]">{value}</span>
         </div>
     </div>
 );
 
 export default MyProjects;
+

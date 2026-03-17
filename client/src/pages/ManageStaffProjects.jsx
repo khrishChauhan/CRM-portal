@@ -72,77 +72,74 @@ const ManageStaffProjects = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="w-10 h-10 animate-spin text-primary-500" />
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
+                <Loader2 className="w-10 h-10 animate-spin text-blue-600 mb-4" />
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Loading projects...</p>
             </div>
         );
     }
 
     return (
-        <div className="space-y-10 animate-reveal pb-20">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+        <div className="space-y-8 animate-reveal pb-10">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-5xl font-display font-bold text-white tracking-tight leading-none text-gradient">My Projects</h1>
-                    <p className="text-slate-500 mt-3 font-medium text-lg italic">View and update your assigned projects.</p>
+                    <h1 className="text-3xl font-display font-bold text-[#1A1A1A]">Project Assignments</h1>
+                    <p className="text-[#6B7280] font-medium">Manage and update progress on your active projects.</p>
                 </div>
             </div>
 
             {error && (
-                <div className="glass-dark p-8 rounded-[2rem] border border-red-500/20 flex items-center gap-6 text-red-400">
-                    <AlertCircle className="w-8 h-8 flex-shrink-0" />
+                <div className="bg-red-50 p-6 rounded-[22px] border border-red-100 flex items-center gap-4 text-red-600">
+                    <AlertCircle className="w-6 h-6 flex-shrink-0" />
                     <div>
-                        <h3 className="font-bold uppercase tracking-widest text-[11px] mb-1">Something went wrong</h3>
+                        <h3 className="font-bold text-xs uppercase tracking-wider mb-0.5">Error Occurred</h3>
                         <p className="text-sm font-medium opacity-80">{error}</p>
                     </div>
                 </div>
             )}
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 {projects.map(project => (
-                    <div key={project._id} className="glass p-10 rounded-[3rem] border border-white/5 shadow-2xl hover:border-indigo-500/30 transition-all duration-500 flex flex-col justify-between group relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/5 blur-[80px] -mr-24 -mt-24 group-hover:bg-indigo-500/10 transition-colors"></div>
-
-                        <div className="relative z-10">
-                            <div className="flex justify-between items-start mb-8">
-                                <div className="px-4 py-1.5 glass-dark border border-white/10 text-indigo-400 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] font-mono">
-                                    ID // {project.projectCode}
-                                </div>
-                                <span className={`inline-flex px-3 py-1.5 rounded-xl text-[9px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus]?.replace('bg-', 'bg-transparent border border-').replace('text-', 'text-') || 'border-slate-500/20 text-slate-400'}`}>
-                                    {project.projectStatus}
-                                </span>
+                    <div key={project._id} className="bg-white p-8 rounded-[24px] card-shadow border border-transparent hover:border-blue-500/30 transition-all duration-300 group">
+                        <div className="flex justify-between items-start mb-6">
+                            <div className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-bold uppercase tracking-wider">
+                                {project.projectCode}
                             </div>
-
-                            <h3 className="text-3xl font-display font-bold text-white mb-3 group-hover:text-indigo-400 transition-colors uppercase tracking-tight">
-                                {project.projectName}
-                            </h3>
-                            <p className="text-xs font-bold text-slate-600 uppercase tracking-[0.25em] mb-10 italic">{project.projectCategory || 'General'}</p>
-
-                            <div className="space-y-6">
-                                <DetailItem icon={MapPin} value={project.siteAddress || 'No location set'} />
-                                <DetailItem icon={Calendar} value={`Due: ${project.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'TBD'}`} />
-                            </div>
+                            <span className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${PROJECT_STATUS_COLORS[project.projectStatus] || 'bg-gray-100 text-gray-600'}`}>
+                                {project.projectStatus}
+                            </span>
                         </div>
 
-                        <div className="mt-12 pt-10 border-t border-white/5 flex items-center justify-between relative z-10">
-                            <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-[11px] font-bold text-indigo-400 shadow-inner group-hover:scale-110 transition-transform">
+                        <h3 className="text-2xl font-display font-bold text-[#1A1A1A] mb-2 group-hover:text-blue-600 transition-colors uppercase leading-tight">
+                            {project.projectName}
+                        </h3>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-8">{project.projectCategory || 'General Project'}</p>
+
+                        <div className="space-y-4 mb-8">
+                            <DetailItem icon={MapPin} value={project.siteAddress || 'Address not specified'} />
+                            <DetailItem icon={Calendar} value={`Due: ${project.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'TBD'}`} />
+                        </div>
+
+                        <div className="pt-6 border-t border-gray-100 flex flex-wrap items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-[11px] font-bold text-blue-600">
                                     {project.projectStatus[0]}
                                 </div>
-                                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Current Status</span>
+                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Ongoing</span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => navigate(`/staff/projects/${project._id}/updates`)}
-                                    className="group/btn flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-emerald-500/10 border border-white/10 hover:border-emerald-500/30 text-white rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all shadow-xl"
+                                    className="p-3 bg-gray-50 hover:bg-emerald-50 text-gray-400 hover:text-emerald-600 rounded-xl transition-all border border-transparent hover:border-emerald-100"
+                                    title="View Updates"
                                 >
-                                    <MessageSquare className="w-4 h-4 text-emerald-400 group-hover/btn:scale-110 transition-transform" />
-                                    Updates
+                                    <MessageSquare className="w-5 h-5" />
                                 </button>
                                 <button
                                     onClick={() => handleEdit(project)}
-                                    className="group/btn flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] transition-all shadow-xl"
+                                    className="px-6 py-3.5 blue-gradient text-white rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all btn-shadow flex items-center gap-2"
                                 >
-                                    <Edit3 className="w-4 h-4 text-indigo-400 group-hover/btn:rotate-12 transition-transform" />
+                                    <Edit3 className="w-4 h-4" />
                                     Update Status
                                 </button>
                             </div>
@@ -151,72 +148,72 @@ const ManageStaffProjects = () => {
                 ))}
 
                 {projects.length === 0 && (
-                    <div className="xl:col-span-2 glass p-40 rounded-[4rem] border border-white/5 shadow-2xl flex flex-col items-center justify-center text-center">
-                        <div className="w-24 h-24 bg-white/5 border border-white/5 rounded-[2.5rem] flex items-center justify-center mb-10 ring-1 ring-white/10">
-                            <FolderOpen className="w-12 h-12 text-slate-800" />
+                    <div className="xl:col-span-2 bg-white p-24 rounded-[32px] card-shadow flex flex-col items-center justify-center text-center">
+                        <div className="w-20 h-20 bg-gray-50 rounded-[22px] flex items-center justify-center mb-6">
+                            <FolderOpen className="w-10 h-10 text-gray-300" />
                         </div>
-                        <h3 className="text-2xl font-display font-bold text-white tracking-tight">No projects yet</h3>
-                        <p className="text-slate-500 font-medium mt-4 text-lg italic">You don't have any assigned projects at the moment.</p>
+                        <h3 className="text-xl font-display font-bold text-[#1A1A1A]">No active projects</h3>
+                        <p className="text-[#6B7280] font-medium mt-2">You haven't been assigned to any projects yet.</p>
                     </div>
                 )}
             </div>
 
             {/* Update Modal */}
             {selectedProject && (
-                <div className="fixed inset-0 z-[110] flex items-start sm:items-center justify-center p-4 pt-10 sm:pt-4">
-                    <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl transition-opacity animate-in fade-in duration-500" onClick={() => setSelectedProject(null)}></div>
-                    <div className="glass-dark border border-white/10 rounded-3xl md:rounded-[3.5rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.8)] w-full max-w-xl relative z-[120] animate-in zoom-in-95 duration-700 overflow-hidden flex flex-col max-h-[85vh] sm:max-h-[90vh]">
-                        <div className="flex items-center justify-between px-6 py-6 md:px-12 md:py-10 border-b border-white/5 shrink-0">
+                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setSelectedProject(null)}></div>
+                    <div className="bg-white rounded-[28px] card-shadow w-full max-w-xl relative z-[120] animate-in zoom-in-95 duration-500 overflow-hidden flex flex-col max-h-[90vh]">
+                        <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between">
                             <div>
-                                <h3 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">Update Project</h3>
-                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 italic font-mono truncate max-w-[200px] sm:max-w-none">Updating: {selectedProject.projectName.toUpperCase()}</p>
+                                <h3 className="text-xl font-display font-bold text-[#1A1A1A]">Project Update</h3>
+                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Ref: {selectedProject.projectCode}</p>
                             </div>
-                            <button type="button" onClick={() => setSelectedProject(null)} className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 text-slate-500 hover:text-white transition-all duration-300">
-                                <X className="w-4 h-4 md:w-6 md:h-6 mx-auto" />
+                            <button onClick={() => setSelectedProject(null)} className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors">
+                                <X className="w-5 h-5" />
                             </button>
                         </div>
 
-                        <form onSubmit={handleUpdate} className="flex flex-col overflow-hidden min-h-0">
-                            <div className="px-6 py-6 md:px-12 md:py-10 space-y-6 md:space-y-8 overflow-y-auto custom-scrollbar">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                        <form onSubmit={handleUpdate} className="overflow-y-auto">
+                            <div className="p-8 space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
-                                        <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3 sm:mb-4">Status</label>
+                                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">Current Status</label>
                                         <select
                                             value={editForm.projectStatus}
                                             onChange={e => setEditForm({ ...editForm, projectStatus: e.target.value })}
-                                            className="w-full px-5 sm:px-6 py-4 sm:py-5 bg-white/5 border border-white/10 rounded-2xl text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-white outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all cursor-pointer"
+                                            className="w-full px-5 py-4 bg-[#1A1A1A] text-white rounded-2xl text-[11px] font-bold uppercase tracking-wider outline-none focus:ring-4 focus:ring-blue-500/20 transition-all cursor-pointer"
                                         >
-                                            <option value="Planned" className="bg-slate-900">PLANNED</option>
-                                            <option value="In Progress" className="bg-slate-900">IN PROGRESS</option>
-                                            <option value="On Hold" className="bg-slate-900">ON HOLD</option>
-                                            <option value="Completed" className="bg-slate-900">COMPLETED</option>
-                                            <option value="Delayed" className="bg-slate-900">DELAYED</option>
-                                            <option value="Cancelled" className="bg-slate-900">CANCELLED</option>
+                                            <option value="Planned">Planned</option>
+                                            <option value="In Progress">In Progress</option>
+                                            <option value="On Hold">On Hold</option>
+                                            <option value="Completed">Completed</option>
+                                            <option value="Delayed">Delayed</option>
+                                            <option value="Cancelled">Cancelled</option>
                                         </select>
                                     </div>
 
                                     <div>
-                                        <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3 sm:mb-4">Completion Date</label>
+                                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">Completion Date</label>
                                         <input
                                             type="date"
                                             value={editForm.actualCompletion}
                                             onChange={e => setEditForm({ ...editForm, actualCompletion: e.target.value })}
-                                            className="w-full px-5 sm:px-6 py-4 sm:py-5 bg-white/5 border border-white/10 rounded-2xl text-sm font-bold text-white outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all font-mono"
+                                            className="w-full px-5 py-4 bg-[#1A1A1A] text-white rounded-2xl text-sm font-medium outline-none focus:ring-4 focus:ring-blue-500/20 transition-all"
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3 sm:mb-4">Risk Level</label>
-                                    <div className="grid grid-cols-3 gap-3 sm:gap-4">
+                                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 px-1">Risk Level</label>
+                                    <div className="grid grid-cols-3 gap-3">
                                         {['Low', 'Medium', 'High'].map(level => (
                                             <button
                                                 key={level}
                                                 type="button"
                                                 onClick={() => setEditForm({ ...editForm, riskLevel: level })}
-                                                className={`py-3 sm:py-4 rounded-2xl text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] border transition-all ${editForm.riskLevel === level
-                                                    ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_0_30px_rgba(79,70,229,0.3)]'
-                                                    : 'bg-white/5 border-white/5 text-slate-600 hover:border-white/20'
+                                                className={`py-3 rounded-xl text-[10px] font-bold uppercase tracking-wider border transition-all ${editForm.riskLevel === level
+                                                    ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/20'
+                                                    : 'bg-gray-50 border-gray-100 text-gray-500 hover:bg-white hover:border-blue-200'
                                                     }`}
                                             >
                                                 {level}
@@ -226,25 +223,25 @@ const ManageStaffProjects = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3 sm:mb-4">Notes / Delay Reason</label>
+                                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">Update Notes</label>
                                     <textarea
                                         value={editForm.delayReason}
                                         onChange={e => setEditForm({ ...editForm, delayReason: e.target.value })}
-                                        placeholder="Add any notes or explain delays..."
-                                        className="w-full px-6 sm:px-8 py-5 sm:py-6 bg-white/5 border border-white/10 rounded-3xl text-sm text-white focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all h-28 sm:h-32 resize-none placeholder:text-slate-800 font-mono"
+                                        placeholder="Add any internal notes or progress details..."
+                                        className="w-full px-6 py-5 bg-[#1A1A1A] text-white rounded-2xl text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all h-28 resize-none placeholder:text-gray-600"
                                     />
                                 </div>
                             </div>
 
-                            <div className="shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sm:gap-4 p-4 md:p-8 border-t border-white/5 bg-slate-900/50">
-                                <button type="button" onClick={() => setSelectedProject(null)} className="w-full sm:w-auto px-10 py-4 sm:py-5 bg-white/5 text-[11px] font-bold text-slate-500 uppercase tracking-widest rounded-2xl hover:bg-white/10 hover:text-white transition-all">Cancel</button>
+                            <div className="p-8 border-t border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row gap-3">
+                                <button type="button" onClick={() => setSelectedProject(null)} className="flex-1 px-8 py-4 bg-white border border-gray-200 text-[10px] font-bold text-gray-400 uppercase tracking-widest rounded-xl hover:bg-gray-100 transition-all">Cancel</button>
                                 <button
                                     type="submit"
                                     disabled={updating}
-                                    className="w-full sm:w-auto px-12 py-4 sm:py-5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] uppercase tracking-[0.3em] rounded-2xl transition-all shadow-[0_0_40px_rgba(79,70,229,0.3)] flex items-center justify-center gap-3 disabled:opacity-30"
+                                    className="flex-[2] px-8 py-4 blue-gradient text-white font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all btn-shadow flex items-center justify-center gap-2 disabled:opacity-50"
                                 >
-                                    {updating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-                                    Save Changes
+                                    {updating ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <Save className="w-4 h-4" />}
+                                    Save Progress
                                 </button>
                             </div>
                         </form>
@@ -256,9 +253,9 @@ const ManageStaffProjects = () => {
 };
 
 const DetailItem = ({ icon: Icon, value }) => (
-    <div className="flex items-center gap-4 text-slate-500 group/item">
-        <Icon className="w-5 h-5 text-indigo-500/30 group-hover/item:text-indigo-400 transition-colors" />
-        <span className="text-[13px] font-medium tracking-tight group-hover/item:text-slate-300 transition-colors">{value}</span>
+    <div className="flex items-center gap-3 text-gray-500 group/item">
+        <Icon className="w-5 h-5 text-blue-500/40 group-hover/item:text-blue-600 transition-colors" />
+        <span className="text-sm font-medium tracking-tight group-hover/item:text-gray-900 transition-colors">{value}</span>
     </div>
 );
 

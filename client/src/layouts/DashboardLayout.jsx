@@ -12,7 +12,7 @@ import {
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-const Sidebar = ({ role }) => {
+const Sidebar = ({ role, user, logout }) => {
     const location = useLocation();
 
     const adminLinks = [
@@ -21,7 +21,6 @@ const Sidebar = ({ role }) => {
         { name: 'Clients', path: '/admin/clients', icon: Briefcase },
         { name: 'Projects', path: '/admin/projects', icon: FolderOpen },
         { name: 'Access Requests', path: '/admin/access-requests', icon: FileText },
-
     ];
 
     const staffLinks = [
@@ -30,94 +29,99 @@ const Sidebar = ({ role }) => {
     ];
 
     const clientLinks = [
-        { name: 'Dashboard', path: '/client/dashboard', icon: LayoutDashboard },
-        { name: 'My Projects', path: '/client/projects', icon: FolderOpen },
+        { name: 'Live Projects', path: '/client/dashboard', icon: Briefcase },
+        { name: 'Project Gallery', path: '/client/projects', icon: FolderOpen },
+        { name: 'Report Issue', path: '/client/report', icon: FileText },
     ];
 
     const links = role === 'admin' ? adminLinks : role === 'staff' ? staffLinks : clientLinks;
 
     return (
-        <div className="flex flex-col h-full bg-slate-950 border-r border-white/5 text-white w-64 transition-all duration-500 relative overflow-hidden">
-            {/* Background Texture Overlay */}
-            <div className="absolute inset-0 noise-bg opacity-[0.02] pointer-events-none"></div>
-
-            <div className="p-8 flex items-center space-x-3 group cursor-pointer relative z-10">
-                <div className="w-2.5 h-2.5 bg-indigo-500 rounded-full shadow-[0_0_12px_rgba(99,102,241,0.5)] group-hover:scale-125 transition-transform duration-300"></div>
-                <span className="font-display font-bold text-xl tracking-tight text-white group-hover:text-indigo-400 transition-colors">CRM Portal</span>
+        <div className="flex flex-col h-full bg-white text-[#1A1A1A] w-full max-w-[300px] border-r border-gray-100 shadow-xl font-body">
+            {/* TOP SECTION */}
+            <div className="p-8 flex items-center space-x-4">
+                <div className="w-12 h-12 blue-gradient rounded-[14px] flex items-center justify-center btn-shadow">
+                    <Building2 className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                    <h2 className="font-display font-bold text-lg leading-tight tracking-tight">Khushi Tech</h2>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Project Tracker v1.1</p>
+                </div>
             </div>
 
-            <nav className="flex-1 mt-8 px-4 space-y-1.5 relative z-10">
-                <p className="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4">Menu</p>
-                {links.map((link, idx) => (
-                    <Link
-                        key={link.path}
-                        to={link.path}
-                        className={`flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all duration-300 group animate-reveal ${location.pathname === link.path
-                            ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-[0_0_20px_rgba(99,102,241,0.1)]'
-                            : 'text-slate-400 hover:text-white hover:bg-white/[0.03]'
+            {/* MENU ITEMS */}
+            <nav className="flex-1 mt-6 px-4 space-y-2">
+                {links.map((link) => {
+                    const isActive = location.pathname === link.path;
+                    return (
+                        <Link
+                            key={link.path}
+                            to={link.path}
+                            className={`flex items-center space-x-4 px-5 py-4 rounded-[16px] transition-all duration-300 group ${
+                                isActive
+                                    ? 'blue-gradient text-white btn-shadow'
+                                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
                             }`}
-                        style={{ animationDelay: `${idx * 0.05}s` }}
-                    >
-                        <link.icon className={`w-5 h-5 transition-transform duration-300 group-hover:scale-110 ${location.pathname === link.path ? 'text-indigo-400' : 'text-slate-600 group-hover:text-slate-400'}`} />
-                        <span className="font-medium text-[13px] tracking-wide">{link.name}</span>
-                        {location.pathname === link.path && (
-                            <div className="ml-auto w-1.5 h-1.5 bg-indigo-500 rounded-full shadow-[0_0_10px_rgba(99,102,241,0.8)]"></div>
-                        )}
-                    </Link>
-                ))}
+                        >
+                            <link.icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-gray-600'}`} />
+                            <span className="font-bold text-sm tracking-wide">{link.name}</span>
+                        </Link>
+                    );
+                })}
             </nav>
 
-            <div className="p-6 relative z-10">
-                <div className="p-4 rounded-2xl glass border border-white/5 group hover:border-indigo-500/30 transition-colors duration-500">
-                    <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Status</p>
-                    <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
-                        <p className="text-[11px] text-slate-300 font-medium">All systems running</p>
+            {/* BOTTOM SECTION - USER CARD */}
+            <div className="p-4 border-t border-gray-100">
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-[20px]">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full blue-gradient flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                            {user?.name?.charAt(0) || 'U'}
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-xs font-bold text-[#1A1A1A] truncate max-w-[120px]">{user?.name || 'Guest User'}</span>
+                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{user?.role?.toUpperCase() || 'PUBLIC'}</span>
+                        </div>
                     </div>
+                    <button 
+                        onClick={logout}
+                        className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                        title="Logout"
+                    >
+                        <LogOut className="w-5 h-5" />
+                    </button>
                 </div>
             </div>
         </div>
     );
 };
 
-const Navbar = ({ user, toggleSidebar, logout }) => {
+const Navbar = ({ user, toggleSidebar, title }) => {
     return (
-        <header className="sticky top-0 z-[100] w-full bg-slate-950/80 backdrop-blur-2xl border-b border-white/5 py-3 sm:py-4 px-4 sm:px-8 md:px-12 flex items-center justify-between transition-all duration-500">
-            <div className="flex items-center gap-3 sm:gap-6">
-                <button
-                    onClick={toggleSidebar}
-                    className="p-3 sm:p-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-slate-400 transition-all active:scale-95 group focus:ring-2 focus:ring-indigo-500/40 outline-none"
-                    aria-label="Toggle Menu"
-                >
-                    <Menu className="w-5 h-5 group-hover:text-indigo-400 transition-colors" />
-                </button>
+        <header className="sticky top-0 z-[100] w-full bg-[#F5F7FA]/80 backdrop-blur-xl py-4 px-6 flex items-center justify-between transition-all duration-300">
+            <button
+                onClick={toggleSidebar}
+                className="p-3 rounded-xl bg-white card-shadow text-gray-600 hover:text-blue-600 transition-all active:scale-95 lg:hidden"
+                aria-label="Toggle Menu"
+            >
+                <Menu className="w-6 h-6" />
+            </button>
 
-                <div className="flex flex-col">
-                    <h1 className="text-base sm:text-lg font-display font-bold text-white tracking-tight capitalize truncate max-w-[140px] sm:max-w-none">
-                        {user?.role} Dashboard
-                    </h1>
-                </div>
+            <div className="flex-1 flex justify-center lg:justify-start lg:ml-6">
+                <h1 className="text-lg font-display font-bold text-[#1A1A1A] tracking-tight">
+                    {title || 'Overview'}
+                </h1>
             </div>
 
-            <div className="flex items-center gap-3 sm:gap-6 lg:gap-10">
-                <div className="flex items-center gap-3 sm:gap-6 pl-3 sm:pl-10 border-l border-white/10">
-                    <div className="hidden sm:flex flex-col text-right">
-                        <span className="text-xs sm:text-sm font-bold text-white tracking-tight">{user?.name}</span>
-                        <span className="text-[9px] sm:text-[10px] text-indigo-400 font-bold uppercase tracking-widest leading-none mt-1">{user?.role}</span>
-                    </div>
-                    <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-display font-bold text-xs shadow-lg shadow-indigo-500/5 group-hover:scale-105 transition-transform">
-                        {user?.name?.charAt(0)}
-                    </div>
+            <div className="flex items-center">
+                <div className="w-10 h-10 rounded-full border-2 border-white card-shadow overflow-hidden bg-white flex items-center justify-center shadow-sm">
+                   {user?.picture ? (
+                       <img src={user.picture} alt="Profile" className="w-full h-full object-cover" />
+                   ) : (
+                       <div className="w-full h-full blue-gradient flex items-center justify-center text-white text-xs font-bold">
+                           {user?.name?.charAt(0) || 'U'}
+                       </div>
+                   )}
                 </div>
-
-                <button
-                    onClick={logout}
-                    className="flex items-center justify-center p-3 sm:px-6 sm:py-4 rounded-2xl bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 text-red-400 text-[10px] font-bold uppercase tracking-[0.2em] transition-all active:scale-95 shadow-lg shadow-red-500/5 focus:ring-2 focus:ring-red-500/40 outline-none"
-                    title="Logout"
-                >
-                    <LogOut className="w-4 h-4 sm:mr-3" />
-                    <span className="hidden sm:inline">Log out</span>
-                </button>
             </div>
         </header>
     );
@@ -128,49 +132,60 @@ export const DashboardLayout = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const location = useLocation();
 
+    // Map path to title
+    const titles = {
+        '/admin/dashboard': 'Admin Dashboard',
+        '/admin/staff': 'Manage Staff',
+        '/admin/clients': 'Manage Clients',
+        '/admin/projects': 'Manage Projects',
+        '/admin/access-requests': 'Access Requests',
+        '/staff/dashboard': 'Staff Dashboard',
+        '/staff/projects': 'My Assignments',
+        '/client/dashboard': 'Overview',
+        '/client/projects': 'Project Gallery',
+    };
+
+    const currentTitle = titles[location.pathname] || 'Dashboard';
+
     // Close sidebar on route change (for mobile)
     useEffect(() => {
         setSidebarOpen(false);
     }, [location]);
 
     return (
-        <div className="flex h-screen bg-slate-950 overflow-hidden font-body selection:bg-indigo-500/30 relative">
-            {/* Background Texture Overlay */}
-            <div className="absolute inset-0 noise-bg opacity-[0.02] pointer-events-none z-[60]"></div>
-
+        <div className="flex h-screen bg-[#F5F7FA] overflow-hidden font-body selection:bg-blue-500/20 relative">
+            
             {/* Mobile Sidebar Overlay */}
             {sidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[70] lg:hidden transition-opacity duration-300"
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] lg:hidden transition-opacity duration-300"
                     onClick={() => setSidebarOpen(false)}
                 />
             )}
 
             {/* Sidebar Container */}
             <aside className={`
-                fixed inset-y-0 left-0 z-[80] w-64 transform transition-transform duration-500 ease-in-out lg:translate-x-0 lg:static lg:inset-0
+                fixed inset-y-0 left-0 z-[120] w-[80%] max-w-[300px] transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
                 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
             `}>
-                <Sidebar role={user?.role} />
+                <Sidebar role={user?.role} user={user} logout={logout} />
             </aside>
 
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
                 <Navbar
                     user={user}
+                    title={currentTitle}
                     toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-                    logout={logout}
                 />
 
-                <main className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-12 relative z-10 scrollbar-hide">
-                    <div className="max-w-[1600px] mx-auto animate-reveal">
+                <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 scrollbar-hide">
+                    <div className="max-w-7xl mx-auto">
                         {children}
                     </div>
-
-                    {/* Decorative Bottom Glow */}
-                    <div className="fixed bottom-0 right-0 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-indigo-500/5 rounded-full blur-[80px] md:blur-[120px] pointer-events-none -mr-32 -mb-32"></div>
                 </main>
             </div>
         </div>
     );
 };
+
