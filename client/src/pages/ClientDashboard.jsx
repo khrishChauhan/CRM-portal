@@ -246,9 +246,9 @@ const ClientDashboard = () => {
 
             {/* Request Modal */}
             {requestModal && (
-                <div className="fixed inset-0 z-[200] flex md:items-center md:justify-center">
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-black/45 backdrop-blur-sm transition-opacity" onClick={() => { setRequestModal(null); setRequestMessage(''); }}></div>
-                    <div className="bg-white w-full h-full md:h-auto md:w-[94%] md:max-w-[460px] md:max-w-[520px] md:max-h-[90vh] md:rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col relative z-[210] animate-in slide-in-from-bottom md:zoom-in-95 duration-300 md:duration-500 overflow-hidden">
+                    <div className="bg-white w-[94%] max-w-[520px] h-auto max-h-[90vh] rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col relative z-[210] animate-in zoom-in-95 duration-500 overflow-hidden">
                         <div className="flex items-center justify-between p-7 pb-4 bg-white shrink-0">
                             <h2 className="text-[22px] font-bold text-[#2C3E50] tracking-tight">Request Protocols</h2>
                             <button onClick={() => { setRequestModal(null); setRequestMessage(''); }} className="p-2 text-gray-400 hover:text-red-500 transition-all">

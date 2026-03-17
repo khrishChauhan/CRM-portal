@@ -386,7 +386,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-[250] flex md:items-center md:justify-center">
+        <div className="fixed inset-0 z-[250] flex items-center justify-center p-4">
             {/* Overlay */}
             <div 
                 className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-300" 
@@ -394,7 +394,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
             ></div>
 
             {/* Modal Card */}
-            <div className="bg-white w-full h-full md:h-auto md:w-[94%] md:max-w-[520px] md:max-h-[90vh] md:rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col relative z-[260] animate-in slide-in-from-bottom md:zoom-in-95 duration-300 md:duration-500 overflow-hidden">
+            <div className="bg-white w-[94%] max-w-[520px] h-auto max-h-[90vh] rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col relative z-[260] animate-in zoom-in-95 duration-500 overflow-hidden">
                 
                 {/* Header */}
                 <div className="flex items-center justify-between p-7 pb-4 bg-white shrink-0">
@@ -411,7 +411,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
 
                 {/* Form Body */}
                 <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0 bg-white">
-                    <div className="flex-1 overflow-y-auto scrollbar-hide px-7 pb-4">
+                    <div className="flex-1 overflow-y-auto scrollbar-hide px-7 pb-2">
                         {error && (
                             <div className="mb-6 flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-xl text-red-500 text-[10px] font-bold uppercase tracking-widest">
                                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
@@ -507,7 +507,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                                 </div>
                             </div>
 
-                            <div className="space-y-1.5 pb-4">
+                            <div className="space-y-1.5">
                                 <label className="text-[15px] font-bold text-[#34495E] ml-1">Staff Allocation</label>
                                 <div className="flex flex-wrap gap-2 p-4 bg-gray-50 border border-gray-100 rounded-[18px]">
                                     {staffList.map(s => {
@@ -528,7 +528,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                         </div>
                     </div>
 
-                    <div className="p-7 bg-white border-t border-gray-50 shrink-0">
+                    <div className="p-7 pt-3 bg-white border-t border-gray-50 shrink-0">
                         <button
                             type="submit"
                             disabled={saving}
