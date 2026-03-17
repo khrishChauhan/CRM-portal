@@ -116,7 +116,7 @@ const ManageAccessRequests = () => {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search by client or project..."
-                        className="w-full bg-[#1A1A1A] pl-14 pr-6 py-4 rounded-[18px] text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 text-sm font-medium"
+                        className="w-full bg-gray-50/50 pl-14 pr-6 py-4 rounded-[18px] text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-500/5 transition-all text-sm font-medium"
                     />
                 </div>
                 <select

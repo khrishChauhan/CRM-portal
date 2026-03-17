@@ -146,7 +146,7 @@ const ManageProjects = () => {
             )}
 
             {/* ── Control Center (Filters) ── */}
-            <div className="bg-[#2E2E2E] p-2 rounded-[24px] shadow-xl flex flex-col lg:flex-row gap-2 mt-6">
+            <div className="bg-white p-2 rounded-[24px] shadow-lg border border-gray-100 flex flex-col lg:flex-row gap-2 mt-6">
                 <div className="relative flex-1 group">
                     <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
                     <input
@@ -154,25 +154,25 @@ const ManageProjects = () => {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search projects by name..."
-                        className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-gray-600 focus:outline-none transition-all text-sm font-medium"
+                        className="w-full bg-gray-50/50 pl-14 pr-6 py-4.5 text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:bg-gray-50 focus:ring-4 focus:ring-blue-500/5 rounded-2xl transition-all text-sm font-medium"
                     />
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 px-2 pb-2 md:p-0">
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="w-full sm:w-auto px-6 py-4 bg-white/5 border border-white/5 rounded-[18px] text-[10px] font-bold uppercase tracking-widest text-gray-400 focus:outline-none focus:bg-white/10 transition-all cursor-pointer"
+                        className="w-full sm:w-auto px-6 py-4 bg-gray-50/80 border border-gray-100 rounded-[18px] text-[10px] font-bold uppercase tracking-widest text-[#2C3E50] focus:outline-none focus:bg-white transition-all cursor-pointer appearance-none"
                     >
-                        <option value="" className="bg-[#2E2E2E]">All Status</option>
-                        {STATUSES.map((s) => <option key={s} value={s} className="bg-[#2E2E2E] uppercase">{s}</option>)}
+                        <option value="">All Status</option>
+                        {STATUSES.map((s) => <option key={s} value={s} className="uppercase">{s}</option>)}
                     </select>
                     <select
                         value={priorityFilter}
                         onChange={(e) => setPriorityFilter(e.target.value)}
-                        className="w-full sm:w-auto px-6 py-4 bg-white/5 border border-white/5 rounded-[18px] text-[10px] font-bold uppercase tracking-widest text-gray-400 focus:outline-none focus:bg-white/10 transition-all cursor-pointer"
+                        className="w-full sm:w-auto px-6 py-4 bg-gray-50/80 border border-gray-100 rounded-[18px] text-[10px] font-bold uppercase tracking-widest text-[#2C3E50] focus:outline-none focus:bg-white transition-all cursor-pointer appearance-none"
                     >
-                        <option value="" className="bg-[#2E2E2E]">All Priority</option>
-                        {PRIORITIES.map((p) => <option key={p} value={p} className="bg-[#2E2E2E] uppercase">{p}</option>)}
+                        <option value="">All Priority</option>
+                        {PRIORITIES.map((p) => <option key={p} value={p} className="uppercase">{p}</option>)}
                     </select>
                 </div>
             </div>
@@ -386,7 +386,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-[250] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[250] flex justify-center items-start p-4">
             {/* Overlay */}
             <div 
                 className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-300" 
@@ -394,24 +394,24 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
             ></div>
 
             {/* Modal Card */}
-            <div className="bg-white w-[94%] max-w-[520px] h-auto max-h-[90vh] rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col relative z-[260] animate-in zoom-in-95 duration-500 overflow-hidden">
+            <div className="bg-white w-[94%] max-w-[460px] h-auto max-h-[92vh] rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col relative z-[260] animate-in slide-in-from-top-4 duration-300 overflow-hidden">
                 
                 {/* Header */}
-                <div className="flex items-center justify-between p-7 pb-4 bg-white shrink-0">
-                    <h2 className="text-[22px] font-bold text-[#2C3E50] tracking-tight">
+                <div className="flex items-center justify-between p-[22px] pb-3 bg-white shrink-0">
+                    <h2 className="text-[20px] font-bold text-[#2C3E50] tracking-tight">
                         {isEdit ? 'Update Project' : 'Create New Project'}
                     </h2>
                     <button 
                         onClick={onClose} 
-                        className="p-2 text-gray-400 hover:text-red-500 transition-all font-bold"
+                        className="p-1.5 text-gray-400 hover:text-red-500 transition-all font-bold"
                     >
-                        <X className="w-6 h-6" />
+                        <X className="w-5 h-5" />
                     </button>
                 </div>
 
                 {/* Form Body */}
                 <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0 bg-white">
-                    <div className="flex-1 overflow-y-auto scrollbar-hide px-7 pb-2">
+                    <div className="flex-1 overflow-y-auto scrollbar-hide px-[22px] pb-2">
                         {error && (
                             <div className="mb-6 flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-xl text-red-500 text-[10px] font-bold uppercase tracking-widest">
                                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
@@ -528,7 +528,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                         </div>
                     </div>
 
-                    <div className="p-7 pt-3 bg-white border-t border-gray-50 shrink-0">
+                    <div className="p-[22px] pt-3 bg-white border-t border-gray-50 shrink-0">
                         <button
                             type="submit"
                             disabled={saving}
@@ -598,9 +598,9 @@ const SelectField = ({ label, name, value, onChange, options }) => (
 );
 
 const ConfirmationModal = ({ title, message, onConfirm, onCancel, confirmText, isDestructive }) => (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[300] flex justify-center items-start p-4">
         <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={onCancel}></div>
-        <div className="bg-white rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] w-[94%] max-w-[420px] relative z-[310] animate-in zoom-in-95 duration-500 p-8 text-center">
+        <div className="bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] w-[94%] max-w-[420px] relative z-[310] animate-in slide-in-from-top-4 duration-300 p-8 text-center">
             <div className={`w-16 h-16 rounded-2xl ${isDestructive ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-blue-500'} flex items-center justify-center mx-auto mb-6`}>
                 {isDestructive ? <Trash2 className="w-8 h-8" /> : <AlertCircle className="w-8 h-8" />}
             </div>

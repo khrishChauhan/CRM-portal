@@ -262,17 +262,17 @@ const ManageClients = () => {
 
             {/* ── Client Detail Modal ── */}
             {selectedClient && (
-                <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-[150] flex justify-center items-start p-4">
                     <div className="absolute inset-0 bg-black/45 backdrop-blur-sm transition-opacity" onClick={() => setSelectedClient(null)}></div>
-                    <div className="bg-white w-[94%] max-w-[520px] h-auto max-h-[90vh] rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col relative z-[160] animate-in zoom-in-95 duration-500 overflow-hidden">
-                        <div className="flex items-center justify-between p-7 pb-4 bg-white shrink-0">
-                            <h2 className="text-[22px] font-bold text-[#2C3E50] tracking-tight">{selectedClient.name}</h2>
-                            <button onClick={() => setSelectedClient(null)} className="p-2 text-gray-400 hover:text-red-500 transition-all">
-                                <X className="w-6 h-6" />
+                    <div className="bg-white w-[94%] max-w-[460px] h-auto max-h-[92vh] rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col relative z-[160] animate-in slide-in-from-top-4 duration-300 overflow-hidden">
+                        <div className="flex items-center justify-between p-[22px] pb-3 bg-white shrink-0">
+                            <h2 className="text-[20px] font-bold text-[#2C3E50] tracking-tight">{selectedClient.name}</h2>
+                            <button onClick={() => setSelectedClient(null)} className="p-1.5 text-gray-400 hover:text-red-500 transition-all">
+                                <X className="w-5 h-5" />
                             </button>
                         </div>
                         
-                        <div className="flex-1 overflow-y-auto scrollbar-hide p-7 pt-2 pb-8">
+                        <div className="flex-1 overflow-y-auto scrollbar-hide px-[22px] pt-1 pb-8">
                             <div className="space-y-4">
                                 <InfoRow icon={Mail} label="Contact Email" value={selectedClient.email} />
                                 <InfoRow icon={Building2} label="Company Name" value={selectedClient.company || '—'} />
