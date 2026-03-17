@@ -4,7 +4,8 @@ import {
     UserPlus, Search, ChevronLeft, ChevronRight,
     Edit3, Trash2, ToggleLeft, ToggleRight, X, Loader2,
     Users, UserCheck, UserX, Building2, Phone,
-    Calendar, Briefcase, DollarSign, AlertCircle, CheckCircle, Mail
+    Calendar, Briefcase, DollarSign, AlertCircle, CheckCircle, Mail,
+    ChevronDown
 } from 'lucide-react';
 
 // ── Constants ──
@@ -28,6 +29,7 @@ const ManageStaff = () => {
     const [deptFilter, setDeptFilter] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [editingStaff, setEditingStaff] = useState(null);
+    const [deleteConfirm, setDeleteConfirm] = useState(null); // { id, name }
     const [toast, setToast] = useState(null);
 
     // ── Fetch staff list ──
@@ -91,14 +93,20 @@ const ManageStaff = () => {
 
     // ── Delete (soft) ──
     const handleDelete = async (id, name) => {
-        if (!window.confirm(`Are you sure you want to deactivate ${name}?`)) return;
+        setDeleteConfirm({ id, name });
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteConfirm) return;
         try {
-            const { data } = await api.delete(`/staff/${id}`);
+            const { data } = await api.delete(`/staff/${deleteConfirm.id}`);
             showToast(data.message);
             fetchStaff(pagination.page);
             fetchMeta();
         } catch (err) {
             showToast(err.response?.data?.message || 'Failed to delete staff', 'error');
+        } finally {
+            setDeleteConfirm(null);
         }
     };
 
@@ -308,6 +316,17 @@ const ManageStaff = () => {
                     showToast={showToast}
                 />
             )}
+
+            {deleteConfirm && (
+                <ConfirmationModal
+                    title="Deactivate Staff"
+                    message={`Are you sure you want to deactivate ${deleteConfirm.name}? This will revoke their access.`}
+                    onConfirm={confirmDelete}
+                    onCancel={() => setDeleteConfirm(null)}
+                    confirmText="Deactivate"
+                    isDestructive
+                />
+            )}
         </div>
     );
 };
@@ -355,6 +374,11 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
 
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = 'unset'; };
+    }, []);
+
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
     const handleSubmit = async (e) => {
@@ -389,86 +413,91 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-[150] flex items-start sm:items-center justify-center p-4 pt-10 sm:pt-4">
-            <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity" onClick={onClose}></div>
-            <div className="bg-white rounded-[32px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.15)] w-[92%] sm:w-full max-w-xl max-h-[90vh] overflow-hidden flex flex-col relative z-[160] animate-in zoom-in-95 duration-500">
-                <div className="flex items-center justify-between px-8 py-8 md:px-10 md:py-8 border-b border-gray-50 bg-gray-50/30 shrink-0">
-                    <div>
-                        <h2 className="text-2xl font-display font-bold text-[#1A1A1A] tracking-tight">{isEdit ? 'Modify Profile' : 'Staff Onboarding'}</h2>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2 underline underline-offset-4 decoration-blue-500/50">Intelligence Division Access</p>
-                    </div>
-                    <button type="button" onClick={onClose} className="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-red-50 transition-all">
-                        <X className="w-5 h-5" />
+        <div className="fixed inset-0 z-[150] flex md:items-center md:justify-center">
+            <div className="absolute inset-0 bg-black/45 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
+            <div className="bg-white w-full h-full md:h-auto md:w-[94%] md:max-w-[520px] md:max-h-[90vh] md:rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col relative z-[160] animate-in slide-in-from-bottom md:zoom-in-95 duration-300 md:duration-500 overflow-hidden">
+                <div className="flex items-center justify-between p-7 pb-4 shrink-0 bg-white">
+                    <h2 className="text-[22px] font-bold text-[#2C3E50] tracking-tight">
+                        {isEdit ? 'Modify Profile' : 'Add Staff'}
+                    </h2>
+                    <button type="button" onClick={onClose} className="p-2 text-gray-400 hover:text-red-500 transition-all font-bold">
+                        <X className="w-6 h-6" />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="flex flex-col overflow-hidden min-h-0 bg-white">
-                    <div className="px-5 py-6 md:px-10 md:py-10 space-y-4 md:space-y-6 overflow-y-auto custom-scrollbar">
+                <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0 bg-white">
+                    <div className="flex-1 overflow-y-auto scrollbar-hide px-7 pb-4 space-y-4 md:space-y-5">
                     {error && (
-                        <div className="flex items-center gap-4 p-5 bg-red-50 border border-red-100 rounded-2xl text-red-500 text-[10px] font-bold uppercase tracking-widest animate-shake shadow-sm">
+                        <div className="flex items-center gap-4 p-5 animate-shake bg-red-50 border border-red-100 rounded-2xl text-red-500 text-[10px] font-bold uppercase tracking-widest shadow-sm">
                             <AlertCircle className="w-5 h-5 flex-shrink-0" />
                             {error}
                         </div>
                     )}
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                        <FormField icon={Users} label="Full Name" name="name" value={form.name} onChange={handleChange} required placeholder="Enter name" />
-                        <FormField icon={Mail} label="Email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="Enter email" disabled={isEdit} />
-                    </div>
+                        <FormField label="Full Name" name="name" value={form.name} onChange={handleChange} required placeholder="Enter name" />
+                        <FormField label="Email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="Enter email" disabled={isEdit} />
 
-                    <FormField icon={Briefcase} label={isEdit ? 'New Password (optional)' : 'Password'} name="password" type="password" value={form.password} onChange={handleChange} required={!isEdit} placeholder={isEdit ? '•••••••• (unchanged)' : 'Create a password'} />
+                        <FormField label={isEdit ? 'New Password' : 'Password'} name="password" type="password" value={form.password} onChange={handleChange} required={!isEdit} placeholder={isEdit ? '••••••••' : 'Create a password'} />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                        <FormField icon={Phone} label="Phone" name="phone" value={form.phone} onChange={handleChange} placeholder="+1 234 567 890" />
-                        <FormField icon={Phone} label="Alternate Phone" name="alternatePhone" value={form.alternatePhone} onChange={handleChange} placeholder="Optional" />
-                    </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField label="Phone" name="phone" value={form.phone} onChange={handleChange} placeholder="+1 234 567 890" />
+                            <FormField label="Alt. Phone" name="alternatePhone" value={form.alternatePhone} onChange={handleChange} placeholder="Optional" />
+                        </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                        <FormField icon={Briefcase} label="Professional Title" name="designation" value={form.designation} onChange={handleChange} placeholder="e.g. Lead Engineer" />
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                                <Building2 className="w-3.5 h-3.5" /> Organisation Unit
-                            </label>
-                            <select name="department" value={form.department} onChange={handleChange} className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[13px] font-bold text-[#1A1A1A] focus:outline-none focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer">
-                                <option value="">Select department</option>
-                                {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
-                            </select>
+                        <FormField label="Professional Title" name="designation" value={form.designation} onChange={handleChange} placeholder="e.g. Lead Engineer" />
+                        
+                        <div className="space-y-1.5 mb-5">
+                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Organisation Unit</label>
+                            <div className="relative">
+                                <select name="department" value={form.department} onChange={handleChange} className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none">
+                                    <option value="">Select department</option>
+                                    {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
+                                </select>
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                    <ChevronDown className="w-4 h-4" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <FormField label="Induction Date" name="joiningDate" type="date" value={form.joiningDate} onChange={handleChange} />
+                        
+                        <div className="space-y-1.5 mb-5">
+                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Engagement Type</label>
+                            <div className="relative">
+                                <select name="employmentType" value={form.employmentType} onChange={handleChange} className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none">
+                                    {EMPLOYMENT_TYPES.map(t => <option key={t} value={t} className="capitalize">{t}</option>)}
+                                </select>
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                    <ChevronDown className="w-4 h-4" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <FormField label="Compensation Scale" name="salaryBand" value={form.salaryBand} onChange={handleChange} placeholder="e.g. Band A-1" />
+                        
+                        <div className="space-y-1.5 mb-5">
+                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Hierarchy Lead</label>
+                            <div className="relative">
+                                <select name="reportingManager" value={form.reportingManager} onChange={handleChange} className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none">
+                                    <option value="">Direct to Board</option>
+                                    {managers.filter(m => m._id !== staff?._id).map(m => (
+                                        <option key={m._id} value={m._id}>{m.name}</option>
+                                    ))}
+                                </select>
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                    <ChevronDown className="w-4 h-4" />
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                        <FormField icon={Calendar} label="Induction Date" name="joiningDate" type="date" value={form.joiningDate} onChange={handleChange} />
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                                <Briefcase className="w-3.5 h-3.5" /> Engagement Type
-                            </label>
-                            <select name="employmentType" value={form.employmentType} onChange={handleChange} className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[13px] font-bold text-[#1A1A1A] focus:outline-none focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer">
-                                {EMPLOYMENT_TYPES.map(t => <option key={t} value={t} className="capitalize">{t}</option>)}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pb-2 md:pb-6">
-                        <FormField icon={DollarSign} label="Compensation Scale" name="salaryBand" value={form.salaryBand} onChange={handleChange} placeholder="e.g. Band A-1" />
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-                                <Users className="w-3.5 h-3.5" /> Hierarchy Lead
-                            </label>
-                            <select name="reportingManager" value={form.reportingManager} onChange={handleChange} className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[13px] font-bold text-[#1A1A1A] focus:outline-none focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer">
-                                <option value="">Direct to Board</option>
-                                {managers.filter(m => m._id !== staff?._id).map(m => (
-                                    <option key={m._id} value={m._id}>{m.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-
-                    </div>
-                    
-                    <div className="shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sm:gap-4 p-8 md:p-10 border-t border-gray-50 bg-gray-50/20">
-                        <button type="button" onClick={onClose} className="w-full sm:w-auto px-10 py-4 text-gray-400 font-bold text-[10px] uppercase tracking-widest hover:text-red-500 transition-all">Cancel</button>
-                        <button type="submit" disabled={saving} className="w-full sm:w-auto px-12 py-4 blue-gradient text-white font-bold text-xs uppercase tracking-widest rounded-xl shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50">
-                            {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : (isEdit ? 'Update Protocol' : 'Finalise Onboarding')}
+                    <div className="p-7 bg-white border-t border-gray-50 flex-shrink-0">
+                        <button
+                            type="submit"
+                            disabled={saving}
+                            className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                        >
+                            {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : (isEdit ? 'Update Staff Profile' : 'Confirm & Add Staff')}
                         </button>
                     </div>
                 </form>
@@ -480,22 +509,53 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
 // ════════════════════════════════════════
 //  Reusable Form Field
 // ════════════════════════════════════════
-const FormField = ({ icon: Icon, label, name, type = 'text', value, onChange, required, placeholder, disabled, className = '' }) => (
-    <div className={`space-y-2 ${className}`}>
-        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
-            {Icon && <Icon className="w-3.5 h-3.5" />}
-            {label} {required && <span className="text-blue-500">•</span>}
-        </label>
-        <input
-            type={type}
-            name={name}
-            value={value}
-            onChange={onChange}
-            required={required}
-            placeholder={placeholder}
-            disabled={disabled}
-            className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-[13px] font-bold text-[#1A1A1A] placeholder:text-gray-300 focus:outline-none focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 disabled:opacity-30 transition-all"
-        />
+const FormField = ({ label, name, type = 'text', value, onChange, placeholder, required, disabled }) => (
+    <div className="space-y-1.5 mb-5 relative">
+        <label className="text-[15px] font-bold text-[#34495E] ml-1">{label}</label>
+        <div className="relative">
+            <input
+                type={type}
+                name={name}
+                value={value}
+                onChange={onChange}
+                required={required}
+                placeholder={placeholder}
+                disabled={disabled}
+                className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all disabled:opacity-30"
+            />
+            {type === 'date' && (
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                </div>
+            )}
+        </div>
+    </div>
+);
+
+const ConfirmationModal = ({ title, message, onConfirm, onCancel, confirmText, isDestructive }) => (
+    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={onCancel}></div>
+        <div className="bg-white rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] w-[94%] max-w-[420px] relative z-[310] animate-in zoom-in-95 duration-500 p-8 text-center">
+            <div className={`w-16 h-16 rounded-2xl ${isDestructive ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-blue-500'} flex items-center justify-center mx-auto mb-6`}>
+                {isDestructive ? <Trash2 className="w-8 h-8" /> : <AlertCircle className="w-8 h-8" />}
+            </div>
+            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">{title}</h3>
+            <p className="text-sm text-gray-500 mb-8 leading-relaxed">{message}</p>
+            <div className="flex flex-col gap-3">
+                <button 
+                    onClick={onConfirm}
+                    className={`w-full py-4 ${isDestructive ? 'bg-red-500 shadow-red-200' : 'blue-gradient shadow-blue-200'} text-white font-bold rounded-[16px] shadow-lg hover:opacity-90 active:scale-[0.98] transition-all`}
+                >
+                    {confirmText || 'Confirm'}
+                </button>
+                <button 
+                    onClick={onCancel}
+                    className="w-full py-4 text-gray-400 font-bold text-[10px] uppercase tracking-widest hover:text-gray-600 transition-all"
+                >
+                    Cancel
+                </button>
+            </div>
+        </div>
     </div>
 );
 

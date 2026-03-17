@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import {
     Search, Loader2, FolderOpen, AlertCircle,
-    MapPin, Calendar, User, ChevronRight, LayoutGrid, List, MessageSquare
+    MapPin, Calendar, User, ChevronRight, LayoutGrid, List, MessageSquare, X
 } from 'lucide-react';
 
 const PROJECT_STATUS_COLORS = {
@@ -177,60 +177,56 @@ const DetailRow = ({ icon: Icon, label }) => (
 );
 
 const ProjectDetailsModal = ({ project, onClose }) => {
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = 'unset'; };
+    }, []);
+
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
-            <div className="bg-white rounded-[32px] card-shadow w-full max-w-2xl relative z-[210] animate-in zoom-in-95 duration-300 overflow-hidden flex flex-col max-h-[90vh]">
-                <div className="shrink-0 h-48 blue-gradient flex items-end p-10 relative">
-                    <div className="relative z-10 w-full flex justify-between items-end">
-                        <div className="text-white">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-80">Project Overview</p>
-                            <h2 className="text-3xl font-display font-bold leading-tight">{project.projectName}</h2>
-                        </div>
-                        <div className="bg-white/20 backdrop-blur-md rounded-xl px-4 py-2 border border-white/20">
-                            <span className="text-white font-bold text-lg font-mono">#{project.projectCode}</span>
-                        </div>
+        <div className="fixed inset-0 z-[200] flex md:items-center md:justify-center">
+            <div className="absolute inset-0 bg-black/45 backdrop-blur-sm" onClick={onClose}></div>
+            <div className="bg-white w-full h-full md:h-auto md:w-[94%] md:max-w-[520px] md:max-h-[90vh] md:rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col relative z-[210] animate-in slide-in-from-bottom md:zoom-in-95 duration-300 md:duration-500 overflow-hidden">
+                <div className="flex items-center justify-between p-7 pb-4 bg-white shrink-0">
+                    <div>
+                        <h2 className="text-[22px] font-bold text-[#2C3E50] tracking-tight">{project.projectName}</h2>
+                        <p className="text-[11px] font-bold text-blue-600 uppercase tracking-widest mt-1.5 px-3 py-1 bg-blue-50 rounded-lg inline-block">Ref: {project.projectCode}</p>
                     </div>
+                    <button onClick={onClose} className="p-2 text-gray-400 hover:text-red-500 transition-all">
+                        <X className="w-6 h-6" />
+                    </button>
                 </div>
 
-                <div className="p-10 space-y-10 overflow-y-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                        <div className="space-y-6">
-                            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-l-4 border-blue-500 pl-3">General Information</h4>
-                            <div className="space-y-4">
-                                <ModalDetail icon={MapPin} title="Location" value={project.siteAddress || 'Not specified'} />
-                                <ModalDetail icon={Calendar} title="Start Date" value={new Date(project.startDate).toLocaleDateString('en-GB')} />
-                                <ModalDetail icon={FolderOpen} title="Category" value={project.projectCategory || 'General'} />
-                            </div>
-                        </div>
-                        <div className="space-y-6">
-                            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-l-4 border-blue-500 pl-3">Status & Progress</h4>
-                            <div className="bg-gray-50 p-6 rounded-[20px] border border-gray-100 flex items-center justify-between">
-                                <span className="text-xs font-bold text-gray-500 uppercase">Current Status</span>
-                                <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus] || 'bg-gray-100 text-gray-500'}`}>
-                                    {project.projectStatus}
-                                </span>
-                            </div>
+                <div className="flex-1 overflow-y-auto scrollbar-hide px-7 pt-2 pb-8 space-y-6">
+                    <div className="grid grid-cols-1 gap-4">
+                        <ModalDetail icon={MapPin} title="Site Address" value={project.siteAddress || 'Not specified'} />
+                        <ModalDetail icon={Calendar} title="Project Start" value={new Date(project.startDate).toLocaleDateString('en-GB')} />
+                        <ModalDetail icon={FolderOpen} title="Work Category" value={project.projectCategory || 'General Project'} />
+                        
+                        <div className="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-[20px] shadow-sm">
+                            <span className="text-[13px] font-bold text-[#7F8C8D] ml-1">Live Status</span>
+                            <span className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus] || 'bg-gray-100 text-gray-500'}`}>
+                                {project.projectStatus}
+                            </span>
                         </div>
                     </div>
 
-                    <div className="bg-blue-50 p-8 rounded-[24px] border border-blue-100 flex items-center gap-6">
-                        <div className="w-14 h-14 rounded-[18px] bg-white flex items-center justify-center shadow-sm">
-                            <User className="w-7 h-7 text-blue-500" />
+                    <div className="bg-blue-50/50 p-6 rounded-[24px] border border-blue-100 flex items-center gap-5">
+                        <div className="w-12 h-12 rounded-[16px] bg-white border border-blue-50 flex items-center justify-center shadow-sm">
+                            <User className="w-6 h-6 text-blue-500" />
                         </div>
                         <div>
-                            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-widest block mb-1">Project Manager</span>
-                            <span className="text-lg font-bold text-[#1A1A1A]">{project.assignedManager?.name || 'Not assigned'}</span>
+                            <span className="text-[12px] font-bold text-blue-400 block">Project Manager</span>
+                            <span className="text-base font-bold text-[#2C3E50]">{project.assignedManager?.name || 'Unassigned'}</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="shrink-0 p-8 border-t border-gray-100 bg-gray-50">
+                <div className="p-7 bg-white border-t border-gray-50 flex-shrink-0">
                     <button
                         onClick={onClose}
-                        className="w-full py-5 blue-gradient text-white font-bold text-sm uppercase tracking-widest rounded-[18px] btn-shadow"
+                        className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all"
                     >
-                        Close Details
+                        Close Overview
                     </button>
                 </div>
             </div>
@@ -239,13 +235,13 @@ const ProjectDetailsModal = ({ project, onClose }) => {
 };
 
 const ModalDetail = ({ icon: Icon, title, value }) => (
-    <div className="flex gap-4">
-        <div className="w-10 h-10 rounded-xl bg-gray-50 flex-shrink-0 flex items-center justify-center border border-gray-100">
-            <Icon className="w-5 h-5 text-blue-500" />
+    <div className="flex items-center gap-5 py-4 px-4 bg-gray-50 border border-gray-100 rounded-2xl group transition-all">
+        <div className="w-11 h-11 rounded-[14px] bg-white border border-gray-100 flex items-center justify-center text-gray-400 group-hover:text-blue-600 transition-all duration-300 shadow-sm">
+            <Icon className="w-5 h-5" />
         </div>
-        <div>
-            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block mb-1">{title}</span>
-            <span className="text-sm font-bold text-[#1A1A1A]">{value}</span>
+        <div className="flex flex-col">
+            <span className="text-[13px] font-bold text-[#7F8C8D]">{title}</span>
+            <span className="font-bold text-[#2C3E50] text-[15px] mt-0.5 tracking-tight">{value}</span>
         </div>
     </div>
 );

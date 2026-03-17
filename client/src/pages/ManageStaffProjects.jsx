@@ -56,6 +56,15 @@ const ManageStaffProjects = () => {
         });
     };
 
+    useEffect(() => {
+        if (selectedProject) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => { document.body.style.overflow = 'unset'; };
+    }, [selectedProject]);
+
     const handleUpdate = async (e) => {
         e.preventDefault();
         setUpdating(true);
@@ -160,60 +169,70 @@ const ManageStaffProjects = () => {
 
             {/* Update Modal */}
             {selectedProject && (
-                <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setSelectedProject(null)}></div>
-                    <div className="bg-white rounded-[28px] card-shadow w-full max-w-xl relative z-[120] animate-in zoom-in-95 duration-500 overflow-hidden flex flex-col max-h-[90vh]">
-                        <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between">
+                <div className="fixed inset-0 z-[110] flex md:items-center md:justify-center">
+                    <div className="absolute inset-0 bg-black/45 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setSelectedProject(null)}></div>
+                    <div className="bg-white w-full h-full md:h-auto md:w-[94%] md:max-w-[520px] md:max-h-[90vh] md:rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col relative z-[120] animate-in slide-in-from-bottom md:zoom-in-95 duration-300 md:duration-500 overflow-hidden">
+                        <div className="flex items-center justify-between p-7 pb-4 shrink-0 bg-white">
                             <div>
-                                <h3 className="text-xl font-display font-bold text-[#1A1A1A]">Project Update</h3>
-                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Ref: {selectedProject.projectCode}</p>
+                                <h2 className="text-[22px] font-bold text-[#2C3E50] tracking-tight">Project Update</h2>
+                                <p className="text-[11px] font-bold text-blue-600 uppercase tracking-widest mt-1.5 px-3 py-1 bg-blue-50 rounded-lg inline-block">Ref: {selectedProject.projectCode}</p>
                             </div>
-                            <button onClick={() => setSelectedProject(null)} className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors">
-                                <X className="w-5 h-5" />
+                            <button onClick={() => setSelectedProject(null)} className="p-2 text-gray-400 hover:text-red-500 transition-all">
+                                <X className="w-6 h-6" />
                             </button>
                         </div>
 
-                        <form onSubmit={handleUpdate} className="overflow-y-auto">
-                            <div className="p-8 space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">Current Status</label>
-                                        <select
-                                            value={editForm.projectStatus}
-                                            onChange={e => setEditForm({ ...editForm, projectStatus: e.target.value })}
-                                            className="w-full px-5 py-4 bg-[#1A1A1A] text-white rounded-2xl text-[11px] font-bold uppercase tracking-wider outline-none focus:ring-4 focus:ring-blue-500/20 transition-all cursor-pointer"
-                                        >
-                                            <option value="Planned">Planned</option>
-                                            <option value="In Progress">In Progress</option>
-                                            <option value="On Hold">On Hold</option>
-                                            <option value="Completed">Completed</option>
-                                            <option value="Delayed">Delayed</option>
-                                            <option value="Cancelled">Cancelled</option>
-                                        </select>
+                        <form onSubmit={handleUpdate} className="flex-1 flex flex-col min-h-0 bg-white">
+                            <div className="flex-1 overflow-y-auto scrollbar-hide px-7 pt-2 pb-4">
+                                <div className="grid grid-cols-2 gap-4 mb-5">
+                                    <div className="space-y-1.5">
+                                        <label className="text-[15px] font-bold text-[#34495E] ml-1">Current Status</label>
+                                        <div className="relative">
+                                            <select
+                                                value={editForm.projectStatus}
+                                                onChange={e => setEditForm({ ...editForm, projectStatus: e.target.value })}
+                                                className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none"
+                                            >
+                                                <option value="Planned">Planned</option>
+                                                <option value="In Progress">In Progress</option>
+                                                <option value="On Hold">On Hold</option>
+                                                <option value="Completed">Completed</option>
+                                                <option value="Delayed">Delayed</option>
+                                                <option value="Cancelled">Cancelled</option>
+                                            </select>
+                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                                                <ChevronDown className="w-4 h-4 text-gray-400" />
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div>
-                                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">Completion Date</label>
-                                        <input
-                                            type="date"
-                                            value={editForm.actualCompletion}
-                                            onChange={e => setEditForm({ ...editForm, actualCompletion: e.target.value })}
-                                            className="w-full px-5 py-4 bg-[#1A1A1A] text-white rounded-2xl text-sm font-medium outline-none focus:ring-4 focus:ring-blue-500/20 transition-all"
-                                        />
+                                    <div className="space-y-1.5">
+                                        <label className="text-[15px] font-bold text-[#34495E] ml-1">Completion</label>
+                                        <div className="relative">
+                                            <input
+                                                type="date"
+                                                value={editForm.actualCompletion}
+                                                onChange={e => setEditForm({ ...editForm, actualCompletion: e.target.value })}
+                                                className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                                            />
+                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                                                <ChevronDown className="w-4 h-4 text-gray-400" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 px-1">Risk Level</label>
-                                    <div className="grid grid-cols-3 gap-3">
+                                <div className="space-y-1.5 mb-5">
+                                    <label className="text-[15px] font-bold text-[#34495E] ml-1">Risk Level</label>
+                                    <div className="grid grid-cols-3 gap-2 p-1.5 bg-gray-50 border border-gray-200 rounded-[14px]">
                                         {['Low', 'Medium', 'High'].map(level => (
                                             <button
                                                 key={level}
                                                 type="button"
                                                 onClick={() => setEditForm({ ...editForm, riskLevel: level })}
-                                                className={`py-3 rounded-xl text-[10px] font-bold uppercase tracking-wider border transition-all ${editForm.riskLevel === level
-                                                    ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/20'
-                                                    : 'bg-gray-50 border-gray-100 text-gray-500 hover:bg-white hover:border-blue-200'
+                                                className={`py-2 rounded-[10px] text-[11px] font-bold uppercase tracking-wider transition-all ${editForm.riskLevel === level
+                                                    ? 'bg-blue-600 shadow-lg shadow-blue-200 text-white'
+                                                    : 'bg-transparent text-gray-400 hover:text-gray-600'
                                                     }`}
                                             >
                                                 {level}
@@ -222,25 +241,25 @@ const ManageStaffProjects = () => {
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">Update Notes</label>
+                                <div className="space-y-1.5 mb-8">
+                                    <label className="text-[15px] font-bold text-[#34495E] ml-1">Update Notes</label>
                                     <textarea
                                         value={editForm.delayReason}
                                         onChange={e => setEditForm({ ...editForm, delayReason: e.target.value })}
-                                        placeholder="Add any internal notes or progress details..."
-                                        className="w-full px-6 py-5 bg-[#1A1A1A] text-white rounded-2xl text-sm focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition-all h-28 resize-none placeholder:text-gray-600"
+                                        placeholder="Add any internal notes..."
+                                        style={{ minHeight: '110px' }}
+                                        className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
                                     />
                                 </div>
                             </div>
 
-                            <div className="p-8 border-t border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row gap-3">
-                                <button type="button" onClick={() => setSelectedProject(null)} className="flex-1 px-8 py-4 bg-white border border-gray-200 text-[10px] font-bold text-gray-400 uppercase tracking-widest rounded-xl hover:bg-gray-100 transition-all">Cancel</button>
+                            <div className="p-7 pt-4 bg-white border-t border-gray-50 shrink-0">
                                 <button
                                     type="submit"
                                     disabled={updating}
-                                    className="flex-[2] px-8 py-4 blue-gradient text-white font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all btn-shadow flex items-center justify-center gap-2 disabled:opacity-50"
+                                    className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
-                                    {updating ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <Save className="w-4 h-4" />}
+                                    {updating ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : <Save className="w-5 h-5" />}
                                     Save Progress
                                 </button>
                             </div>

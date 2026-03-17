@@ -258,6 +258,15 @@ const ProjectUpdates = () => {
         setImagePreview(null);
     };
 
+    useEffect(() => {
+        if (lightbox) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => { document.body.style.overflow = 'unset'; };
+    }, [lightbox]);
+
     // ── Post update ──
     const handlePost = async () => {
         if (!message.trim()) {
@@ -857,54 +866,52 @@ const ProjectUpdates = () => {
 
             {/* ── Lightbox Modal ── */}
             {lightbox && (
-                <div className="fixed inset-0 z-[200] flex items-start sm:items-center justify-center p-3 sm:p-4 pt-10 sm:pt-4">
+                <div className="fixed inset-0 z-[200] flex md:items-center md:justify-center">
                     <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-3xl animate-in fade-in duration-500" onClick={() => setLightbox(null)}></div>
-                    <div className="relative z-[210] w-full max-w-4xl animate-in zoom-in-95 duration-500 max-h-[90vh] flex flex-col p-4">
-                        <div className="bg-white rounded-[32px] overflow-hidden shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] flex flex-col">
-                            {/* Image container */}
-                            <div className="flex-1 min-h-0 bg-gray-50 flex items-center justify-center relative">
-                                <img
-                                    src={lightbox.imageUrl}
-                                    alt="Full size"
-                                    className="max-w-full max-h-[65vh] object-contain"
-                                />
-                                <button
-                                    onClick={() => setLightbox(null)}
-                                    className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/80 backdrop-blur-md border border-gray-100 flex items-center justify-center text-gray-800 hover:text-red-500 transition-all shadow-lg active:scale-90"
-                                >
-                                    <X className="w-6 h-6" />
-                                </button>
+                    <div className="bg-white w-full h-full md:h-auto md:w-full md:max-w-4xl md:rounded-[32px] overflow-hidden shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] flex flex-col relative z-[210] animate-in slide-in-from-bottom md:zoom-in-95 duration-300 md:duration-500">
+                        {/* Image container */}
+                        <div className="flex-1 min-h-0 bg-gray-50 flex items-center justify-center relative">
+                            <img
+                                src={lightbox.imageUrl}
+                                alt="Full size"
+                                className="max-w-full max-h-[65vh] object-contain"
+                            />
+                            <button
+                                onClick={() => setLightbox(null)}
+                                className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/80 backdrop-blur-md border border-gray-100 flex items-center justify-center text-gray-800 hover:text-red-500 transition-all shadow-lg active:scale-90"
+                            >
+                                <X className="w-6 h-6" />
+                            </button>
+                        </div>
+
+                        {/* Info bar */}
+                        <div className="shrink-0 p-6 sm:p-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 border-t border-gray-50">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-full blue-gradient flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                                    {lightbox.createdBy?.name?.charAt(0)?.toUpperCase()}
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="text-[#1A1A1A] font-bold text-base leading-none mb-1.5">{lightbox.createdBy?.name}</p>
+                                    <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                                        <Clock className="w-3.5 h-3.5" />
+                                        {formatTime(lightbox.createdAt)}
+                                    </p>
+                                </div>
                             </div>
 
-                            {/* Info bar */}
-                            <div className="shrink-0 p-6 sm:p-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 border-t border-gray-50">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-full blue-gradient flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                                        {lightbox.createdBy?.name?.charAt(0)?.toUpperCase()}
-                                    </div>
-                                    <div className="min-w-0">
-                                        <p className="text-[#1A1A1A] font-bold text-base leading-none mb-1.5">{lightbox.createdBy?.name}</p>
-                                        <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
-                                            <Clock className="w-3.5 h-3.5" />
-                                            {formatTime(lightbox.createdAt)}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center gap-3">
-                                    {lightbox.location?.latitude && lightbox.location?.longitude && (
-                                        <a
-                                            href={`https://www.google.com/maps?q=${lightbox.location.latitude},${lightbox.location.longitude}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex-1 sm:flex-initial flex items-center justify-center gap-3 px-6 h-12 bg-gray-50 border border-gray-100 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A] hover:bg-blue-50 hover:text-blue-600 transition-all shadow-sm"
-                                        >
-                                            <MapPin className="w-4 h-4" />
-                                            <span>View Location</span>
-                                            <ExternalLink className="w-3.5 h-3.5" />
-                                        </a>
-                                    )}
-                                </div>
+                            <div className="flex items-center gap-3">
+                                {lightbox.location?.latitude && lightbox.location?.longitude && (
+                                    <a
+                                        href={`https://www.google.com/maps?q=${lightbox.location.latitude},${lightbox.location.longitude}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex-1 sm:flex-initial flex items-center justify-center gap-3 px-6 h-12 bg-gray-50 border border-gray-100 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A] hover:bg-blue-50 hover:text-blue-600 transition-all shadow-sm"
+                                    >
+                                        <MapPin className="w-4 h-4" />
+                                        <span>View Location</span>
+                                        <ExternalLink className="w-3.5 h-3.5" />
+                                    </a>
+                                )}
                             </div>
                         </div>
                     </div>

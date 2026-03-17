@@ -31,6 +31,7 @@ const ManageProjects = () => {
     const [priorityFilter, setPriorityFilter] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [editingProject, setEditingProject] = useState(null);
+    const [deleteConfirm, setDeleteConfirm] = useState(null); // { id, name }
     const [toast, setToast] = useState(null);
 
     const fetchProjects = useCallback(async (page = 1) => {
@@ -69,14 +70,20 @@ const ManageProjects = () => {
     };
 
     const handleDelete = async (id, name) => {
-        if (!window.confirm(`Delete project "${name}"? This is a soft delete.`)) return;
+        setDeleteConfirm({ id, name });
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteConfirm) return;
         try {
-            await api.delete(`/projects/${id}`);
+            await api.delete(`/projects/${deleteConfirm.id}`);
             showToast('Project deleted');
             fetchProjects(pagination.page);
             fetchDashboard();
         } catch (err) {
             showToast(err.response?.data?.message || 'Failed', 'error');
+        } finally {
+            setDeleteConfirm(null);
         }
     };
 
@@ -287,6 +294,17 @@ const ManageProjects = () => {
                     showToast={showToast}
                 />
             )}
+
+            {deleteConfirm && (
+                <ConfirmationModal 
+                    title="Delete Project"
+                    message={`Are you sure you want to delete "${deleteConfirm.name}"? This action can be undone by admin.`}
+                    onConfirm={confirmDelete}
+                    onCancel={() => setDeleteConfirm(null)}
+                    confirmText="Delete Project"
+                    isDestructive
+                />
+            )}
         </div>
     );
 };
@@ -330,6 +348,9 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
         api.get('/projects/dropdowns')
             .then(res => setStaffList(res.data.data.staff || []))
             .catch(() => { });
+        
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = 'unset'; };
     }, []);
 
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -365,151 +386,155 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-[250] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[250] flex md:items-center md:justify-center">
             {/* Overlay */}
             <div 
-                className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-300" 
+                className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-300" 
                 onClick={onClose}
             ></div>
 
             {/* Modal Card */}
-            <div className="bg-white rounded-[22px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] w-[92%] max-w-[420px] max-h-[88vh] overflow-y-auto flex flex-col relative z-[260] animate-in zoom-in-95 duration-500 scrollbar-hide">
+            <div className="bg-white w-full h-full md:h-auto md:w-[94%] md:max-w-[520px] md:max-h-[90vh] md:rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col relative z-[260] animate-in slide-in-from-bottom md:zoom-in-95 duration-300 md:duration-500 overflow-hidden">
                 
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 shrink-0 border-b border-gray-50">
-                    <h2 className="text-xl font-bold text-[#1A1A1A] tracking-tight">
+                <div className="flex items-center justify-between p-7 pb-4 bg-white shrink-0">
+                    <h2 className="text-[22px] font-bold text-[#2C3E50] tracking-tight">
                         {isEdit ? 'Update Project' : 'Create New Project'}
                     </h2>
                     <button 
                         onClick={onClose} 
-                        className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all"
+                        className="p-2 text-gray-400 hover:text-red-500 transition-all font-bold"
                     >
-                        <X className="w-5 h-5" />
+                        <X className="w-6 h-6" />
                     </button>
                 </div>
 
                 {/* Form Body */}
-                <form onSubmit={handleSubmit} className="p-6 pt-2 space-y-0">
-                    {error && (
-                        <div className="mb-4 flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-xl text-red-500 text-[10px] font-bold uppercase tracking-widest">
-                            <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                            {error}
-                        </div>
-                    )}
+                <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0 bg-white">
+                    <div className="flex-1 overflow-y-auto scrollbar-hide px-7 pb-4">
+                        {error && (
+                            <div className="mb-6 flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-xl text-red-500 text-[10px] font-bold uppercase tracking-widest">
+                                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                                {error}
+                            </div>
+                        )}
 
-                    <Field 
-                        label="Project Name" 
-                        name="projectName" 
-                        value={form.projectName} 
-                        onChange={handleChange} 
-                        placeholder="Project Name" 
-                        required 
-                    />
+                        <Field 
+                            label="Project Name" 
+                            name="projectName" 
+                            value={form.projectName} 
+                            onChange={handleChange} 
+                            placeholder="Project Name" 
+                            required 
+                        />
 
-                    <Field 
-                        label="Description" 
-                        name="description" 
-                        value={form.description} 
-                        onChange={handleChange} 
-                        placeholder="Project info..." 
-                        textarea 
-                    />
+                        <Field 
+                            label="Description" 
+                            name="description" 
+                            value={form.description} 
+                            onChange={handleChange} 
+                            placeholder="Project info..." 
+                            textarea 
+                        />
 
-                    <Field 
-                        label="Location Address" 
-                        name="siteAddress" 
-                        value={form.siteAddress} 
-                        onChange={handleChange} 
-                        placeholder="Site Location" 
-                    />
+                        <Field 
+                            label="Location Address" 
+                            name="siteAddress" 
+                            value={form.siteAddress} 
+                            onChange={handleChange} 
+                            placeholder="Site Location" 
+                        />
 
-                    {/* Lat & Long row */}
-                    <div className="grid grid-cols-2 gap-4 mb-[18px]">
-                        <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Latitude</label>
-                            <input
-                                type="text"
-                                name="latitude"
-                                value={form.latitude}
-                                onChange={handleChange}
-                                placeholder="0.0000"
-                                className="w-full px-[14px] py-[14px] bg-[#F3F5F7] border-none rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none transition-all"
-                            />
-                        </div>
-                        <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Longitude</label>
-                            <input
-                                type="text"
-                                name="longitude"
-                                value={form.longitude}
-                                onChange={handleChange}
-                                placeholder="0.0000"
-                                className="w-full px-[14px] py-[14px] bg-[#F3F5F7] border-none rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none transition-all"
-                            />
-                        </div>
-                    </div>
-
-                    <Field 
-                        label="Start Date" 
-                        name="startDate" 
-                        type="date" 
-                        value={form.startDate} 
-                        onChange={handleChange} 
-                    />
-
-                    {/* Extended Fields (Beyond Screenshot) */}
-                    <div className="pt-4 border-t border-gray-50 mt-2 space-y-[18px]">
-                        <div className="grid grid-cols-2 gap-4">
-                            <Field label="Category" name="projectCategory" value={form.projectCategory} onChange={handleChange} placeholder="Category" />
-                            <SelectField label="Priority" name="priority" value={form.priority} onChange={handleChange} options={PRIORITIES} />
+                        <div className="grid grid-cols-2 gap-4 mb-5">
+                            <div className="space-y-1.5">
+                                <label className="text-[15px] font-bold text-[#34495E] ml-1">Latitude</label>
+                                <input
+                                    type="text"
+                                    name="latitude"
+                                    value={form.latitude}
+                                    onChange={handleChange}
+                                    placeholder="eg. 28.6139"
+                                    className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                                />
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className="text-[15px] font-bold text-[#34495E] ml-1">Longitude</label>
+                                <input
+                                    type="text"
+                                    name="longitude"
+                                    value={form.longitude}
+                                    onChange={handleChange}
+                                    placeholder="eg. 77.2090"
+                                    className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                                />
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <SelectField label="Status" name="projectStatus" value={form.projectStatus} onChange={handleChange} options={STATUSES} />
-                            <Field label="Exp. Completion" name="expectedCompletion" type="date" value={form.expectedCompletion} onChange={handleChange} />
-                        </div>
+                        <Field 
+                            label="Start Date" 
+                            name="startDate" 
+                            type="date" 
+                            value={form.startDate} 
+                            onChange={handleChange} 
+                        />
 
-                        <div className="space-y-1">
-                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Project Manager</label>
-                            <select 
-                                name="projectManager" 
-                                value={form.projectManager} 
-                                onChange={handleChange} 
-                                className="w-full px-[14px] py-[14px] bg-[#F3F5F7] border-none rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none transition-all cursor-pointer"
-                            >
-                                <option value="">Select Manager</option>
-                                {staffList.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
-                            </select>
-                        </div>
+                        <div className="pt-4 border-t border-gray-100 mt-2 space-y-5">
+                            <div className="grid grid-cols-2 gap-4">
+                                <Field label="Category" name="projectCategory" value={form.projectCategory} onChange={handleChange} placeholder="Category" />
+                                <SelectField label="Priority" name="priority" value={form.priority} onChange={handleChange} options={PRIORITIES} />
+                            </div>
 
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Staff Allocation</label>
-                            <div className="flex flex-wrap gap-2 p-3 bg-[#F3F5F7] rounded-[14px]">
-                                {staffList.map(s => {
-                                    const selected = form.assignedStaff.includes(s._id);
-                                    return (
-                                        <button
-                                            key={s._id}
-                                            type="button"
-                                            onClick={() => toggleStaff(s._id)}
-                                            className={`px-3 py-2 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all border ${selected ? 'bg-blue-600 border-blue-500 text-white shadow-sm' : 'bg-white border-transparent text-gray-400'}`}
-                                        >
-                                            {s.name}
-                                        </button>
-                                    );
-                                })}
+                            <div className="grid grid-cols-2 gap-4">
+                                <SelectField label="Status" name="projectStatus" value={form.projectStatus} onChange={handleChange} options={STATUSES} />
+                                <Field label="Exp. Completion" name="expectedCompletion" type="date" value={form.expectedCompletion} onChange={handleChange} />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label className="text-[15px] font-bold text-[#34495E] ml-1">Project Lead</label>
+                                <div className="relative">
+                                    <select 
+                                        name="projectManager" 
+                                        value={form.projectManager} 
+                                        onChange={handleChange} 
+                                        className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none"
+                                    >
+                                        <option value="">Select Manager</option>
+                                        {staffList.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+                                    </select>
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                        <ChevronDown className="w-4 h-4" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-1.5 pb-4">
+                                <label className="text-[15px] font-bold text-[#34495E] ml-1">Staff Allocation</label>
+                                <div className="flex flex-wrap gap-2 p-4 bg-gray-50 border border-gray-100 rounded-[18px]">
+                                    {staffList.map(s => {
+                                        const selected = form.assignedStaff.includes(s._id);
+                                        return (
+                                            <button
+                                                key={s._id}
+                                                type="button"
+                                                onClick={() => toggleStaff(s._id)}
+                                                className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all border ${selected ? 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-200' : 'bg-white border-gray-200 text-gray-400'}`}
+                                            >
+                                                {s.name}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Submit Button */}
-                    <div className="pt-4 sticky bottom-0 bg-white pb-2">
-                        <button 
-                            type="submit" 
-                            disabled={saving} 
-                            className="w-full py-4 px-4 bg-[#2F6BFF] text-white font-bold rounded-[16px] shadow-lg hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                    <div className="p-7 bg-white border-t border-gray-50 shrink-0">
+                        <button
+                            type="submit"
+                            disabled={saving}
+                            className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50"
                         >
-                            {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Create Project'}
+                            {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : (isEdit ? 'Update Project' : 'Create Project')}
                         </button>
                     </div>
                 </form>
@@ -518,20 +543,20 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
     );
 };
 
-const Field = ({ label, name, type = 'text', value, onChange, icon: Icon, required, placeholder, textarea }) => (
-    <div className="space-y-1 mb-[18px]">
-        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">
-            {label}
-        </label>
+const Field = ({ label, name, value, onChange, placeholder, type = 'text', required = false, textarea = false }) => (
+    <div className="space-y-1.5 mb-5">
+        <label className="text-[15px] font-bold text-[#34495E] ml-1">{label}</label>
         <div className="relative">
             {textarea ? (
                 <textarea
                     name={name}
                     value={value}
                     onChange={onChange}
+                    required={required}
                     placeholder={placeholder}
                     rows={4}
-                    className="w-full px-[14px] py-[14px] bg-[#F3F5F7] border-none rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none transition-all"
+                    style={{ minHeight: '110px' }}
+                    className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 resize-none focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
                 />
             ) : (
                 <input
@@ -541,7 +566,7 @@ const Field = ({ label, name, type = 'text', value, onChange, icon: Icon, requir
                     onChange={onChange}
                     required={required}
                     placeholder={placeholder}
-                    className="w-full px-[14px] py-[14px] bg-[#F3F5F7] border-none rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 focus:outline-none transition-all"
+                    className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
                 />
             )}
             {type === 'date' && (
@@ -554,19 +579,46 @@ const Field = ({ label, name, type = 'text', value, onChange, icon: Icon, requir
 );
 
 const SelectField = ({ label, name, value, onChange, options }) => (
-    <div className="space-y-1 mb-[18px]">
-        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">{label}</label>
+    <div className="space-y-1.5 mb-5">
+        <label className="text-[15px] font-bold text-[#34495E] ml-1">{label}</label>
         <div className="relative">
             <select
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full px-[14px] py-[14px] bg-[#F3F5F7] border-none rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none transition-all cursor-pointer appearance-none"
+                className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none"
             >
                 {options.map((o) => <option key={o} value={o}>{o}</option>)}
             </select>
             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                 <ChevronDown className="w-4 h-4 text-gray-400" />
+            </div>
+        </div>
+    </div>
+);
+
+const ConfirmationModal = ({ title, message, onConfirm, onCancel, confirmText, isDestructive }) => (
+    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={onCancel}></div>
+        <div className="bg-white rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] w-[94%] max-w-[420px] relative z-[310] animate-in zoom-in-95 duration-500 p-8 text-center">
+            <div className={`w-16 h-16 rounded-2xl ${isDestructive ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-blue-500'} flex items-center justify-center mx-auto mb-6`}>
+                {isDestructive ? <Trash2 className="w-8 h-8" /> : <AlertCircle className="w-8 h-8" />}
+            </div>
+            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">{title}</h3>
+            <p className="text-sm text-gray-500 mb-8 leading-relaxed">{message}</p>
+            <div className="flex flex-col gap-3">
+                <button 
+                    onClick={onConfirm}
+                    className={`w-full py-4 ${isDestructive ? 'bg-red-500 shadow-red-200' : 'blue-gradient shadow-blue-200'} text-white font-bold rounded-[16px] shadow-lg hover:opacity-90 active:scale-[0.98] transition-all`}
+                >
+                    {confirmText || 'Confirm'}
+                </button>
+                <button 
+                    onClick={onCancel}
+                    className="w-full py-4 text-gray-400 font-bold text-[10px] uppercase tracking-widest hover:text-gray-600 transition-all"
+                >
+                    Cancel
+                </button>
             </div>
         </div>
     </div>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import {
     Search, ChevronLeft, ChevronRight, Loader2,
-    AlertCircle, CheckCircle, Clock, MapPin, Send, MessageSquare
+    AlertCircle, CheckCircle, Clock, MapPin, Send, MessageSquare, X
 } from 'lucide-react';
 
 const PROJECT_STATUS_COLORS = {
@@ -62,6 +62,15 @@ const ClientDashboard = () => {
         setToast({ message, type });
         setTimeout(() => setToast(null), 4000);
     };
+
+    useEffect(() => {
+        if (requestModal) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => { document.body.style.overflow = 'unset'; };
+    }, [requestModal]);
 
     const handleRequestAccess = async () => {
         if (!requestModal) return;
@@ -237,46 +246,40 @@ const ClientDashboard = () => {
 
             {/* Request Modal */}
             {requestModal && (
-                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity" onClick={() => { setRequestModal(null); setRequestMessage(''); }}></div>
-                    <div className="bg-white rounded-[32px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.15)] w-full max-w-lg relative z-[210] animate-in zoom-in-95 duration-500 overflow-hidden">
-                        <div className="p-8 sm:p-12">
-                            <div className="flex flex-col items-center text-center mb-10">
-                                <div className="w-20 h-20 blue-gradient text-white flex items-center justify-center rounded-[24px] mb-6 shadow-xl">
-                                    <Send className="w-10 h-10" />
+                <div className="fixed inset-0 z-[200] flex md:items-center md:justify-center">
+                    <div className="absolute inset-0 bg-black/45 backdrop-blur-sm transition-opacity" onClick={() => { setRequestModal(null); setRequestMessage(''); }}></div>
+                    <div className="bg-white w-full h-full md:h-auto md:w-[94%] md:max-w-[460px] md:max-w-[520px] md:max-h-[90vh] md:rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col relative z-[210] animate-in slide-in-from-bottom md:zoom-in-95 duration-300 md:duration-500 overflow-hidden">
+                        <div className="flex items-center justify-between p-7 pb-4 bg-white shrink-0">
+                            <h2 className="text-[22px] font-bold text-[#2C3E50] tracking-tight">Request Protocols</h2>
+                            <button onClick={() => { setRequestModal(null); setRequestMessage(''); }} className="p-2 text-gray-400 hover:text-red-500 transition-all">
+                                <X className="w-6 h-6" />
+                            </button>
+                        </div>
+
+                            <div className="flex-1 overflow-y-auto scrollbar-hide px-7 pt-2 pb-8">
+                                <p className="text-[11px] font-bold text-blue-600 uppercase tracking-widest mb-6 inline-block px-3 py-1 bg-blue-50 rounded-lg">{requestModal.projectName}</p>
+                                <div className="space-y-1.5 mb-8">
+                                    <label className="text-[15px] font-bold text-[#34495E] ml-1">Optional Context</label>
+                                    <textarea
+                                        value={requestMessage}
+                                        onChange={(e) => setRequestMessage(e.target.value)}
+                                        placeholder="Explain your interest in this project..."
+                                        style={{ minHeight: '110px' }}
+                                        className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                                    />
                                 </div>
-                                <h3 className="text-3xl font-display font-bold text-[#1A1A1A] tracking-tight">Authorisation Request</h3>
-                                <p className="text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em] mt-3 py-1 px-4 bg-blue-50 rounded-full">{requestModal.projectName}</p>
                             </div>
 
-                            <div className="space-y-4 mb-10">
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Optional Context</label>
-                                <textarea
-                                    value={requestMessage}
-                                    onChange={(e) => setRequestMessage(e.target.value)}
-                                    placeholder="Explain your interest in this project..."
-                                    className="w-full p-6 bg-gray-50 border border-gray-100 rounded-[20px] text-sm font-medium focus:outline-none focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 h-40 resize-none transition-all placeholder:text-gray-300"
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-4">
+                            <div className="p-7 pt-4 bg-white border-t border-gray-50 flex-shrink-0">
                                 <button
                                     onClick={handleRequestAccess}
                                     disabled={requesting}
-                                    className="w-full py-5 blue-gradient text-white font-bold text-xs uppercase tracking-widest rounded-2xl shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+                                    className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
-                                    {requesting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                                    {requesting ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : <Send className="w-5 h-5" />}
                                     Submit Request
                                 </button>
-                                
-                                <button
-                                    onClick={() => { setRequestModal(null); setRequestMessage(''); }}
-                                    className="w-full py-4 text-gray-400 font-bold text-[10px] uppercase tracking-widest hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all"
-                                >
-                                    Abort Process
-                                </button>
                             </div>
-                        </div>
                     </div>
                 </div>
             )}

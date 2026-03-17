@@ -88,6 +88,15 @@ const ManageClients = () => {
         }
     };
 
+    useEffect(() => {
+        if (selectedClient) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => { document.body.style.overflow = 'unset'; };
+    }, [selectedClient]);
+
     return (
         <div className="space-y-10 animate-reveal">
             {/* ── Toast ── */}
@@ -253,49 +262,48 @@ const ManageClients = () => {
 
             {/* ── Client Detail Modal ── */}
             {selectedClient && (
-                <div className="fixed inset-0 z-[150] flex items-start sm:items-center justify-center p-4 pt-10 sm:pt-4">
-                    <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity" onClick={() => setSelectedClient(null)}></div>
-                    <div className="bg-white rounded-[32px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.15)] w-full max-w-lg max-h-[85vh] sm:max-h-[90vh] overflow-hidden flex flex-col relative z-[160] animate-in zoom-in-95 duration-500">
-                        <div className="flex items-center justify-between px-8 py-8 md:px-10 md:py-10 border-b border-gray-50 bg-gray-50/30 shrink-0">
-                            <div>
-                                <h2 className="text-2xl font-display font-bold text-[#1A1A1A] tracking-tight">{selectedClient.name}</h2>
-                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2 underline underline-offset-4 decoration-blue-500/50">Intelligence Profile</p>
-                            </div>
-                            <button onClick={() => setSelectedClient(null)} className="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-red-50 transition-all">
-                                <X className="w-5 h-5" />
+                <div className="fixed inset-0 z-[150] flex md:items-center md:justify-center">
+                    <div className="absolute inset-0 bg-black/45 backdrop-blur-sm transition-opacity" onClick={() => setSelectedClient(null)}></div>
+                    <div className="bg-white w-full h-full md:h-auto md:w-[94%] md:max-w-[520px] md:max-h-[90vh] md:rounded-[26px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col relative z-[160] animate-in slide-in-from-bottom md:zoom-in-95 duration-300 md:duration-500 overflow-hidden">
+                        <div className="flex items-center justify-between p-7 pb-4 bg-white shrink-0">
+                            <h2 className="text-[22px] font-bold text-[#2C3E50] tracking-tight">{selectedClient.name}</h2>
+                            <button onClick={() => setSelectedClient(null)} className="p-2 text-gray-400 hover:text-red-500 transition-all">
+                                <X className="w-6 h-6" />
                             </button>
                         </div>
                         
-                        <div className="px-8 py-8 md:px-10 md:py-10 overflow-y-auto custom-scrollbar bg-white">
-                            <div className="space-y-2 md:space-y-3">
-                                <InfoRow icon={Mail} label="Operational Email" value={selectedClient.email} />
-                                <InfoRow icon={Building2} label="Corporate Entity" value={selectedClient.company || '—'} />
-                                <InfoRow icon={ShieldCheck} label="Account Status" value={selectedClient.clientStatus.toUpperCase()} />
-                                <InfoRow icon={Calendar} label="Registration Date" value={new Date(selectedClient.createdAt).toLocaleDateString()} />
+                        <div className="flex-1 overflow-y-auto scrollbar-hide p-7 pt-2 pb-8">
+                            <div className="space-y-4">
+                                <InfoRow icon={Mail} label="Contact Email" value={selectedClient.email} />
+                                <InfoRow icon={Building2} label="Company Name" value={selectedClient.company || '—'} />
+                                <InfoRow icon={ShieldCheck} label="Account Status" value={selectedClient.clientStatus.charAt(0).toUpperCase() + selectedClient.clientStatus.slice(1)} />
+                                <InfoRow icon={Calendar} label="Date Joined" value={new Date(selectedClient.createdAt).toLocaleDateString()} />
                             </div>
 
                             {selectedClient.approvedProjects?.length > 0 && (
-                                <div className="mt-8 md:mt-12">
-                                    <h3 className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-6 flex items-center gap-2">
-                                        <div className="w-1 h-1 rounded-full bg-blue-600"></div>
-                                        Approved Assignments ({selectedClient.approvedProjects.length})
+                                <div className="mt-8">
+                                    <h3 className="text-sm font-bold text-[#34495E] mb-4 flex items-center gap-2">
+                                        Approved Projects ({selectedClient.approvedProjects.length})
                                     </h3>
-                                    <div className="space-y-2">
+                                    <div className="space-y-3">
                                         {selectedClient.approvedProjects.map(p => (
-                                            <div key={p._id} className="flex items-center justify-between p-5 bg-gray-50 border border-gray-100 rounded-[20px] group hover:border-blue-500/30 transition-all cursor-default shadow-sm hover:shadow-md">
-                                                <div className="pr-4">
-                                                    <p className="font-bold text-[#1A1A1A] group-hover:text-blue-600 transition-colors text-sm leading-none">{p.projectName}</p>
-                                                    <p className="text-[10px] font-bold text-gray-300 uppercase mt-2 tracking-widest">{p.projectCode}</p>
+                                            <div key={p._id} className="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-[20px] group transition-all">
+                                                <div>
+                                                    <p className="font-bold text-[#1A1A1A] text-sm">{p.projectName}</p>
+                                                    <p className="text-[10px] font-bold text-gray-400 uppercase mt-1 tracking-widest">{p.projectCode}</p>
                                                 </div>
-                                                <span className="shrink-0 text-[9px] font-bold text-blue-600 bg-blue-50/50 border border-blue-100/50 px-3 py-1.5 rounded-xl uppercase tracking-widest">{p.projectStatus}</span>
+                                                <span className="shrink-0 text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl uppercase tracking-widest">{p.projectStatus}</span>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             )}
                         </div>
-                        <div className="shrink-0 p-8 md:p-10 border-t border-gray-50 bg-gray-50/20">
-                            <button onClick={() => setSelectedClient(null)} className="w-full py-4 blue-gradient text-white font-bold text-xs uppercase tracking-widest rounded-xl shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all">Terminate View</button>
+
+                        <div className="p-7 bg-white border-t border-gray-50 flex-shrink-0">
+                            <button onClick={() => setSelectedClient(null)} className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all">
+                                Close Viewer
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -325,13 +333,13 @@ const StatCard = ({ icon: Icon, label, value, color }) => {
 };
 
 const InfoRow = ({ icon: Icon, label, value }) => (
-    <div className="flex items-center gap-6 py-5 border-b border-gray-50 group last:border-0 hover:bg-gray-50/50 -mx-4 px-4 rounded-xl transition-colors">
-        <div className="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-300 group-hover:text-blue-600 group-hover:bg-blue-50 transition-all duration-300">
+    <div className="flex items-center gap-5 py-4 px-4 bg-gray-50 border border-gray-100 rounded-2xl group transition-all">
+        <div className="w-11 h-11 rounded-[14px] bg-white border border-gray-100 flex items-center justify-center text-gray-400 group-hover:text-blue-600 transition-all duration-300 shadow-sm">
             <Icon className="w-5 h-5" />
         </div>
         <div className="flex flex-col">
-            <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{label}</span>
-            <span className="font-bold text-[#1A1A1A] text-[15px] mt-1 tracking-tight">{value}</span>
+            <span className="text-[13px] font-bold text-[#7F8C8D]">{label}</span>
+            <span className="font-bold text-[#2C3E50] text-[15px] mt-0.5 tracking-tight">{value}</span>
         </div>
     </div>
 );
