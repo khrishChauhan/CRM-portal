@@ -126,27 +126,27 @@ const ManageClients = () => {
             </div>
 
             {/* ── Filters Bar ── */}
-            <div className="bg-[#2E2E2E] p-2 rounded-[24px] shadow-xl flex flex-col md:flex-row gap-2 mt-6">
+            <div className="bg-white p-2 rounded-[24px] shadow-lg border border-gray-100 flex flex-col md:flex-row gap-2 mt-6">
                 <div className="relative flex-1 group">
-                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search by name, email or company..."
-                        className="w-full bg-transparent pl-14 pr-6 py-4.5 text-white placeholder-gray-600 focus:outline-none transition-all text-sm font-medium"
+                        className="w-full bg-gray-50/50 pl-14 pr-6 py-4.5 text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:bg-gray-50 focus:ring-4 focus:ring-blue-500/5 rounded-2xl transition-all text-sm font-medium"
                     />
                 </div>
                 <div className="px-2 pb-2 md:p-0">
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="w-full md:w-auto px-6 py-4 bg-white/5 border border-white/5 rounded-[18px] text-[10px] font-bold uppercase tracking-widest text-gray-400 focus:outline-none focus:bg-white/10 transition-all cursor-pointer"
+                        className="w-full md:w-auto px-6 py-4 bg-gray-50/80 border border-gray-100 rounded-[18px] text-[10px] font-bold uppercase tracking-widest text-[#2C3E50] focus:outline-none focus:bg-white transition-all cursor-pointer appearance-none"
                     >
-                        <option value="" className="bg-[#2E2E2E]">All Status</option>
-                        <option value="active" className="bg-[#2E2E2E]">Active Assets</option>
-                        <option value="inactive" className="bg-[#2E2E2E]">Inactive Assets</option>
-                        <option value="suspended" className="bg-[#2E2E2E]">Suspended Assets</option>
+                        <option value="">All Status</option>
+                        <option value="active">Active Assets</option>
+                        <option value="inactive">Inactive Assets</option>
+                        <option value="suspended">Suspended Assets</option>
                     </select>
                 </div>
             </div>
