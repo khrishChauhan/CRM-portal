@@ -32,7 +32,6 @@ const Sidebar = ({ role, user, logout }) => {
     const clientLinks = [
         { name: 'Live Projects', path: '/client/dashboard', icon: Briefcase },
         { name: 'Project Gallery', path: '/client/projects', icon: FolderOpen },
-        { name: 'Report Issue', path: '/client/report', icon: FileText },
     ];
 
     const links = role === 'admin' ? adminLinks : role === 'staff' ? staffLinks : clientLinks;
