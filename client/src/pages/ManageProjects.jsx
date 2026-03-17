@@ -445,30 +445,6 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                             placeholder="Site Location" 
                         />
 
-                        <div className="grid grid-cols-2 gap-4 mb-5">
-                            <div className="space-y-1.5">
-                                <label className="text-[15px] font-bold text-[#34495E] ml-1">Latitude</label>
-                                <input
-                                    type="text"
-                                    name="latitude"
-                                    value={form.latitude}
-                                    onChange={handleChange}
-                                    placeholder="eg. 28.6139"
-                                    className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
-                                />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-[15px] font-bold text-[#34495E] ml-1">Longitude</label>
-                                <input
-                                    type="text"
-                                    name="longitude"
-                                    value={form.longitude}
-                                    onChange={handleChange}
-                                    placeholder="eg. 77.2090"
-                                    className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
-                                />
-                            </div>
-                        </div>
 
                         <Field 
                             label="Start Date" 
