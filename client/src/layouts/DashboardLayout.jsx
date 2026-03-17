@@ -7,7 +7,8 @@ import {
     Menu,
     X,
     FolderOpen,
-    FileText
+    FileText,
+    Building2
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';

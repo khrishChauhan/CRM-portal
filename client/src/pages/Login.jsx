@@ -274,45 +274,6 @@ const Login = () => {
                         </button>
                     )}
                 </div>
-
-                {/* QUICK ACCESS SECTION */}
-                <div className="space-y-6">
-                    <div className="flex items-center gap-4">
-                        <div className="flex-1 h-[1px] bg-gray-200"></div>
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Quick Access</span>
-                        <div className="flex-1 h-[1px] bg-gray-200"></div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <button 
-                            onClick={() => {
-                                setSelectedRole('admin');
-                                setEmail('admin@khushitech.com');
-                                // Pre-filling logic could go here if demo credentials existed
-                            }}
-                            className="py-4 px-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-[14px] text-xs font-bold transition-all active:scale-95"
-                        >
-                            Admin Demo
-                        </button>
-                        <button 
-                            onClick={() => {
-                                setSelectedRole('staff');
-                                setStaffEmail('staff@khushitech.com');
-                                setPassword('password123');
-                            }}
-                            className="py-4 px-4 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-[14px] text-xs font-bold transition-all active:scale-95"
-                        >
-                            Staff Demo
-                        </button>
-                    </div>
-
-                    <button 
-                        className="w-full py-5 bg-white border border-gray-200 text-gray-700 rounded-[18px] text-sm font-bold shadow-sm hover:bg-gray-50 transition-all active:scale-[0.99] flex items-center justify-center gap-2"
-                        onClick={() => navigate('/login')} // Currently no public portal, so just use login
-                    >
-                        View Public Portal
-                    </button>
-                </div>
             </div>
         </div>
     );

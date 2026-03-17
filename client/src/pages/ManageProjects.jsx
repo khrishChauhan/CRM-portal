@@ -4,7 +4,8 @@ import api from '../services/api';
 import {
     Plus, Search, ChevronLeft, ChevronRight, Loader2, FolderOpen,
     Edit3, Trash2, X, AlertCircle, CheckCircle, Calendar, MapPin,
-    Clock, AlertTriangle, Briefcase, TrendingUp, MessageSquare
+    Clock, AlertTriangle, Briefcase, TrendingUp, MessageSquare,
+    ChevronDown
 } from 'lucide-react';
 
 const STATUSES = ['Planned', 'In Progress', 'On Hold', 'Completed', 'Delayed', 'Cancelled'];
@@ -309,6 +310,8 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
         projectCategory: project?.projectCategory || '',
         description: project?.description || '',
         siteAddress: project?.siteAddress || '',
+        latitude: project?.latitude || '',
+        longitude: project?.longitude || '',
         projectManager: project?.projectManager?._id || '',
         assignedStaff: project?.assignedStaff?.map(s => s._id) || [],
         startDate: project?.startDate ? new Date(project.startDate).toISOString().split('T')[0] : '',
@@ -324,7 +327,9 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        api.get('/projects/dropdowns').then(res => setStaffList(res.data.data.staff || [])).catch(() => { });
+        api.get('/projects/dropdowns')
+            .then(res => setStaffList(res.data.data.staff || []))
+            .catch(() => { });
     }, []);
 
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -360,91 +365,151 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-start sm:items-center justify-center p-4 pt-10 sm:pt-4">
-            <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity animate-in fade-in duration-500" onClick={onClose}></div>
-            <div className="bg-white rounded-[32px] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.15)] w-[95%] sm:w-full max-w-2xl max-h-[85vh] sm:max-h-[90vh] overflow-hidden flex flex-col relative z-[220] animate-in zoom-in-95 duration-500">
-                <div className="flex items-center justify-between px-8 py-8 md:px-10 md:py-10 border-b border-gray-50 bg-gray-50/30 shrink-0">
-                    <div>
-                        <h2 className="text-2xl font-display font-bold text-[#1A1A1A] tracking-tight">{isEdit ? 'Update Project' : 'New Project'}</h2>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-2">{isEdit ? `ID: ${project.projectCode}` : 'Configure project baseline'}</p>
-                    </div>
-                    <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-red-50 transition-all">
+        <div className="fixed inset-0 z-[250] flex items-center justify-center p-4">
+            {/* Overlay */}
+            <div 
+                className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-300" 
+                onClick={onClose}
+            ></div>
+
+            {/* Modal Card */}
+            <div className="bg-white rounded-[22px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] w-[92%] max-w-[420px] max-h-[88vh] overflow-y-auto flex flex-col relative z-[260] animate-in zoom-in-95 duration-500 scrollbar-hide">
+                
+                {/* Header */}
+                <div className="flex items-center justify-between p-6 shrink-0 border-b border-gray-50">
+                    <h2 className="text-xl font-bold text-[#1A1A1A] tracking-tight">
+                        {isEdit ? 'Update Project' : 'Create New Project'}
+                    </h2>
+                    <button 
+                        onClick={onClose} 
+                        className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all"
+                    >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="flex flex-col overflow-hidden min-h-0 bg-white">
-                    <div className="px-8 py-8 md:px-10 md:py-10 space-y-6 md:space-y-8 overflow-y-auto custom-scrollbar">
+                {/* Form Body */}
+                <form onSubmit={handleSubmit} className="p-6 pt-2 space-y-0">
                     {error && (
-                        <div className="flex items-center gap-4 p-5 bg-red-50 border border-red-100 rounded-2xl text-red-500 text-[10px] font-bold uppercase tracking-widest animate-shake">
-                            <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                        <div className="mb-4 flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-xl text-red-500 text-[10px] font-bold uppercase tracking-widest">
+                            <AlertCircle className="w-4 h-4 flex-shrink-0" />
                             {error}
                         </div>
                     )}
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-                        <Field label="Project Name" name="projectName" value={form.projectName} onChange={handleChange} icon={FolderOpen} required placeholder="Enter project name" />
-                        <Field label="Category" name="projectCategory" value={form.projectCategory} onChange={handleChange} icon={Briefcase} placeholder="e.g. Website, App" />
-                    </div>
+                    <Field 
+                        label="Project Name" 
+                        name="projectName" 
+                        value={form.projectName} 
+                        onChange={handleChange} 
+                        placeholder="Project Name" 
+                        required 
+                    />
 
-                    <Field label="Description" name="description" value={form.description} onChange={handleChange} textarea placeholder="Describe the project goals and scope..." />
-                    <Field label="Location / Site Address" name="siteAddress" value={form.siteAddress} onChange={handleChange} icon={MapPin} placeholder="Enter site address" />
+                    <Field 
+                        label="Description" 
+                        name="description" 
+                        value={form.description} 
+                        onChange={handleChange} 
+                        placeholder="Project info..." 
+                        textarea 
+                    />
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                        <Field label="Start Date" name="startDate" type="date" value={form.startDate} onChange={handleChange} icon={Calendar} />
-                        <Field label="Expected Completion" name="expectedCompletion" type="date" value={form.expectedCompletion} onChange={handleChange} icon={Calendar} />
-                        {isEdit && <Field label="Actual Completion" name="actualCompletion" type="date" value={form.actualCompletion} onChange={handleChange} icon={Calendar} />}
-                    </div>
+                    <Field 
+                        label="Location Address" 
+                        name="siteAddress" 
+                        value={form.siteAddress} 
+                        onChange={handleChange} 
+                        placeholder="Site Location" 
+                    />
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                        <SelectField label="Status" name="projectStatus" value={form.projectStatus} onChange={handleChange} options={STATUSES} />
-                        <SelectField label="Priority" name="priority" value={form.priority} onChange={handleChange} options={PRIORITIES} />
-                        <SelectField label="Risk Level" name="riskLevel" value={form.riskLevel} onChange={handleChange} options={['Low', 'Medium', 'High']} />
-                    </div>
-
-                    {form.projectStatus === 'Delayed' && (
-                        <Field label="Delay Reason" name="delayReason" value={form.delayReason} onChange={handleChange} textarea placeholder="Explain the reason for the delay..." />
-                    )}
-
-                    <div className="space-y-3">
-                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                            Project Manager
-                        </label>
-                        <select name="projectManager" value={form.projectManager} onChange={handleChange} className="w-full px-6 py-5 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer">
-                            <option value="">Select Manager</option>
-                            {staffList.map(s => <option key={s._id} value={s._id}>{s.name} — {s.designation || 'Staff'}</option>)}
-                        </select>
-                    </div>
-
-                    <div className="space-y-3">
-                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-                            Assigned Staff ({form.assignedStaff.length})
-                        </label>
-                        <div className="flex flex-wrap gap-2 p-5 bg-gray-50 border border-gray-100 rounded-[28px] min-h-[100px]">
-                            {staffList.length === 0 ? (
-                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest italic p-4">Loading operational staff...</p>
-                            ) : staffList.map(s => {
-                                const selected = form.assignedStaff.includes(s._id);
-                                return (
-                                    <button
-                                        key={s._id}
-                                        type="button"
-                                        onClick={() => toggleStaff(s._id)}
-                                        className={`px-5 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 border ${selected ? 'bg-blue-600 border-blue-500 text-white shadow-lg' : 'bg-white border-gray-100 text-gray-400 hover:text-blue-600 hover:border-blue-500/50'}`}
-                                    >
-                                        {s.name}
-                                    </button>
-                                );
-                            })}
+                    {/* Lat & Long row */}
+                    <div className="grid grid-cols-2 gap-4 mb-[18px]">
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Latitude</label>
+                            <input
+                                type="text"
+                                name="latitude"
+                                value={form.latitude}
+                                onChange={handleChange}
+                                placeholder="0.0000"
+                                className="w-full px-[14px] py-[14px] bg-[#F3F5F7] border-none rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none transition-all"
+                            />
+                        </div>
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Longitude</label>
+                            <input
+                                type="text"
+                                name="longitude"
+                                value={form.longitude}
+                                onChange={handleChange}
+                                placeholder="0.0000"
+                                className="w-full px-[14px] py-[14px] bg-[#F3F5F7] border-none rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none transition-all"
+                            />
                         </div>
                     </div>
 
+                    <Field 
+                        label="Start Date" 
+                        name="startDate" 
+                        type="date" 
+                        value={form.startDate} 
+                        onChange={handleChange} 
+                    />
+
+                    {/* Extended Fields (Beyond Screenshot) */}
+                    <div className="pt-4 border-t border-gray-50 mt-2 space-y-[18px]">
+                        <div className="grid grid-cols-2 gap-4">
+                            <Field label="Category" name="projectCategory" value={form.projectCategory} onChange={handleChange} placeholder="Category" />
+                            <SelectField label="Priority" name="priority" value={form.priority} onChange={handleChange} options={PRIORITIES} />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <SelectField label="Status" name="projectStatus" value={form.projectStatus} onChange={handleChange} options={STATUSES} />
+                            <Field label="Exp. Completion" name="expectedCompletion" type="date" value={form.expectedCompletion} onChange={handleChange} />
+                        </div>
+
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Project Manager</label>
+                            <select 
+                                name="projectManager" 
+                                value={form.projectManager} 
+                                onChange={handleChange} 
+                                className="w-full px-[14px] py-[14px] bg-[#F3F5F7] border-none rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none transition-all cursor-pointer"
+                            >
+                                <option value="">Select Manager</option>
+                                {staffList.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+                            </select>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Staff Allocation</label>
+                            <div className="flex flex-wrap gap-2 p-3 bg-[#F3F5F7] rounded-[14px]">
+                                {staffList.map(s => {
+                                    const selected = form.assignedStaff.includes(s._id);
+                                    return (
+                                        <button
+                                            key={s._id}
+                                            type="button"
+                                            onClick={() => toggleStaff(s._id)}
+                                            className={`px-3 py-2 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all border ${selected ? 'bg-blue-600 border-blue-500 text-white shadow-sm' : 'bg-white border-transparent text-gray-400'}`}
+                                        >
+                                            {s.name}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="shrink-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 sm:gap-4 p-8 md:p-10 border-t border-gray-50 bg-gray-50/20">
-                        <button type="button" onClick={onClose} className="w-full sm:w-auto px-10 py-4 font-bold text-[10px] text-gray-400 uppercase tracking-widest rounded-xl hover:bg-gray-100 hover:text-gray-600 transition-all">Cancel</button>
-                        <button type="submit" disabled={saving} className="w-full sm:w-auto px-12 py-4 blue-gradient text-[10px] font-bold text-white uppercase tracking-widest rounded-xl shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-30">
-                            {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : (isEdit ? 'Update Project' : 'Initialise Project')}
+                    {/* Submit Button */}
+                    <div className="pt-4 sticky bottom-0 bg-white pb-2">
+                        <button 
+                            type="submit" 
+                            disabled={saving} 
+                            className="w-full py-4 px-4 bg-[#2F6BFF] text-white font-bold rounded-[16px] shadow-lg hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                        >
+                            {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Create Project'}
                         </button>
                     </div>
                 </form>
@@ -454,45 +519,56 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
 };
 
 const Field = ({ label, name, type = 'text', value, onChange, icon: Icon, required, placeholder, textarea }) => (
-    <div className="space-y-3 group">
-        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1 flex items-center gap-2">
-            {Icon && <Icon className="w-3.5 h-3.5 transition-colors group-focus-within:text-blue-500" />}
-            {label} {required && <span className="text-blue-500">•</span>}
+    <div className="space-y-1 mb-[18px]">
+        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">
+            {label}
         </label>
-        {textarea ? (
-            <textarea
-                name={name}
-                value={value}
-                onChange={onChange}
-                placeholder={placeholder}
-                rows={4}
-                className="w-full px-6 py-5 bg-gray-50 border border-gray-100 rounded-[24px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 resize-none focus:outline-none focus:border-blue-500/50 transition-all"
-            />
-        ) : (
-            <input
-                type={type}
-                name={name}
-                value={value}
-                onChange={onChange}
-                required={required}
-                placeholder={placeholder}
-                className="w-full px-6 py-5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none focus:border-blue-500/50 transition-all"
-            />
-        )}
+        <div className="relative">
+            {textarea ? (
+                <textarea
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                    placeholder={placeholder}
+                    rows={4}
+                    className="w-full px-[14px] py-[14px] bg-[#F3F5F7] border-none rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none transition-all"
+                />
+            ) : (
+                <input
+                    type={type}
+                    name={name}
+                    value={value}
+                    onChange={onChange}
+                    required={required}
+                    placeholder={placeholder}
+                    className="w-full px-[14px] py-[14px] bg-[#F3F5F7] border-none rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 focus:outline-none transition-all"
+                />
+            )}
+            {type === 'date' && (
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                </div>
+            )}
+        </div>
     </div>
 );
 
 const SelectField = ({ label, name, value, onChange, options }) => (
-    <div className="space-y-3">
-        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">{label}</label>
-        <select
-            name={name}
-            value={value}
-            onChange={onChange}
-            className="w-full px-6 py-5 bg-gray-50 border border-gray-100 rounded-xl text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500/50 transition-all cursor-pointer"
-        >
-            {options.map((o) => <option key={o} value={o}>{o}</option>)}
-        </select>
+    <div className="space-y-1 mb-[18px]">
+        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">{label}</label>
+        <div className="relative">
+            <select
+                name={name}
+                value={value}
+                onChange={onChange}
+                className="w-full px-[14px] py-[14px] bg-[#F3F5F7] border-none rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none transition-all cursor-pointer appearance-none"
+            >
+                {options.map((o) => <option key={o} value={o}>{o}</option>)}
+            </select>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                <ChevronDown className="w-4 h-4 text-gray-400" />
+            </div>
+        </div>
     </div>
 );
 
