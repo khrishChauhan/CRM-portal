@@ -135,7 +135,7 @@ const ManageProjects = () => {
 
             {/* ── Dashboard Stats ── */}
             {dashboard && (
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 md:gap-4 mt-6">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
                     <MiniStat label="Total" value={ov.total || 0} icon={FolderOpen} color="text-blue-500" bgColor="bg-blue-50" />
                     <MiniStat label="Active" value={ov.active || 0} icon={TrendingUp} color="text-emerald-500" bgColor="bg-emerald-50" />
                     <MiniStat label="Completed" value={ov.completed || 0} icon={CheckCircle} color="text-sky-500" bgColor="bg-sky-50" />
@@ -310,13 +310,13 @@ const ManageProjects = () => {
 };
 
 const MiniStat = ({ label, value, icon: Icon, color, bgColor }) => (
-    <div className="bg-white p-5 rounded-[28px] border border-gray-100 shadow-xl group hover:border-blue-500/20 transition-all duration-500 flex items-center gap-5">
-        <div className={`w-12 h-12 rounded-2xl ${bgColor} flex items-center justify-center transition-transform group-hover:scale-110`}>
-            <Icon className={`w-6 h-6 ${color}`} />
+    <div className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group hover:border-blue-500/20 hover:-translate-y-1 transition-all duration-300 flex flex-col items-start h-full">
+        <div className={`w-10 h-10 rounded-xl ${bgColor} flex items-center justify-center mb-3 transition-transform group-hover:scale-110`}>
+            <Icon className={`w-5 h-5 ${color}`} />
         </div>
         <div>
-            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">{label}</p>
-            <p className="text-2xl font-display font-bold text-[#1A1A1A] tracking-tighter">{value}</p>
+            <p className="text-2xl sm:text-3xl font-display font-bold text-[#1A1A1A] tracking-tighter leading-none mb-1">{value}</p>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">{label}</p>
         </div>
     </div>
 );

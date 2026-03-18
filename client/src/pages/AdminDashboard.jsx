@@ -73,21 +73,15 @@ const AdminDashboard = () => {
             </header>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 mt-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
                 {cards.map((card, idx) => (
-                    <div key={card.name} className="bg-white p-7 md:p-8 rounded-[32px] border border-gray-100 shadow-xl group hover:-translate-y-1 transition-all duration-500 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform"></div>
-                        <div className="flex flex-col gap-6 relative z-10">
-                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${card.bgColor} ${card.color} shadow-sm group-hover:scale-110 transition-transform duration-500`}>
-                                <card.icon className="w-7 h-7" />
-                            </div>
-                            <div>
-                                <h3 className="text-gray-400 text-[10px] font-bold uppercase tracking-widest mb-1">{card.name}</h3>
-                                <div className="flex items-baseline gap-4">
-                                    <p className="text-5xl font-display font-bold text-[#1A1A1A] tracking-tighter">{card.value}</p>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{card.subtitle}</span>
-                                </div>
-                            </div>
+                    <div key={card.name} className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group hover:-translate-y-1 transition-all duration-300 flex flex-col items-start h-full relative overflow-hidden">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${card.bgColor} ${card.color} mb-3 shadow-sm group-hover:scale-110 transition-transform duration-500`}>
+                            <card.icon className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <p className="text-2xl sm:text-3xl font-display font-bold text-[#1A1A1A] tracking-tighter leading-none mb-1">{card.value}</p>
+                            <h3 className="text-gray-400 text-[10px] font-bold uppercase tracking-widest leading-tight">{card.name}</h3>
                         </div>
                     </div>
                 ))}

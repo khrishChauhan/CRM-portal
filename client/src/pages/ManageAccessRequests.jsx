@@ -100,7 +100,7 @@ const ManageAccessRequests = () => {
             </div>
 
             {/* Dashboard Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
                 <StatCard label="Total" value={stats.total} icon={FileText} color="text-blue-600" bgColor="bg-blue-50" />
                 <StatCard label="Pending" value={stats.pending} icon={Clock} color="text-amber-600" bgColor="bg-amber-50" />
                 <StatCard label="Approved" value={stats.approved} icon={CheckCircle} color="text-emerald-600" bgColor="bg-emerald-50" />
@@ -290,15 +290,13 @@ const ManageAccessRequests = () => {
 
 const StatCard = ({ label, value, icon: Icon, color, bgColor }) => {
     return (
-        <div className="bg-white p-6 rounded-[22px] card-shadow group hover:translate-y-[-2px] transition-all duration-300">
-            <div className="flex flex-col gap-4">
-                <div className={`w-12 h-12 rounded-xl ${bgColor} flex items-center justify-center transition-transform group-hover:scale-110 duration-500`}>
-                    <Icon className={`w-6 h-6 ${color}`} />
-                </div>
-                <div>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">{label}</p>
-                    <p className="text-3xl font-display font-bold text-[#1A1A1A] tracking-tight">{value}</p>
-                </div>
+        <div className="bg-white p-4 sm:p-5 rounded-[20px] shadow-md border border-gray-100 group flex flex-col items-start h-full hover:-translate-y-1 transition-all duration-300">
+            <div className={`w-10 h-10 rounded-xl ${bgColor} flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform duration-500`}>
+                <Icon className={`w-5 h-5 ${color}`} />
+            </div>
+            <div>
+                <p className="text-2xl sm:text-3xl font-display font-bold text-[#1A1A1A] tracking-tighter leading-none mb-1">{value}</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">{label}</p>
             </div>
         </div>
     );
