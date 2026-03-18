@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect, authorize } = require('../middleware/authMiddleware');
+const upload = require('../middleware/upload');
 const {
     submitQuery,
     getQueries,
@@ -11,7 +12,7 @@ const {
 router.use(protect);
 
 // Routes for /api/projects/:projectId/...
-router.post('/projects/:projectId/query', authorize('client'), submitQuery);
+router.post('/projects/:projectId/query', upload.single('image'), authorize('client'), submitQuery);
 router.get('/projects/:projectId/queries', authorize('admin', 'staff', 'client'), getQueries);
 
 // Top level route for /api/queries/:queryId/respond

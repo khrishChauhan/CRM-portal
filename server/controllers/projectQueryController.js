@@ -10,11 +10,17 @@ const { sendSuccess, sendError } = require('../utils/response');
 exports.submitQuery = async (req, res) => {
     try {
         const { projectId } = req.params;
-        const { title, message } = req.body;
+        const { title, message, latitude, longitude } = req.body;
+        const imageUrl = req.file ? req.file.path : null;
         const userId = req.user.id;
 
         if (!title || !message) {
             return sendError(res, 'Title and message are required', 400);
+        }
+
+        // If an image is provided, coordinates are mandatory
+        if (imageUrl && (!latitude || !longitude)) {
+            return sendError(res, 'Location is required when uploading an image.', 400);
         }
 
         // Verify project exists
@@ -34,7 +40,10 @@ exports.submitQuery = async (req, res) => {
             clientId: userId,
             title,
             message,
-            status: 'open'
+            status: 'open',
+            imageUrl: imageUrl || null,
+            latitude: latitude || null,
+            longitude: longitude || null
         });
 
         return sendSuccess(res, query, 'Your query has been sent to the project team.', 201);

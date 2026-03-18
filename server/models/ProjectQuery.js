@@ -43,6 +43,18 @@ const projectQuerySchema = new mongoose.Schema(
             type: Date,
             default: null,
         },
+        imageUrl: {
+            type: String,
+            default: null,
+        },
+        latitude: {
+            type: Number,
+            default: null,
+        },
+        longitude: {
+            type: Number,
+            default: null,
+        },
     },
     {
         timestamps: true,

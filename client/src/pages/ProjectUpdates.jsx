@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import {
     ArrowLeft, Send, MapPin, Loader2,
     Clock, X, AlertCircle, CheckCircle, Maximize2, ExternalLink, Camera,
-    MessageSquare, CheckCircle2
+    MessageSquare, CheckCircle2, Image as ImageIcon
 } from 'lucide-react';
 
 const ProjectUpdates = () => {
@@ -318,11 +318,31 @@ const ProjectUpdates = () => {
             return;
         }
 
+        // Location is REQUIRED if image is attached
+        if (imageFile && !location) {
+            showToast('Location is required when uploading an image.', 'error');
+            return;
+        }
+
         setSubmitQueryLoading(true);
         try {
-            await api.post(`/projects/${id}/query`, newQuery);
+            const formData = new FormData();
+            formData.append('title', newQuery.title.trim());
+            formData.append('message', newQuery.message.trim());
+            if (imageFile) formData.append('image', imageFile);
+            if (location) {
+                formData.append('latitude', location.latitude);
+                formData.append('longitude', location.longitude);
+            }
+
+            await api.post(`/projects/${id}/query`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+
             showToast('Your query has been sent to the project team.');
             setNewQuery({ title: '', message: '' });
+            clearImage();
+            setLocation(null);
             fetchQueries();
         } catch (err) {
             showToast(err.response?.data?.message || 'Failed to submit query', 'error');
@@ -625,9 +645,66 @@ const ProjectUpdates = () => {
                                         onChange={(e) => setNewQuery({ ...newQuery, message: e.target.value })}
                                         className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-500/50 transition-all resize-none font-medium"
                                     />
+
+                                    {/* Image Upload for Query */}
+                                    <div className="flex flex-col gap-3">
+                                        {imagePreview && (
+                                            <div className="relative inline-block mt-1">
+                                                <img src={imagePreview} alt="Query Preview" className="h-40 w-full object-cover rounded-2xl border-2 border-white shadow-md" />
+                                                <button
+                                                    onClick={clearImage}
+                                                    className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600 transition-colors shadow-lg border-2 border-white"
+                                                >
+                                                    <X className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        <div className="flex items-center gap-2">
+                                            <label className="flex-1">
+                                                <div className={`flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border-2 border-dashed transition-all cursor-pointer ${imagePreview ? 'border-blue-200 bg-blue-50/30' : 'border-gray-200 hover:border-blue-500/30 hover:bg-gray-50/50'}`}>
+                                                    <Camera className={`w-5 h-5 ${imagePreview ? 'text-blue-600' : 'text-gray-400'}`} />
+                                                    <span className={`text-xs font-bold uppercase tracking-widest ${imagePreview ? 'text-blue-600' : 'text-gray-500'}`}>
+                                                        {imagePreview ? 'Change Photo' : 'Add Photo (Optional)'}
+                                                    </span>
+                                                </div>
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    capture="environment"
+                                                    className="hidden"
+                                                    onChange={handleImageSelect}
+                                                />
+                                            </label>
+
+                                            {imagePreview && (
+                                                <div className={`p-3.5 rounded-xl border flex items-center justify-center transition-all ${location ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-amber-50 border-amber-100 text-amber-600 animate-pulse'}`}>
+                                                    {locLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {imagePreview && !location && !locLoading && (
+                                            <button 
+                                                onClick={captureLocation}
+                                                className="text-[10px] font-bold text-amber-600 uppercase tracking-widest flex items-center gap-2 px-1"
+                                            >
+                                                <AlertCircle className="w-3.5 h-3.5" />
+                                                Location required with image — Tap to capture
+                                            </button>
+                                        )}
+                                        
+                                        {stamping && (
+                                            <div className="flex items-center gap-2.5 text-blue-600 text-[10px] font-bold uppercase tracking-widest px-1">
+                                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                                Digitally stamping query photo...
+                                            </div>
+                                        )}
+                                    </div>
+
                                     <button
                                         onClick={handleQuerySubmit}
-                                        disabled={submitQueryLoading || !newQuery.title.trim() || !newQuery.message.trim()}
+                                        disabled={submitQueryLoading || stamping || !newQuery.title.trim() || !newQuery.message.trim()}
                                         className="w-full h-12 blue-gradient text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all btn-shadow disabled:opacity-30 flex items-center justify-center gap-3"
                                     >
                                         {submitQueryLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-4.5 h-4.5" />}
@@ -662,6 +739,19 @@ const ProjectUpdates = () => {
                                                             <span className="text-[8px] font-bold opacity-70">{formatTime(q.createdAt)}</span>
                                                         </div>
                                                         <p className="text-sm leading-relaxed opacity-90">{q.message}</p>
+                                                        
+                                                        {q.imageUrl && (
+                                                            <div className="mt-3 relative group/qimg cursor-pointer max-w-sm" onClick={() => setLightbox({ ...q, imageUrl: q.imageUrl })}>
+                                                                <img
+                                                                    src={q.imageUrl}
+                                                                    alt="Query attachment"
+                                                                    className="w-full h-auto max-h-[220px] object-cover rounded-xl border border-white/20 shadow-md transition-all group-hover/qimg:brightness-90"
+                                                                />
+                                                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/qimg:opacity-100 transition-opacity">
+                                                                    <Maximize2 className="w-5 h-5 text-white" />
+                                                                </div>
+                                                            </div>
+                                                        )}
                                                         
                                                         {/* Status Indicator */}
                                                         <div className={`absolute -left-2 -top-2 px-2.5 py-1 rounded-lg text-[7px] font-bold uppercase tracking-widest shadow-lg border ${
@@ -725,7 +815,35 @@ const ProjectUpdates = () => {
                                                     </span>
                                                 </div>
                                                 <h4 className="text-[#1A1A1A] font-bold text-base mb-2">{q.title}</h4>
-                                                <p className="text-gray-600 text-sm leading-relaxed mb-6">{q.message}</p>
+                                                <p className="text-gray-600 text-sm leading-relaxed mb-4">{q.message}</p>
+
+                                                {q.imageUrl && (
+                                                    <div className="mb-6 space-y-3">
+                                                        <div className="relative group/qimg cursor-pointer max-w-md" onClick={() => setLightbox({ ...q, imageUrl: q.imageUrl })}>
+                                                            <img
+                                                                src={q.imageUrl}
+                                                                alt="Query attachment"
+                                                                className="w-full h-auto max-h-[260px] object-cover rounded-2xl border border-gray-100 shadow-sm transition-all group-hover/qimg:brightness-95"
+                                                            />
+                                                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/qimg:opacity-100 transition-opacity">
+                                                                <Maximize2 className="w-6 h-6 text-white" />
+                                                            </div>
+                                                        </div>
+
+                                                        {q.latitude && q.longitude && (
+                                                            <a
+                                                                href={`https://www.google.com/maps?q=${q.latitude},${q.longitude}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-xl text-[10px] font-bold uppercase tracking-widest text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+                                                            >
+                                                                <MapPin className="w-3.5 h-3.5" />
+                                                                View Captured Location
+                                                                <ExternalLink className="w-3 h-3 ml-1" />
+                                                            </a>
+                                                        )}
+                                                    </div>
+                                                )}
 
                                                 {q.response ? (
                                                     <div className="mt-4 p-5 rounded-2xl bg-gray-50 border border-gray-100 border-l-4 border-l-emerald-500">
