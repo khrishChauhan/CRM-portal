@@ -27,7 +27,7 @@ const PrivacyPolicy = () => {
                                 Privacy Policy
                             </h1>
                             <p className="text-blue-600 font-semibold tracking-wide text-sm uppercase">
-                                Click Aarambh Ventures
+                                Khushi Technology
                             </p>
                         </div>
                     </div>
@@ -35,6 +35,13 @@ const PrivacyPolicy = () => {
 
                 {/* Content Section */}
                 <div className="p-6 sm:p-10 space-y-10">
+                    {/* Introduction Section */}
+                    <div className="animate-reveal">
+                        <p className="text-[#4B5563] leading-relaxed text-[16px] font-medium italic">
+                            This Privacy Policy applies to Khushi Technology and explains how user data is collected, used, and protected within the application.
+                        </p>
+                    </div>
+
                     <section className="animate-reveal">
                         <div className="flex items-center gap-3 mb-4">
                             <ShieldCheck className="w-5 h-5 text-blue-500" />
@@ -91,7 +98,7 @@ const PrivacyPolicy = () => {
 
                     <section className="animate-reveal" style={{ animationDelay: '0.4s' }}>
                         <div className="flex items-center gap-3 mb-4">
-                            <Users className="w-5 h-5 text-blue-500" />
+                            <UsersIcon className="w-5 h-5 text-blue-500" />
                             <h2 className="text-xl font-bold text-[#1A1A1A]">5. Third-Party Services</h2>
                         </div>
                         <p className="text-[#4B5563] leading-relaxed text-[15px]">
@@ -116,10 +123,17 @@ const PrivacyPolicy = () => {
                     </section>
                 </div>
 
+                {/* Developer Credit Line */}
+                <div className="px-6 sm:px-10 pb-4 text-center">
+                    <p className="text-gray-400 text-[11px] font-medium">
+                        This application is developed by Click Aarambh Ventures for Khushi Technology.
+                    </p>
+                </div>
+
                 {/* Footer section */}
                 <div className="p-6 bg-gray-50 text-center border-t border-gray-100">
                     <p className="text-gray-400 text-xs font-medium">
-                        © {new Date().getFullYear()} Click Aarambh Ventures. All rights reserved.
+                        © {new Date().getFullYear()} Khushi Technology. All rights reserved.
                     </p>
                 </div>
             </div>
@@ -127,8 +141,8 @@ const PrivacyPolicy = () => {
     );
 };
 
-// Helper component for Users icon if not imported properly or if needed
-const Users = ({ className }) => (
+// Helper component for Users icon
+const UsersIcon = ({ className }) => (
     <svg 
         xmlns="http://www.w3.org/2000/svg" 
         width="24" 
