@@ -16,6 +16,7 @@ import ClientDashboard from './pages/ClientDashboard';
 import MyProjects from './pages/MyProjects';
 import ManageAccessRequests from './pages/ManageAccessRequests';
 import ProjectUpdates from './pages/ProjectUpdates';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Routes>
             {/* Public */}
             <Route path="/login" element={<Login />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>

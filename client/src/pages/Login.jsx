@@ -277,6 +277,16 @@ const Login = () => {
                             </button>
                         )}
                     </div>
+
+                    <div className="flex justify-center">
+                        <button 
+                            onClick={() => navigate('/privacy-policy')}
+                            className="text-[12px] text-gray-400 hover:text-blue-500 hover:underline transition-all font-medium tracking-wide flex items-center gap-1.5"
+                        >
+                            <ShieldCheck className="w-3.5 h-3.5" />
+                            Privacy Policy
+                        </button>
+                    </div>
                 </div>
             </div>
             <Footer />
