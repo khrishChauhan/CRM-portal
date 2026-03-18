@@ -419,7 +419,7 @@ const ProjectUpdates = () => {
     }
 
     return (
-        <div className="animate-reveal flex flex-col h-[calc(100vh-6rem)] overflow-x-hidden">
+        <div className="animate-reveal flex flex-col min-h-full overflow-x-hidden">
             {/* ── Toast ── */}
             {toast && (
                 <div className={`fixed top-6 right-6 z-[200] flex items-center gap-4 px-6 py-4 rounded-2xl bg-white border border-gray-100 shadow-2xl text-[10px] font-bold uppercase tracking-[0.15em] animate-in slide-in-from-right-10 duration-500 max-w-[90vw] ${toast.type === 'error' ? 'text-red-500' : 'text-emerald-500'}`}>

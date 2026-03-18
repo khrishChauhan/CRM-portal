@@ -127,6 +127,8 @@ const Navbar = ({ user, toggleSidebar, title }) => {
     );
 };
 
+import Footer from '../components/Footer';
+
 export const DashboardLayout = ({ children }) => {
     const { user, logout } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -179,9 +181,12 @@ export const DashboardLayout = ({ children }) => {
                     toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
                 />
 
-                <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 scrollbar-hide">
-                    <div className="max-w-7xl mx-auto">
+                <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 flex flex-col scrollbar-hide">
+                    <div className="max-w-7xl mx-auto w-full flex-1">
                         {children}
+                    </div>
+                    <div className="mt-auto pt-10">
+                        <Footer />
                     </div>
                 </main>
             </div>
