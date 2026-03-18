@@ -18,9 +18,14 @@ exports.submitQuery = async (req, res) => {
             return sendError(res, 'Title and message are required', 400);
         }
 
-        // If an image is provided, coordinates are mandatory
-        if (imageUrl && (!latitude || !longitude)) {
-            return sendError(res, 'Location is required when uploading an image.', 400);
+        // Photo is now MANDATORY for queries
+        if (!req.file) {
+            return sendError(res, 'A live photo is mandatory to submit a query.', 400);
+        }
+
+        // Coordinates are mandatory with the photo
+        if (!latitude || !longitude) {
+            return sendError(res, 'Location is required for the query photo.', 400);
         }
 
         // Verify project exists

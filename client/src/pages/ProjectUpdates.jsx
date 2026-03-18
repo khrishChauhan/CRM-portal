@@ -318,9 +318,15 @@ const ProjectUpdates = () => {
             return;
         }
 
+        // Photo is now MANDATORY for queries
+        if (!imageFile) {
+            showToast('A live photo is mandatory to submit a query.', 'error');
+            return;
+        }
+
         // Location is REQUIRED if image is attached
         if (imageFile && !location) {
-            showToast('Location is required when uploading an image.', 'error');
+            showToast('Location is required for the query photo.', 'error');
             return;
         }
 
@@ -413,7 +419,7 @@ const ProjectUpdates = () => {
     }
 
     return (
-        <div className="animate-reveal flex flex-col h-[calc(100vh-6rem)]">
+        <div className="animate-reveal flex flex-col h-[calc(100vh-6rem)] overflow-x-hidden">
             {/* ── Toast ── */}
             {toast && (
                 <div className={`fixed top-6 right-6 z-[200] flex items-center gap-4 px-6 py-4 rounded-2xl bg-white border border-gray-100 shadow-2xl text-[10px] font-bold uppercase tracking-[0.15em] animate-in slide-in-from-right-10 duration-500 max-w-[90vw] ${toast.type === 'error' ? 'text-red-500' : 'text-emerald-500'}`}>
@@ -478,7 +484,7 @@ const ProjectUpdates = () => {
             </div>
 
             {/* ── Feed Content ── */}
-            <div className="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-thin mb-3">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-3 pr-1 scrollbar-thin mb-3">
                 {activeTab === 'overview' ? (
                     /* ── Overview Tab ── */
                     <div className="space-y-4 sm:space-y-6 animate-reveal">
@@ -662,10 +668,10 @@ const ProjectUpdates = () => {
 
                                         <div className="flex items-center gap-2">
                                             <label className="flex-1">
-                                                <div className={`flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border-2 border-dashed transition-all cursor-pointer ${imagePreview ? 'border-blue-200 bg-blue-50/30' : 'border-gray-200 hover:border-blue-500/30 hover:bg-gray-50/50'}`}>
-                                                    <Camera className={`w-5 h-5 ${imagePreview ? 'text-blue-600' : 'text-gray-400'}`} />
-                                                    <span className={`text-xs font-bold uppercase tracking-widest ${imagePreview ? 'text-blue-600' : 'text-gray-500'}`}>
-                                                        {imagePreview ? 'Change Photo' : 'Add Photo (Optional)'}
+                                                <div className="flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border-2 border-dashed transition-all cursor-pointer border-gray-200 hover:border-blue-500/30 hover:bg-gray-50/50">
+                                                    <Camera className="w-5 h-5 text-blue-600" />
+                                                    <span className="text-xs font-bold uppercase tracking-widest text-[#1A1A1A]">
+                                                        {imagePreview ? 'Change Photo' : 'Add Photo (Required)'}
                                                     </span>
                                                 </div>
                                                 <input
@@ -704,8 +710,8 @@ const ProjectUpdates = () => {
 
                                     <button
                                         onClick={handleQuerySubmit}
-                                        disabled={submitQueryLoading || stamping || !newQuery.title.trim() || !newQuery.message.trim()}
-                                        className="w-full h-12 blue-gradient text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all btn-shadow disabled:opacity-30 flex items-center justify-center gap-3"
+                                        disabled={submitQueryLoading || stamping || !newQuery.title.trim() || !newQuery.message.trim() || !imageFile}
+                                        className="w-full h-12 blue-gradient text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all btn-shadow disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                                     >
                                         {submitQueryLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-4.5 h-4.5" />}
                                         Submit Query
@@ -733,7 +739,7 @@ const ProjectUpdates = () => {
                                             /* ── Chat Style for Client ── */
                                             <div className="space-y-4 mb-10">
                                                 <div className="flex flex-col items-end">
-                                                    <div className="max-w-[85%] bg-blue-600 text-white rounded-[24px] rounded-tr-none px-6 py-4 shadow-xl relative">
+                                                    <div className="max-w-[100%] sm:max-w-[85%] bg-blue-600 text-white rounded-[24px] rounded-tr-none px-6 py-4 shadow-xl relative">
                                                         <div className="flex items-center justify-between gap-6 mb-1.5">
                                                             <h4 className="font-bold text-sm tracking-tight">{q.title}</h4>
                                                             <span className="text-[8px] font-bold opacity-70">{formatTime(q.createdAt)}</span>
@@ -763,8 +769,8 @@ const ProjectUpdates = () => {
                                                 </div>
 
                                                 {q.response ? (
-                                                    <div className="flex flex-col items-start translate-x-2">
-                                                        <div className="max-w-[85%] bg-white border border-gray-100 rounded-[24px] rounded-tl-none px-6 py-4 shadow-xl">
+                                                    <div className="flex flex-col items-start translate-x-0">
+                                                        <div className="max-w-[100%] sm:max-w-[85%] bg-white border border-gray-100 rounded-[24px] rounded-tl-none px-6 py-4 shadow-xl">
                                                             <div className="flex items-center gap-3 mb-2">
                                                                 <div className="w-7 h-7 rounded-full blue-gradient flex items-center justify-center text-white text-[10px] font-bold">
                                                                     {q.respondedBy?.name?.charAt(0) || 'T'}
