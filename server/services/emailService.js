@@ -36,8 +36,6 @@ const sendOTPEmail = async (toEmail, otp) => {
                 <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 12px; padding: 14px; margin-bottom: 32px;">
                     <p style="color: #92400e; font-size: 13px; font-weight: 600; margin: 0;">Valid for 5 minutes only.</p>
                 </div>
-
-                <p style="color: #94a3b8; font-size: 12px; line-height: 1.5; margin: 0;">Security Reminder: Our support team will never ask for this code. If you did not request this login, please change your security settings immediately.</p>
             </div>
 
             <!-- Footer Section -->
