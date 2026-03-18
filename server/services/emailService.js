@@ -29,8 +29,8 @@ const sendOTPEmail = async (toEmail, otp) => {
                 <h2 style="color: #1a1a1b; font-size: 20px; font-weight: 700; margin-bottom: 12px; margin-top: 0;">Login Verification</h2>
                 <p style="color: #6b7280; font-size: 15px; line-height: 1.6; margin-bottom: 32px;">Please use the following verification code to safely access your admin account.</p>
                 
-                <div style="background-color: #f8fafc; border: 2px dashed #e2e8f0; border-radius: 20px; padding: 24px 10px; margin-bottom: 32px;">
-                    <span style="font-size: 42px; font-weight: 800; color: #2563eb; letter-spacing: 12px; font-family: 'Courier New', Courier, monospace;">${otp}</span>
+                <div style="background-color: #f8fafc; border: 2px dashed #e2e8f0; border-radius: 20px; padding: 24px 8px; margin-bottom: 32px;">
+                    <span style="font-size: 36px; font-weight: 800; color: #2563eb; letter-spacing: 8px; font-family: 'Courier New', Courier, monospace; display: block;">${otp}</span>
                 </div>
 
                 <div style="background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 12px; padding: 14px; margin-bottom: 32px;">
@@ -40,7 +40,7 @@ const sendOTPEmail = async (toEmail, otp) => {
 
             <!-- Footer Section -->
             <div style="background-color: #f9fafb; padding: 24px; text-align: center; border-top: 1px solid #f3f4f6;">
-                <p style="color: #6b7280; font-size: 11px; margin: 0; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">&copy; 2024 Khushi Technology &bull; Secure Portal</p>
+                <p style="color: #6b7280; font-size: 11px; margin: 0; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">&copy; Khushi Technology</p>
             </div>
         </div>
     `;
