@@ -111,9 +111,21 @@ exports.verifyAdminOTP = async (req, res) => {
         }
 
         // ── OTP is valid — find or create admin user ──
-        let user = await User.findOne({ email: normalizedEmail, role: 'admin' });
-        if (!user) {
-            user = await User.create({ name: 'System Admin', email: normalizedEmail, role: 'admin' });
+        let user = await User.findOne({ email: normalizedEmail });
+        
+        if (user) {
+            // If user exists but is not an admin, upgrade them (since they verified admin OTP)
+            if (user.role !== 'admin') {
+                user.role = 'admin';
+                await user.save();
+            }
+        } else {
+            // Create new admin user
+            user = await User.create({ 
+                name: 'System Admin', 
+                email: normalizedEmail, 
+                role: 'admin' 
+            });
         }
 
         // Delete OTP after successful verification
