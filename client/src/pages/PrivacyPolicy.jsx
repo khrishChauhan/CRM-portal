@@ -106,28 +106,6 @@ const PrivacyPolicy = () => {
                         </p>
                     </section>
 
-                    <section className="animate-reveal" style={{ animationDelay: '0.5s' }}>
-                        <div className="flex items-center gap-3 mb-4">
-                            <Mail className="w-5 h-5 text-blue-500" />
-                            <h2 className="text-xl font-bold text-[#1A1A1A]">6. Contact</h2>
-                        </div>
-                        <div className="p-6 bg-blue-50 rounded-2xl border border-blue-100">
-                            <p className="text-[#1E40AF] font-medium mb-1">For any questions, contact our support team:</p>
-                            <a 
-                                href="mailto:khrishchauhan@gmail.com" 
-                                className="text-blue-600 font-bold text-lg hover:underline transition-all"
-                            >
-                                khrishchauhan@gmail.com
-                            </a>
-                        </div>
-                    </section>
-                </div>
-
-                {/* Developer Credit Line */}
-                <div className="px-6 sm:px-10 pb-4 text-center">
-                    <p className="text-gray-400 text-[11px] font-medium">
-                        This application is developed by Click Aarambh Ventures for Khushi Technology.
-                    </p>
                 </div>
 
                 {/* Footer section */}
