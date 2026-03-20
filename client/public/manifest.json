@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "Khushi Technology",
-  "short_name": "KhushiTech",
+  "name": "Khushi Technology Application",
+  "short_name": "Khushi Technology Application",
   "description": "Project Tracking & Management System",
   "start_url": "/",
   "scope": "/",
