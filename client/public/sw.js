@@ -1,5 +1,5 @@
 // Khushi Technology — Service Worker
-const CACHE_NAME = 'khushitech-v1';
+const CACHE_NAME = 'khushitech-v2';
 const SHELL_ASSETS = [
   '/',
   '/manifest.json',
