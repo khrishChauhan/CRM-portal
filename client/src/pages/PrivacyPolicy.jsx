@@ -111,7 +111,7 @@ const PrivacyPolicy = () => {
                 {/* Footer section */}
                 <div className="p-6 bg-gray-50 text-center border-t border-gray-100">
                     <p className="text-gray-400 text-xs font-medium">
-                        © {new Date().getFullYear()} Khushi Technology. All rights reserved.
+                        © {new Date().getFullYear()} KhushiTech. All rights reserved.
                     </p>
                 </div>
             </div>
