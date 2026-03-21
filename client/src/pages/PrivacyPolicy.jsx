@@ -19,15 +19,15 @@ const PrivacyPolicy = () => {
                     </button>
 
                     <div className="flex items-center gap-4 mb-4">
-                        <div className="w-12 h-12 blue-gradient rounded-xl flex items-center justify-center">
-                            <ShieldCheck className="w-6 h-6 text-white" />
+                        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-gray-100 p-1">
+                            <img src="/logo.png" alt="KT Logo" className="w-full h-full object-contain" />
                         </div>
                         <div>
                             <h1 className="text-3xl sm:text-4xl font-display font-bold text-[#1A1A1A]">
                                 Privacy Policy
                             </h1>
                             <p className="text-blue-600 font-semibold tracking-wide text-sm uppercase">
-                                Khushi Technology
+                                KhushiTech
                             </p>
                         </div>
                     </div>
@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
                     {/* Introduction Section */}
                     <div className="animate-reveal">
                         <p className="text-[#4B5563] leading-relaxed text-[16px] font-medium italic">
-                            This Privacy Policy applies to Khushi Technology and explains how user data is collected, used, and protected within the application.
+                            This Privacy Policy applies to KhushiTech and explains how user data is collected, used, and protected within the application.
                         </p>
                     </div>
 

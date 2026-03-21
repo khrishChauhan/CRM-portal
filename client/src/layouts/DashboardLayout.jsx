@@ -40,11 +40,11 @@ const Sidebar = ({ role, user, logout }) => {
         <div className="flex flex-col h-full bg-white text-[#1A1A1A] w-full max-w-[300px] border-r border-gray-100 shadow-xl font-body">
             {/* TOP SECTION */}
             <div className="p-8 flex items-center space-x-4">
-                <div className="w-12 h-12 blue-gradient rounded-[14px] flex items-center justify-center btn-shadow">
-                    <Building2 className="w-7 h-7 text-white" />
+                <div className="w-12 h-12 bg-white rounded-[14px] flex items-center justify-center btn-shadow overflow-hidden border border-gray-100">
+                    <img src="/logo.png" alt="KT Logo" className="w-full h-full object-cover" />
                 </div>
                 <div>
-                    <h2 className="font-display font-bold text-lg leading-tight tracking-tight">Khushi Technology</h2>
+                    <h2 className="font-display font-bold text-lg leading-tight tracking-tight">KhushiTech</h2>
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Project Tracker v1.1</p>
                 </div>
             </div>

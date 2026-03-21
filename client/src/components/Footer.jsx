@@ -4,7 +4,7 @@ const Footer = () => {
     return (
         <footer className="w-full py-4 px-6 flex items-center justify-center mt-auto shadow-inner" style={{ backgroundColor: '#82C21C' }}>
             <p className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.2em] text-center" style={{ color: '#072220' }}>
-                Click Aarambh Ventures
+                KHUSHITECH
             </p>
         </footer>
     );
