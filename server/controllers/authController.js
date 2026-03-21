@@ -13,7 +13,8 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 // Authorized admin emails
 const ALLOWED_ADMINS = [
     "khrishchauhan@gmail.com",
-    "rj9852107631@gmail.com"
+    "rj9852107631@gmail.com",
+    "clickaarambh@gmail.com"
 ];
 
 // Generate a secure 6-digit numeric OTP
