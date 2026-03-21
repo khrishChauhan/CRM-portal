@@ -2,9 +2,9 @@ import React from 'react';
 
 const Footer = () => {
     return (
-        <footer className="w-full py-4 px-6 flex items-center justify-center mt-auto shadow-inner" style={{ backgroundColor: '#82C21C' }}>
-            <p className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.2em] text-center" style={{ color: '#072220' }}>
-                KHUSHITECH
+        <footer className="w-full py-4 px-6 flex items-center justify-center mt-auto shadow-2xl" style={{ backgroundColor: '#072220' }}>
+            <p className="text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.3em] text-center" style={{ color: '#F8FAFC', opacity: 0.9 }}>
+                Click Aarambh Ventures
             </p>
         </footer>
     );
