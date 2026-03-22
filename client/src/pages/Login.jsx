@@ -160,7 +160,7 @@ const Login = () => {
                         <div className="w-20 h-20 blue-gradient rounded-[22px] flex items-center justify-center mb-6 btn-shadow">
                             <Building2 className="w-10 h-10 text-white" />
                         </div>
-                        <h1 className="text-3xl font-display font-bold text-[#1A1A1A] mb-2 text-center">Khushi Technology</h1>
+                        <h1 className="text-3xl font-display font-bold text-[#1A1A1A] mb-2 text-center">Khushi Technology Application</h1>
                         <p className="text-[#6B7280] font-medium text-sm text-center max-w-[280px]">
                             Project Tracking & Management System
                         </p>

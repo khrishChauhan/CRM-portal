@@ -44,7 +44,7 @@ const Sidebar = ({ role, user, logout }) => {
                     <Building2 className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                    <h2 className="font-display font-bold text-lg leading-tight tracking-tight">Khushi Technology</h2>
+                    <h2 className="font-display font-bold text-lg leading-tight tracking-tight">Khushi Technology Application</h2>
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Project Tracker v1.1</p>
                 </div>
             </div>
