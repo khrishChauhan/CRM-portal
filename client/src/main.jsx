@@ -9,11 +9,17 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Register Service Worker for PWA
+// Register service worker for PWA installability and offline support.
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('Service Worker Registered'))
-      .catch(err => console.log('Service Worker registration failed: ', err));
-  });
+  window.addEventListener('load', async () => {
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' })
+      console.log('[PWA] Service worker registered:', registration.scope)
+
+      const readyRegistration = await navigator.serviceWorker.ready
+      console.log('[PWA] Service worker active:', readyRegistration.active?.state)
+    } catch (error) {
+      console.error('[PWA] Service worker registration failed:', error)
+    }
+  })
 }
