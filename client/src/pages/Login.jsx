@@ -231,6 +231,8 @@ const Login = () => {
                                         )}
                                         <input
                                             type={selectedRole === 'admin' ? "text" : "password"}
+                                            inputMode={selectedRole === 'admin' ? "numeric" : undefined}
+                                            pattern={selectedRole === 'admin' ? "[0-9]*" : undefined}
                                             required
                                             value={selectedRole === 'admin' ? otp : password}
                                             onChange={(e) => selectedRole === 'admin' ? setOtp(e.target.value) : setPassword(e.target.value)}

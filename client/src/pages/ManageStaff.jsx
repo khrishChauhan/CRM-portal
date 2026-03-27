@@ -440,8 +440,8 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         <FormField label={isEdit ? 'New Password' : 'Password'} name="password" type="password" value={form.password} onChange={handleChange} required={!isEdit} placeholder={isEdit ? '••••••••' : 'Create a password'} />
 
                         <div className="grid grid-cols-2 gap-4">
-                            <FormField label="Phone" name="phone" value={form.phone} onChange={handleChange} placeholder="+1 234 567 890" />
-                            <FormField label="Alt. Phone" name="alternatePhone" value={form.alternatePhone} onChange={handleChange} placeholder="Optional" />
+                            <FormField label="Phone" name="phone" type="tel" inputMode="numeric" pattern="[0-9\-\+\s\(\)]*" value={form.phone} onChange={handleChange} placeholder="+1 234 567 890" />
+                            <FormField label="Alt. Phone" name="alternatePhone" type="tel" inputMode="numeric" pattern="[0-9\-\+\s\(\)]*" value={form.alternatePhone} onChange={handleChange} placeholder="Optional" />
                         </div>
 
                         <FormField label="Professional Title" name="designation" value={form.designation} onChange={handleChange} placeholder="e.g. Lead Engineer" />
@@ -509,7 +509,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
 // ════════════════════════════════════════
 //  Reusable Form Field
 // ════════════════════════════════════════
-const FormField = ({ label, name, type = 'text', value, onChange, placeholder, required, disabled }) => (
+const FormField = ({ label, name, type = 'text', value, onChange, placeholder, required, disabled, inputMode, pattern }) => (
     <div className="space-y-1.5 mb-5 relative">
         <label className="text-[15px] font-bold text-[#34495E] ml-1">{label}</label>
         <div className="relative">
@@ -521,6 +521,8 @@ const FormField = ({ label, name, type = 'text', value, onChange, placeholder, r
                 required={required}
                 placeholder={placeholder}
                 disabled={disabled}
+                inputMode={inputMode}
+                pattern={pattern}
                 className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all disabled:opacity-30"
             />
             {type === 'date' && (
