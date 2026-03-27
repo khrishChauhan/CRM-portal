@@ -5,7 +5,7 @@ import {
     Plus, Search, ChevronLeft, ChevronRight, Loader2, FolderOpen,
     Edit3, Trash2, X, AlertCircle, CheckCircle, Calendar, MapPin,
     Clock, AlertTriangle, Briefcase, TrendingUp, MessageSquare,
-    ChevronDown
+    ChevronDown, Users
 } from 'lucide-react';
 
 const STATUSES = ['Planned', 'In Progress', 'On Hold', 'Completed', 'Delayed', 'Cancelled'];
@@ -458,24 +458,24 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                         />
 
                         <div className="pt-4 border-t border-gray-100 mt-2 space-y-5">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-4">
                                 <Field label="Category" name="projectCategory" value={form.projectCategory} onChange={handleChange} placeholder="Category" />
                                 <SelectField label="Priority" name="priority" value={form.priority} onChange={handleChange} options={PRIORITIES} />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-4">
                                 <SelectField label="Status" name="projectStatus" value={form.projectStatus} onChange={handleChange} options={STATUSES} />
-                                <Field label="Exp. Completion" name="expectedCompletion" type="date" value={form.expectedCompletion} onChange={handleChange} />
+                                <Field label="Expected Completion" name="expectedCompletion" type="date" value={form.expectedCompletion} onChange={handleChange} />
                             </div>
 
-                            <div className="space-y-1.5">
-                                <label className="text-[15px] font-bold text-[#34495E] ml-1">Project Lead</label>
+                            <div className="space-y-1.5 mb-4">
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Project Lead</label>
                                 <div className="relative">
                                     <select 
                                         name="projectManager" 
                                         value={form.projectManager} 
                                         onChange={handleChange} 
-                                        className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none"
+                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none min-h-[48px]"
                                     >
                                         <option value="">Select Manager</option>
                                         {staffList.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
@@ -486,22 +486,28 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                                 </div>
                             </div>
 
-                            <div className="space-y-1.5">
-                                <label className="text-[15px] font-bold text-[#34495E] ml-1">Staff Allocation</label>
-                                <div className="flex flex-wrap gap-2 p-4 bg-gray-50 border border-gray-100 rounded-[18px]">
-                                    {staffList.map(s => {
-                                        const selected = form.assignedStaff.includes(s._id);
-                                        return (
-                                            <button
-                                                key={s._id}
-                                                type="button"
-                                                onClick={() => toggleStaff(s._id)}
-                                                className={`px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all border ${selected ? 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-200' : 'bg-white border-gray-200 text-gray-400'}`}
-                                            >
-                                                {s.name}
-                                            </button>
-                                        );
-                                    })}
+                            <div className="space-y-1.5 mb-4">
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Staff Allocation</label>
+                                <div className="p-4 bg-white border border-gray-200 rounded-[14px] min-h-[52px] focus-within:border-blue-600 focus-within:ring-4 focus-within:ring-blue-500/5 transition-all" tabIndex="0">
+                                    <div className="flex items-center gap-2 mb-3 text-sm text-gray-400 font-medium select-none pointer-events-none">
+                                        <Users className="w-4 h-4" /> Select staff members
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {staffList.map(s => {
+                                            const selected = form.assignedStaff.includes(s._id);
+                                            return (
+                                                <button
+                                                    key={s._id}
+                                                    type="button"
+                                                    onClick={() => toggleStaff(s._id)}
+                                                    className={`px-3 py-2 rounded-lg text-[10px] sm:text-xs font-bold tracking-wider transition-all border cursor-pointer ${selected ? 'bg-blue-600 border-blue-500 text-white shadow-md' : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100 hover:text-gray-700'}`}
+                                                >
+                                                    {s.name} {selected && <CheckCircle className="w-3 h-3 inline-block ml-1 opacity-80" />}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                    <p className="text-[11px] font-medium text-gray-400 mt-3 pt-3 border-t border-gray-50">Choose one or more staff members for this project.</p>
                                 </div>
                             </div>
                         </div>
@@ -523,9 +529,9 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
 };
 
 const Field = ({ label, name, value, onChange, placeholder, type = 'text', required = false, textarea = false }) => (
-    <div className="space-y-1.5 mb-5">
-        <label className="text-[15px] font-bold text-[#34495E] ml-1">{label}</label>
-        <div className="relative">
+    <div className="space-y-1.5 mb-4">
+        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">{label}</label>
+        <div className="relative flex items-center">
             {textarea ? (
                 <textarea
                     name={name}
@@ -535,21 +541,22 @@ const Field = ({ label, name, value, onChange, placeholder, type = 'text', requi
                     placeholder={placeholder}
                     rows={4}
                     style={{ minHeight: '110px' }}
-                    className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 resize-none focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/5 transition-all hover:border-blue-300 cursor-text"
                 />
             ) : (
                 <input
                     type={type}
                     name={name}
-                    value={value}
+                    value={value || ''}
                     onChange={onChange}
                     required={required}
                     placeholder={placeholder}
-                    className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                    style={{ minHeight: '48px' }}
+                    className={`w-full px-4 py-3 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/5 transition-all hover:border-blue-300 ${type === 'date' ? 'cursor-pointer pr-10' : 'cursor-text'}`}
                 />
             )}
             {type === 'date' && (
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                <div className="absolute right-4 pointer-events-none">
                     <ChevronDown className="w-4 h-4 text-gray-400" />
                 </div>
             )}
@@ -558,18 +565,19 @@ const Field = ({ label, name, value, onChange, placeholder, type = 'text', requi
 );
 
 const SelectField = ({ label, name, value, onChange, options }) => (
-    <div className="space-y-1.5 mb-5">
-        <label className="text-[15px] font-bold text-[#34495E] ml-1">{label}</label>
-        <div className="relative">
+    <div className="space-y-1.5 mb-4">
+        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">{label}</label>
+        <div className="relative flex items-center">
             <select
                 name={name}
                 value={value}
                 onChange={onChange}
-                className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none"
+                style={{ minHeight: '48px' }}
+                className="w-full px-4 py-3 pr-10 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/5 transition-all hover:border-blue-300 cursor-pointer appearance-none"
             >
                 {options.map((o) => <option key={o} value={o}>{o}</option>)}
             </select>
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+            <div className="absolute right-4 pointer-events-none">
                 <ChevronDown className="w-4 h-4 text-gray-400" />
             </div>
         </div>
