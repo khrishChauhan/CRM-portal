@@ -440,8 +440,8 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         <FormField label={isEdit ? 'New Password' : 'Password'} name="password" type="password" value={form.password} onChange={handleChange} required={!isEdit} placeholder={isEdit ? '••••••••' : 'Create a password'} />
 
                         <div className="grid grid-cols-2 gap-4">
-                            <FormField label="Phone" name="phone" type="tel" inputMode="numeric" pattern="[0-9\-\+\s\(\)]*" value={form.phone} onChange={handleChange} placeholder="+1 234 567 890" />
-                            <FormField label="Alt. Phone" name="alternatePhone" type="tel" inputMode="numeric" pattern="[0-9\-\+\s\(\)]*" value={form.alternatePhone} onChange={handleChange} placeholder="Optional" />
+                            <FormField label="Phone" name="phone" type="number" inputMode="numeric" value={form.phone} onChange={handleChange} placeholder="+1 234 567 890" />
+                            <FormField label="Alt. Phone" name="alternatePhone" type="number" inputMode="numeric" value={form.alternatePhone} onChange={handleChange} placeholder="Optional" />
                         </div>
 
                         <FormField label="Professional Title" name="designation" value={form.designation} onChange={handleChange} placeholder="e.g. Lead Engineer" />
