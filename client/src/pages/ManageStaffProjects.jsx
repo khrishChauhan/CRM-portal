@@ -81,9 +81,9 @@ const ManageStaffProjects = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[400px]">
-                <Loader2 className="w-10 h-10 animate-spin text-blue-600 mb-4" />
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Loading projects...</p>
+            <div className="flex flex-col items-center justify-center py-20 md:py-32 min-h-[300px] md:min-h-[400px]">
+                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-blue-600 mb-4" />
+                <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest">Loading projects...</p>
             </div>
         );
     }
@@ -157,12 +157,12 @@ const ManageStaffProjects = () => {
                 ))}
 
                 {projects.length === 0 && (
-                    <div className="xl:col-span-2 bg-white p-24 rounded-[32px] card-shadow flex flex-col items-center justify-center text-center">
-                        <div className="w-20 h-20 bg-gray-50 rounded-[22px] flex items-center justify-center mb-6">
-                            <FolderOpen className="w-10 h-10 text-gray-300" />
+                    <div className="xl:col-span-2 bg-white py-12 md:py-20 px-4 rounded-[24px] md:rounded-[32px] card-shadow flex flex-col items-center justify-center text-center max-w-2xl mx-auto w-full">
+                        <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-50 rounded-2xl md:rounded-[22px] flex items-center justify-center mb-4 md:mb-6">
+                            <FolderOpen className="w-8 h-8 md:w-10 md:h-10 text-gray-300" />
                         </div>
-                        <h3 className="text-xl font-display font-bold text-[#1A1A1A]">No active projects</h3>
-                        <p className="text-[#6B7280] font-medium mt-2">You haven't been assigned to any projects yet.</p>
+                        <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A]">No active projects</h3>
+                        <p className="text-[#6B7280] text-[13px] md:text-sm font-medium mt-1 md:mt-2">You haven't been assigned to any projects yet.</p>
                     </div>
                 )}
             </div>

@@ -132,17 +132,17 @@ const ClientDashboard = () => {
 
                 {/* PROJECT LIST */}
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-20">
-                        <Loader2 className="w-12 h-12 animate-spin text-blue-600 mb-4" />
+                    <div className="flex flex-col items-center justify-center py-12 md:py-20">
+                        <Loader2 className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600 mb-4" />
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compiling Database...</p>
                     </div>
                 ) : projects.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-                        <div className="w-20 h-20 bg-gray-50 rounded-[32px] flex items-center justify-center mb-6">
-                            <Search className="w-8 h-8 opacity-20" />
+                    <div className="flex flex-col items-center justify-center py-12 md:py-20 px-4 text-center text-gray-400">
+                        <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-50 rounded-2xl md:rounded-[32px] flex items-center justify-center mb-4 md:mb-6">
+                            <Search className="w-6 h-6 md:w-8 md:h-8 opacity-20" />
                         </div>
-                        <h3 className="text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Matches Found</h3>
-                        <p className="text-sm mt-2 font-medium italic">Try broadening your search logic.</p>
+                        <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Matches Found</h3>
+                        <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic">Try broadening your search logic.</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 gap-6">

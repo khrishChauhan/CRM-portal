@@ -411,9 +411,9 @@ const ProjectUpdates = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[400px]">
-                <Loader2 className="w-10 h-10 animate-spin text-blue-600 mb-4" />
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest font-body">Syncing Project Data...</p>
+            <div className="flex flex-col items-center justify-center py-20 md:py-32 min-h-[300px] md:min-h-[400px]">
+                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-blue-600 mb-4" />
+                <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest font-body">Syncing Project Data...</p>
             </div>
         );
     }
@@ -550,12 +550,12 @@ const ProjectUpdates = () => {
                     </div>
                 ) : activeTab === 'updates' ? (
                     updates.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-32">
-                            <div className="w-20 h-20 bg-gray-50 rounded-[24px] flex items-center justify-center mb-6">
-                                <Send className="w-10 h-10 text-gray-200" />
+                        <div className="flex flex-col items-center justify-center py-16 md:py-32 text-center px-4">
+                            <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-50 rounded-2xl md:rounded-[24px] flex items-center justify-center mb-4 md:mb-6">
+                                <Send className="w-8 h-8 md:w-10 md:h-10 text-gray-200" />
                             </div>
-                            <h3 className="text-xl font-display font-bold text-[#1A1A1A]">No Updates Yet</h3>
-                            <p className="text-gray-400 font-medium mt-1">Be the first to post an update for this project.</p>
+                            <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A]">No Updates Yet</h3>
+                            <p className="text-gray-400 text-[13px] md:text-sm font-medium mt-1">Be the first to post an update for this project.</p>
                         </div>
                     ) : (
                         updates.map((update, idx) => (
@@ -721,15 +721,15 @@ const ProjectUpdates = () => {
                         )}
 
                         {queriesLoading ? (
-                            <div className="flex flex-col items-center justify-center py-24">
-                                <Loader2 className="w-10 h-10 animate-spin text-blue-600 mb-4" />
+                            <div className="flex flex-col items-center justify-center py-12 md:py-24">
+                                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-blue-600 mb-4" />
                                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Loading Queries...</p>
                             </div>
                         ) : queries.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-20 text-slate-600">
-                                <MessageSquare className="w-12 h-12 opacity-20 mb-4" />
-                                <h3 className="text-lg font-display font-bold text-white/50">No Queries Yet</h3>
-                                <p className="text-sm mt-1">Questions related to this project will appear here.</p>
+                            <div className="flex flex-col items-center justify-center py-12 md:py-20 text-slate-600 text-center px-4">
+                                <MessageSquare className="w-8 h-8 md:w-12 md:h-12 opacity-20 mb-4" />
+                                <h3 className="text-base md:text-lg font-display font-bold text-white/50">No Queries Yet</h3>
+                                <p className="text-[13px] md:text-sm mt-1">Questions related to this project will appear here.</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 gap-6">

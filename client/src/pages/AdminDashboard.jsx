@@ -32,8 +32,8 @@ const AdminDashboard = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[500px]">
-                <Loader2 className="w-12 h-12 animate-spin text-blue-600 mb-4" />
+            <div className="flex flex-col items-center justify-center py-20 md:py-32 min-h-[300px] md:min-h-[500px]">
+                <Loader2 className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600 mb-4" />
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compiling Analytics...</p>
             </div>
         );
@@ -104,12 +104,12 @@ const AdminDashboard = () => {
                             <ActivityRow key={idx} log={log} />
                         ))
                     ) : (
-                        <div className="py-32 text-center flex flex-col items-center">
-                            <div className="w-20 h-20 bg-gray-50 rounded-[32px] flex items-center justify-center mb-6">
-                                <Clock className="w-10 h-10 text-gray-200" />
+                        <div className="py-12 md:py-20 text-center flex flex-col items-center justify-center px-4 max-w-sm mx-auto">
+                            <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-50 rounded-2xl md:rounded-[32px] flex items-center justify-center mb-4 md:mb-6">
+                                <Clock className="w-8 h-8 md:w-10 md:h-10 text-gray-300" />
                             </div>
-                            <h3 className="text-xl font-display font-bold text-[#1A1A1A] opacity-20 tracking-tight">No events recorded</h3>
-                            <p className="text-gray-400 mt-2 max-w-xs font-medium italic">New system events will appear here.</p>
+                            <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Events Recorded</h3>
+                            <p className="text-gray-400/80 mt-1 md:mt-2 text-[13px] md:text-sm font-medium italic">System events and intelligence logs will appear here.</p>
                         </div>
                     )}
                 </div>

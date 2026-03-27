@@ -33,8 +33,8 @@ const StaffDashboard = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[500px]">
-                <Loader2 className="w-12 h-12 animate-spin text-blue-600 mb-4" />
+            <div className="flex flex-col items-center justify-center py-20 md:py-32 min-h-[300px] md:min-h-[500px]">
+                <Loader2 className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600 mb-4" />
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Initialising Portal...</p>
             </div>
         );

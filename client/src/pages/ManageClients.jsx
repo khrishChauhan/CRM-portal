@@ -3,7 +3,7 @@ import api from '../services/api';
 import {
     Search, ChevronLeft, ChevronRight, Loader2, Users, UserCheck, UserX,
     AlertTriangle, Mail, Building2, Calendar, FolderOpen, AlertCircle,
-    CheckCircle, Eye, ShieldOff, ShieldCheck, Trash2, X
+    CheckCircle, Eye, ShieldOff, ShieldCheck, Trash2, X, Plus
 } from 'lucide-react';
 
 const STATUS_COLORS = {
@@ -152,19 +152,22 @@ const ManageClients = () => {
             </div>
 
             {/* ── Client Table ── */}
-            <div className="bg-white rounded-[32px] border border-gray-100 shadow-2xl overflow-hidden min-h-[500px] mt-6">
+            <div className="bg-white rounded-[32px] border border-gray-100 shadow-2xl overflow-hidden min-h-[300px] sm:min-h-[500px] mt-6">
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-40">
-                        <Loader2 className="w-12 h-12 animate-spin text-blue-600 mb-4" />
+                    <div className="flex flex-col items-center justify-center py-20 sm:py-40">
+                        <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-blue-600 mb-4" />
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Initialising Database...</p>
                     </div>
                 ) : clients.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-40 text-gray-400">
-                        <div className="w-20 h-20 bg-gray-50 rounded-[32px] flex items-center justify-center mb-6">
-                            <Users className="w-10 h-10 opacity-20" />
+                    <div className="flex flex-col items-center justify-center py-16 sm:py-32 md:py-40 px-4 text-center text-gray-400">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 rounded-2xl md:rounded-[32px] flex items-center justify-center mb-4 md:mb-6">
+                            <Users className="w-8 h-8 md:w-10 md:h-10 opacity-20" />
                         </div>
-                        <h3 className="text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Clients Registered</h3>
-                        <p className="text-sm mt-2 font-medium italic">Try adjusting your filters.</p>
+                        <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Clients Registered</h3>
+                        <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic">Try adjusting your filters.</p>
+                        <button onClick={() => setIsModalOpen(true)} className="mt-6 md:mt-8 px-5 py-2.5 blue-gradient text-white rounded-xl font-bold text-[10px] uppercase tracking-[0.15em] transition-all btn-shadow active:scale-95 flex items-center gap-2">
+                            <Plus className="w-4 h-4" /> Add Client
+                        </button>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">

@@ -38,9 +38,9 @@ const MyProjects = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[400px]">
-                <Loader2 className="w-10 h-10 animate-spin text-blue-600 mb-4" />
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Loading Projects...</p>
+            <div className="flex flex-col items-center justify-center py-20 md:py-32 min-h-[300px] md:min-h-[400px]">
+                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-blue-600 mb-4" />
+                <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest">Loading Projects...</p>
             </div>
         );
     }
@@ -74,12 +74,12 @@ const MyProjects = () => {
                     <p className="font-semibold text-sm">{error}</p>
                 </div>
             ) : projects.length === 0 ? (
-                <div className="bg-white p-20 rounded-[32px] card-shadow flex flex-col items-center justify-center text-center">
-                    <div className="w-20 h-20 bg-gray-50 rounded-[24px] flex items-center justify-center mb-6">
-                        <FolderOpen className="w-10 h-10 text-gray-300" />
+                <div className="bg-white py-12 md:py-20 px-4 rounded-[24px] md:rounded-[32px] card-shadow flex flex-col items-center justify-center text-center max-w-2xl mx-auto">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-50 rounded-2xl md:rounded-[24px] flex items-center justify-center mb-4 md:mb-6">
+                        <FolderOpen className="w-8 h-8 md:w-10 md:h-10 text-gray-300" />
                     </div>
-                    <h3 className="text-xl font-display font-bold text-[#1A1A1A]">No Projects Yet</h3>
-                    <p className="text-gray-500 max-w-sm mt-2">You don't have access to any projects. Request access from the dashboard.</p>
+                    <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A]">No Projects Yet</h3>
+                    <p className="text-gray-500 text-[13px] md:text-sm max-w-sm mt-1 md:mt-2">You don't have access to any projects. Request access from the dashboard.</p>
                 </div>
             ) : (
                 <div className={viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>

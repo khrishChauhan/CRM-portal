@@ -132,19 +132,19 @@ const ManageAccessRequests = () => {
             </div>
 
             {/* Requests List */}
-            <div className="bg-white rounded-[24px] card-shadow overflow-hidden min-h-[400px]">
+            <div className="bg-white rounded-[24px] card-shadow overflow-hidden min-h-[300px] sm:min-h-[400px]">
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-32">
-                        <Loader2 className="w-10 h-10 animate-spin text-blue-600 mb-4" />
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Loading requests...</p>
+                    <div className="flex flex-col items-center justify-center py-20 sm:py-32">
+                        <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 animate-spin text-blue-600 mb-4" />
+                        <p className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest">Loading requests...</p>
                     </div>
                 ) : requests.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-32 text-gray-400">
-                        <div className="w-20 h-20 bg-gray-50 rounded-[22px] flex items-center justify-center mb-6">
-                            <FileText className="w-10 h-10 opacity-20" />
+                    <div className="flex flex-col items-center justify-center py-16 sm:py-32 px-4 text-center text-gray-400">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 rounded-2xl md:rounded-[22px] flex items-center justify-center mb-4 sm:mb-6">
+                            <FileText className="w-8 h-8 sm:w-10 sm:h-10 opacity-20" />
                         </div>
-                        <h3 className="text-lg font-display font-bold text-gray-900">No requests found</h3>
-                        <p className="text-sm font-medium mt-1">Check back later for new access requests.</p>
+                        <h3 className="text-base sm:text-lg font-display font-bold text-gray-900">No requests found</h3>
+                        <p className="text-[13px] sm:text-sm font-medium mt-1">Check back later for new access requests.</p>
                     </div>
                 ) : (
                     <div className="divide-y divide-gray-100">
