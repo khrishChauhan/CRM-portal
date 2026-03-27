@@ -207,9 +207,6 @@ const ManageStaff = () => {
                         </div>
                         <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Staff Found</h3>
                         <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic">Try broader search parameters.</p>
-                        <button onClick={() => setIsModalOpen(true)} className="mt-6 md:mt-8 px-5 py-2.5 blue-gradient text-white rounded-xl font-bold text-[10px] uppercase tracking-[0.15em] transition-all btn-shadow active:scale-95 flex items-center gap-2">
-                            <Plus className="w-4 h-4" /> Add Staff
-                        </button>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
@@ -430,12 +427,12 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
 
                 <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0 bg-white">
                     <div className="flex-1 overflow-y-auto scrollbar-hide px-[22px] pb-2 space-y-4 md:space-y-5">
-                    {error && (
-                        <div className="flex items-center gap-4 p-5 animate-shake bg-red-50 border border-red-100 rounded-2xl text-red-500 text-[10px] font-bold uppercase tracking-widest shadow-sm">
-                            <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                            {error}
-                        </div>
-                    )}
+                        {error && (
+                            <div className="flex items-center gap-4 p-5 animate-shake bg-red-50 border border-red-100 rounded-2xl text-red-500 text-[10px] font-bold uppercase tracking-widest shadow-sm">
+                                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                                {error}
+                            </div>
+                        )}
 
                         <FormField label="Full Name" name="name" value={form.name} onChange={handleChange} required placeholder="Enter name" />
                         <FormField label="Email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="Enter email" disabled={isEdit} />
@@ -448,7 +445,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         </div>
 
                         <FormField label="Professional Title" name="designation" value={form.designation} onChange={handleChange} placeholder="e.g. Lead Engineer" />
-                        
+
                         <div className="space-y-1.5 mb-5">
                             <label className="text-[15px] font-bold text-[#34495E] ml-1">Organisation Unit</label>
                             <div className="relative">
@@ -463,7 +460,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         </div>
 
                         <FormField label="Induction Date" name="joiningDate" type="date" value={form.joiningDate} onChange={handleChange} />
-                        
+
                         <div className="space-y-1.5 mb-5">
                             <label className="text-[15px] font-bold text-[#34495E] ml-1">Engagement Type</label>
                             <div className="relative">
@@ -477,7 +474,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         </div>
 
                         <FormField label="Compensation Scale" name="salaryBand" value={form.salaryBand} onChange={handleChange} placeholder="e.g. Band A-1" />
-                        
+
                         <div className="space-y-1.5 mb-5">
                             <label className="text-[15px] font-bold text-[#34495E] ml-1">Hierarchy Lead</label>
                             <div className="relative">
@@ -545,13 +542,13 @@ const ConfirmationModal = ({ title, message, onConfirm, onCancel, confirmText, i
             <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">{title}</h3>
             <p className="text-sm text-gray-500 mb-8 leading-relaxed">{message}</p>
             <div className="flex flex-col gap-3">
-                <button 
+                <button
                     onClick={onConfirm}
                     className={`w-full py-4 ${isDestructive ? 'bg-red-500 shadow-red-200' : 'blue-gradient shadow-blue-200'} text-white font-bold rounded-[16px] shadow-lg hover:opacity-90 active:scale-[0.98] transition-all`}
                 >
                     {confirmText || 'Confirm'}
                 </button>
-                <button 
+                <button
                     onClick={onCancel}
                     className="w-full py-4 text-gray-400 font-bold text-[10px] uppercase tracking-widest hover:text-gray-600 transition-all"
                 >

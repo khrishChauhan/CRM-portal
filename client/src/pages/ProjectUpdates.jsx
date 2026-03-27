@@ -143,7 +143,7 @@ const ProjectUpdates = () => {
         if (isMobile && canPost) {
             captureLocation();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [canPost]);
 
     // ── Canvas watermark stamping ──
@@ -518,11 +518,10 @@ const ProjectUpdates = () => {
                             <div className="bg-white p-6 sm:p-10 rounded-[28px] card-shadow border border-gray-50 flex flex-col justify-center gap-8">
                                 <div className="flex items-center justify-between">
                                     <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Current Status</h3>
-                                    <span className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest ${
-                                        project?.projectStatus === 'Completed' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
-                                        project?.projectStatus === 'In Progress' ? 'bg-blue-50 text-blue-600 border border-blue-100' :
-                                        'bg-gray-100 text-gray-500 border border-gray-200'
-                                    }`}>
+                                    <span className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest ${project?.projectStatus === 'Completed' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
+                                            project?.projectStatus === 'In Progress' ? 'bg-blue-50 text-blue-600 border border-blue-100' :
+                                                'bg-gray-100 text-gray-500 border border-gray-200'
+                                        }`}>
                                         {project?.projectStatus || 'Planned'}
                                     </span>
                                 </div>
@@ -691,7 +690,7 @@ const ProjectUpdates = () => {
                                         </div>
 
                                         {imagePreview && !location && !locLoading && (
-                                            <button 
+                                            <button
                                                 onClick={captureLocation}
                                                 className="text-[10px] font-bold text-amber-600 uppercase tracking-widest flex items-center gap-2 px-1"
                                             >
@@ -699,7 +698,7 @@ const ProjectUpdates = () => {
                                                 Location required with image — Tap to capture
                                             </button>
                                         )}
-                                        
+
                                         {stamping && (
                                             <div className="flex items-center gap-2.5 text-blue-600 text-[10px] font-bold uppercase tracking-widest px-1">
                                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -745,7 +744,7 @@ const ProjectUpdates = () => {
                                                             <span className="text-[8px] font-bold opacity-70">{formatTime(q.createdAt)}</span>
                                                         </div>
                                                         <p className="text-sm leading-relaxed opacity-90">{q.message}</p>
-                                                        
+
                                                         {q.imageUrl && (
                                                             <div className="mt-3 relative group/qimg cursor-pointer max-w-sm" onClick={() => setLightbox({ ...q, imageUrl: q.imageUrl })}>
                                                                 <img
@@ -758,11 +757,10 @@ const ProjectUpdates = () => {
                                                                 </div>
                                                             </div>
                                                         )}
-                                                        
+
                                                         {/* Status Indicator */}
-                                                        <div className={`absolute -left-2 -top-2 px-2.5 py-1 rounded-lg text-[7px] font-bold uppercase tracking-widest shadow-lg border ${
-                                                            q.status === 'open' ? 'bg-amber-400 text-white border-amber-300' : 'bg-emerald-500 text-white border-emerald-400'
-                                                        }`}>
+                                                        <div className={`absolute -left-2 -top-2 px-2.5 py-1 rounded-lg text-[7px] font-bold uppercase tracking-widest shadow-lg border ${q.status === 'open' ? 'bg-amber-400 text-white border-amber-300' : 'bg-emerald-500 text-white border-emerald-400'
+                                                            }`}>
                                                             {q.status}
                                                         </div>
                                                     </div>
@@ -812,11 +810,10 @@ const ProjectUpdates = () => {
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <span className={`px-3 py-1 rounded-lg text-[8px] font-bold uppercase tracking-widest border ${
-                                                        q.status === 'open' ? 'bg-amber-50 text-amber-600 border-amber-100' : 
-                                                        q.status === 'answered' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 
-                                                        'bg-gray-50 text-gray-400 border-gray-100'
-                                                    }`}>
+                                                    <span className={`px-3 py-1 rounded-lg text-[8px] font-bold uppercase tracking-widest border ${q.status === 'open' ? 'bg-amber-50 text-amber-600 border-amber-100' :
+                                                            q.status === 'answered' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                                                                'bg-gray-50 text-gray-400 border-gray-100'
+                                                        }`}>
                                                         {q.status}
                                                     </span>
                                                 </div>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import {
     Search, Loader2, FolderOpen, AlertCircle,
-    MapPin, Calendar, CheckCircle, ChevronRight, ChevronDown,
+    MapPin, Calendar, CheckCircle, ChevronRight,
     Edit3, X, Save, MessageSquare
 } from 'lucide-react';
 

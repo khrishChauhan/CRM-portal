@@ -2,8 +2,8 @@ import React from 'react';
 
 const Footer = () => {
     return (
-        <footer className="w-full py-4 flex items-center justify-center mt-8 border-t border-gray-200 mb-2">
-            <p className="text-[12px] md:text-[14px] font-medium uppercase tracking-[1px] text-[#6b7280] text-center">
+        <footer className="w-full py-4 px-6 flex items-center justify-center mt-auto shadow-2xl" style={{ backgroundColor: '#082221' }}>
+            <p className="text-[11px] sm:text-[12px] font-bold uppercase tracking-[0.3em] text-center" style={{ color: '#81C21C' }}>
                 Click Aarambh Ventures
             </p>
         </footer>

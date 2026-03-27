@@ -165,9 +165,6 @@ const ManageClients = () => {
                         </div>
                         <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Clients Registered</h3>
                         <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic">Try adjusting your filters.</p>
-                        <button onClick={() => setIsModalOpen(true)} className="mt-6 md:mt-8 px-5 py-2.5 blue-gradient text-white rounded-xl font-bold text-[10px] uppercase tracking-[0.15em] transition-all btn-shadow active:scale-95 flex items-center gap-2">
-                            <Plus className="w-4 h-4" /> Add Client
-                        </button>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
@@ -274,7 +271,7 @@ const ManageClients = () => {
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
-                        
+
                         <div className="flex-1 overflow-y-auto scrollbar-hide px-[22px] pt-1 pb-8">
                             <div className="space-y-4">
                                 <InfoRow icon={Mail} label="Contact Email" value={selectedClient.email} />

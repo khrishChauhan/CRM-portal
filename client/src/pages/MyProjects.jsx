@@ -106,7 +106,7 @@ const MyProjects = () => {
 
 const ProjectItem = ({ project, mode, onSelect }) => {
     const navigate = useNavigate();
-    
+
     if (mode === 'list') {
         return (
             <div className="bg-white p-6 rounded-[20px] card-shadow border border-transparent hover:border-blue-500/20 transition-all cursor-pointer flex items-center justify-between gap-4" onClick={onSelect}>
@@ -201,7 +201,7 @@ const ProjectDetailsModal = ({ project, onClose }) => {
                         <ModalDetail icon={MapPin} title="Site Address" value={project.siteAddress || 'Not specified'} />
                         <ModalDetail icon={Calendar} title="Project Start" value={new Date(project.startDate).toLocaleDateString('en-GB')} />
                         <ModalDetail icon={FolderOpen} title="Work Category" value={project.projectCategory || 'General Project'} />
-                        
+
                         <div className="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-[20px] shadow-sm">
                             <span className="text-[13px] font-bold text-[#7F8C8D] ml-1">Live Status</span>
                             <span className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest ${PROJECT_STATUS_COLORS[project.projectStatus] || 'bg-gray-100 text-gray-500'}`}>

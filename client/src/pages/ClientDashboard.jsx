@@ -116,7 +116,7 @@ const ClientDashboard = () => {
                             <p className="text-gray-500 font-medium text-sm mt-1">Browse and monitor infrastructure development.</p>
                         </div>
                     </div>
-                    
+
                     {/* SEARCH BAR */}
                     <div className="relative group max-w-2xl">
                         <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-blue-500 transition-colors z-10" />
@@ -157,9 +157,8 @@ const ClientDashboard = () => {
                                         <h3 className="text-xl font-display font-bold text-[#1A1A1A] leading-tight group-hover:text-blue-600 transition-colors">
                                             {p.projectName}
                                         </h3>
-                                        <span className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest flex-shrink-0 border ${
-                                            PROJECT_STATUS_COLORS[p.projectStatus] || 'bg-gray-50 text-gray-400 border-gray-100'
-                                        }`}>
+                                        <span className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest flex-shrink-0 border ${PROJECT_STATUS_COLORS[p.projectStatus] || 'bg-gray-50 text-gray-400 border-gray-100'
+                                            }`}>
                                             {p.projectStatus}
                                         </span>
                                     </div>
@@ -189,9 +188,9 @@ const ClientDashboard = () => {
                                                 <span className="text-sm font-bold text-gray-500">{p.projectCategory || 'General'}</span>
                                             </div>
                                         </div>
-                                        
+
                                         {isApproved ? (
-                                            <button 
+                                            <button
                                                 onClick={() => navigate(`/client/projects/${p._id}/updates`)}
                                                 className="w-full sm:w-auto px-8 py-3.5 blue-gradient text-white font-bold text-xs uppercase tracking-widest rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all btn-shadow flex items-center justify-center gap-2"
                                             >
@@ -201,11 +200,10 @@ const ClientDashboard = () => {
                                             <button
                                                 onClick={() => setRequestModal(p)}
                                                 disabled={reqStatus === 'pending'}
-                                                className={`w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest border transition-all flex items-center justify-center gap-2 shadow-sm ${
-                                                    reqStatus === 'pending' 
-                                                    ? 'bg-amber-50 border-amber-100 text-amber-600 opacity-80' 
-                                                    : 'bg-white border-blue-500 text-blue-600 hover:bg-blue-50'
-                                                }`}
+                                                className={`w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest border transition-all flex items-center justify-center gap-2 shadow-sm ${reqStatus === 'pending'
+                                                        ? 'bg-amber-50 border-amber-100 text-amber-600 opacity-80'
+                                                        : 'bg-white border-blue-500 text-blue-600 hover:bg-blue-50'
+                                                    }`}
                                             >
                                                 {reqStatus === 'pending' ? <Clock className="w-4 h-4" /> : <Send className="w-4 h-4" />}
                                                 {reqStatus === 'pending' ? 'Verification Pending' : 'Request Protocols'}
@@ -256,30 +254,30 @@ const ClientDashboard = () => {
                             </button>
                         </div>
 
-                            <div className="flex-1 overflow-y-auto scrollbar-hide px-[22px] pt-2 pb-8">
-                                <p className="text-[11px] font-bold text-blue-600 uppercase tracking-widest mb-6 inline-block px-3 py-1 bg-blue-50 rounded-lg">{requestModal.projectName}</p>
-                                <div className="space-y-1.5 mb-8">
-                                    <label className="text-[15px] font-bold text-[#34495E] ml-1">Optional Context</label>
-                                    <textarea
-                                        value={requestMessage}
-                                        onChange={(e) => setRequestMessage(e.target.value)}
-                                        placeholder="Explain your interest in this project..."
-                                        style={{ minHeight: '110px' }}
-                                        className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
-                                    />
-                                </div>
+                        <div className="flex-1 overflow-y-auto scrollbar-hide px-[22px] pt-2 pb-8">
+                            <p className="text-[11px] font-bold text-blue-600 uppercase tracking-widest mb-6 inline-block px-3 py-1 bg-blue-50 rounded-lg">{requestModal.projectName}</p>
+                            <div className="space-y-1.5 mb-8">
+                                <label className="text-[15px] font-bold text-[#34495E] ml-1">Optional Context</label>
+                                <textarea
+                                    value={requestMessage}
+                                    onChange={(e) => setRequestMessage(e.target.value)}
+                                    placeholder="Explain your interest in this project..."
+                                    style={{ minHeight: '110px' }}
+                                    className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                                />
                             </div>
+                        </div>
 
-                            <div className="p-[22px] pt-3 bg-white border-t border-gray-50 flex-shrink-0">
-                                <button
-                                    onClick={handleRequestAccess}
-                                    disabled={requesting}
-                                    className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                                >
-                                    {requesting ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : <Send className="w-5 h-5" />}
-                                    Submit Request
-                                </button>
-                            </div>
+                        <div className="p-[22px] pt-3 bg-white border-t border-gray-50 flex-shrink-0">
+                            <button
+                                onClick={handleRequestAccess}
+                                disabled={requesting}
+                                className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                            >
+                                {requesting ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : <Send className="w-5 h-5" />}
+                                Submit Request
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

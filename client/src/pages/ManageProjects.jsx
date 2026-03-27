@@ -191,9 +191,6 @@ const ManageProjects = () => {
                         </div>
                         <h3 className="text-lg sm:text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Projects Found</h3>
                         <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium">Try adjusting your search or filters.</p>
-                        <button onClick={() => setIsModalOpen(true)} className="mt-6 md:mt-8 px-5 py-2.5 blue-gradient text-white rounded-xl font-bold text-[10px] uppercase tracking-[0.15em] transition-all btn-shadow active:scale-95 flex items-center gap-2">
-                            <Plus className="w-4 h-4" /> Add Project
-                        </button>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
@@ -299,7 +296,7 @@ const ManageProjects = () => {
             )}
 
             {deleteConfirm && (
-                <ConfirmationModal 
+                <ConfirmationModal
                     title="Delete Project"
                     message={`Are you sure you want to delete "${deleteConfirm.name}"? This action can be undone by admin.`}
                     onConfirm={confirmDelete}
@@ -351,7 +348,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
         api.get('/projects/dropdowns')
             .then(res => setStaffList(res.data.data.staff || []))
             .catch(() => { });
-        
+
         document.body.style.overflow = 'hidden';
         return () => { document.body.style.overflow = 'unset'; };
     }, []);
@@ -391,21 +388,21 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
     return (
         <div className="fixed inset-0 z-[250] flex justify-center items-start p-4">
             {/* Overlay */}
-            <div 
-                className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-300" 
+            <div
+                className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
                 onClick={onClose}
             ></div>
 
             {/* Modal Card */}
             <div className="bg-white w-[94%] max-w-[460px] h-auto max-h-[92vh] rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col relative z-[260] animate-in slide-in-from-top-4 duration-300 overflow-hidden">
-                
+
                 {/* Header */}
                 <div className="flex items-center justify-between p-[22px] pb-3 bg-white shrink-0">
                     <h2 className="text-[20px] font-bold text-[#2C3E50] tracking-tight">
                         {isEdit ? 'Update Project' : 'Create New Project'}
                     </h2>
-                    <button 
-                        onClick={onClose} 
+                    <button
+                        onClick={onClose}
                         className="p-1.5 text-gray-400 hover:text-red-500 transition-all font-bold"
                     >
                         <X className="w-5 h-5" />
@@ -422,39 +419,39 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                             </div>
                         )}
 
-                        <Field 
-                            label="Project Name" 
-                            name="projectName" 
-                            value={form.projectName} 
-                            onChange={handleChange} 
-                            placeholder="Project Name" 
-                            required 
+                        <Field
+                            label="Project Name"
+                            name="projectName"
+                            value={form.projectName}
+                            onChange={handleChange}
+                            placeholder="Project Name"
+                            required
                         />
 
-                        <Field 
-                            label="Description" 
-                            name="description" 
-                            value={form.description} 
-                            onChange={handleChange} 
-                            placeholder="Project info..." 
-                            textarea 
+                        <Field
+                            label="Description"
+                            name="description"
+                            value={form.description}
+                            onChange={handleChange}
+                            placeholder="Project info..."
+                            textarea
                         />
 
-                        <Field 
-                            label="Location Address" 
-                            name="siteAddress" 
-                            value={form.siteAddress} 
-                            onChange={handleChange} 
-                            placeholder="Site Location" 
+                        <Field
+                            label="Location Address"
+                            name="siteAddress"
+                            value={form.siteAddress}
+                            onChange={handleChange}
+                            placeholder="Site Location"
                         />
 
 
-                        <Field 
-                            label="Start Date" 
-                            name="startDate" 
-                            type="date" 
-                            value={form.startDate} 
-                            onChange={handleChange} 
+                        <Field
+                            label="Start Date"
+                            name="startDate"
+                            type="date"
+                            value={form.startDate}
+                            onChange={handleChange}
                         />
 
                         <div className="pt-4 border-t border-gray-100 mt-2 space-y-5">
@@ -471,10 +468,10 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                             <div className="space-y-1.5 mb-4">
                                 <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Project Lead</label>
                                 <div className="relative">
-                                    <select 
-                                        name="projectManager" 
-                                        value={form.projectManager} 
-                                        onChange={handleChange} 
+                                    <select
+                                        name="projectManager"
+                                        value={form.projectManager}
+                                        onChange={handleChange}
                                         className="w-full px-4 py-3 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none min-h-[48px]"
                                     >
                                         <option value="">Select Manager</option>
@@ -594,13 +591,13 @@ const ConfirmationModal = ({ title, message, onConfirm, onCancel, confirmText, i
             <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">{title}</h3>
             <p className="text-sm text-gray-500 mb-8 leading-relaxed">{message}</p>
             <div className="flex flex-col gap-3">
-                <button 
+                <button
                     onClick={onConfirm}
                     className={`w-full py-4 ${isDestructive ? 'bg-red-500 shadow-red-200' : 'blue-gradient shadow-blue-200'} text-white font-bold rounded-[16px] shadow-lg hover:opacity-90 active:scale-[0.98] transition-all`}
                 >
                     {confirmText || 'Confirm'}
                 </button>
-                <button 
+                <button
                     onClick={onCancel}
                     className="w-full py-4 text-gray-400 font-bold text-[10px] uppercase tracking-widest hover:text-gray-600 transition-all"
                 >
