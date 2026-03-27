@@ -526,8 +526,8 @@ const ProjectUpdates = () => {
                                         {project?.projectStatus || 'Planned'}
                                     </span>
                                 </div>
-                                <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
-                                    <p className="text-gray-500 text-sm leading-relaxed italic font-medium">
+                                <div className="p-6 bg-gray-50 border border-gray-200 border-l-[3px] border-l-blue-600 rounded-2xl cursor-default">
+                                    <p className="text-gray-900 text-sm leading-relaxed font-medium">
                                         {project?.description || 'No project description available.'}
                                     </p>
                                 </div>
@@ -642,14 +642,14 @@ const ProjectUpdates = () => {
                                         placeholder="What's on your mind?"
                                         value={newQuery.title}
                                         onChange={(e) => setNewQuery({ ...newQuery, title: e.target.value })}
-                                        className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-500/50 transition-all font-medium"
+                                        className="w-full bg-gray-50 border-2 border-transparent focus:bg-white rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-600 focus:shadow-sm cursor-text transition-all font-medium"
                                     />
                                     <textarea
                                         placeholder="Describe your query in detail..."
                                         rows={3}
                                         value={newQuery.message}
                                         onChange={(e) => setNewQuery({ ...newQuery, message: e.target.value })}
-                                        className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-500/50 transition-all resize-none font-medium"
+                                        className="w-full bg-gray-50 border-2 border-transparent focus:bg-white rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-600 focus:shadow-sm cursor-text transition-all resize-none font-medium"
                                     />
 
                                     {/* Image Upload for Query */}
@@ -852,7 +852,7 @@ const ProjectUpdates = () => {
                                                 )}
 
                                                 {q.response ? (
-                                                    <div className="mt-4 p-5 rounded-2xl bg-gray-50 border border-gray-100 border-l-4 border-l-emerald-500">
+                                                    <div className="mt-4 p-5 rounded-2xl bg-gray-50 border border-gray-200 border-l-[3px] border-l-emerald-500 cursor-default">
                                                         <div className="flex items-center justify-between mb-2">
                                                             <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest flex items-center gap-2">
                                                                 <CheckCircle2 className="w-4 h-4" />
@@ -860,7 +860,7 @@ const ProjectUpdates = () => {
                                                             </p>
                                                             <span className="text-[8px] font-bold text-gray-400">{formatTime(q.respondedAt)}</span>
                                                         </div>
-                                                        <p className="text-[#333333] text-sm italic font-medium">"{q.response}"</p>
+                                                        <p className="text-gray-900 text-sm font-medium">"{q.response}"</p>
                                                         <p className="text-[9px] font-bold text-gray-400 uppercase mt-3">By {q.respondedBy?.name}</p>
                                                     </div>
                                                 ) : (
@@ -871,7 +871,7 @@ const ProjectUpdates = () => {
                                                                 rows={2}
                                                                 value={responseMap[q._id] || ''}
                                                                 onChange={(e) => setResponseMap({ ...responseMap, [q._id]: e.target.value })}
-                                                                className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-500/50 transition-all font-medium"
+                                                                className="w-full bg-gray-50 border-2 border-transparent focus:bg-white rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-600 focus:shadow-sm cursor-text transition-all font-medium resize-none"
                                                             />
                                                             <button
                                                                 onClick={() => handleRespond(q._id)}
@@ -926,7 +926,7 @@ const ProjectUpdates = () => {
                             onChange={(e) => setMessage(e.target.value)}
                             placeholder="Share progress with the client..."
                             rows={2}
-                            className="w-full bg-gray-50 border border-gray-100 rounded-[20px] px-5 py-4 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-500/30 focus:bg-white transition-all resize-none font-medium"
+                            className="w-full bg-gray-50 border-2 border-transparent focus:bg-white rounded-[20px] px-5 py-4 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-600 focus:shadow-sm cursor-text transition-all resize-none font-medium"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                                     handlePost();

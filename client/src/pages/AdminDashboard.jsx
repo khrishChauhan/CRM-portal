@@ -126,28 +126,28 @@ const ActivityRow = ({ log }) => {
     };
 
     return (
-        <div className="px-8 py-8 md:px-10 md:py-8 hover:bg-gray-50 transition-colors group">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                <div className="flex items-start sm:items-center gap-6">
-                    <div className="relative">
-                        <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gray-50 border border-gray-100 group-hover:scale-105 transition-all duration-500">
-                            <User className="w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-colors" />
+        <div className="mx-4 sm:mx-6 my-3 p-4 md:p-6 bg-gray-50 border border-gray-200 border-l-[3px] border-l-blue-600 rounded-2xl cursor-default group hover:shadow-sm transition-shadow overflow-hidden">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 md:gap-6">
+                <div className="flex items-start sm:items-center gap-4 md:gap-6 w-full min-w-0">
+                    <div className="relative flex-shrink-0">
+                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center bg-white border border-gray-200 group-hover:scale-105 transition-all duration-500 shadow-sm">
+                            <User className="w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-blue-600 transition-colors" />
                         </div>
-                        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white border-2 border-white rounded-full flex items-center justify-center shadow-lg">
-                            <div className={`w-2 h-2 rounded-full ${log.actorRole === 'admin' ? 'bg-blue-600' : log.actorRole === 'staff' ? 'bg-emerald-600' : 'bg-amber-600'}`}></div>
+                        <div className="absolute -bottom-1 -right-1 w-5 h-5 md:w-6 md:h-6 bg-white border-2 border-white rounded-full flex items-center justify-center shadow-md">
+                            <div className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${log.actorRole === 'admin' ? 'bg-blue-600' : log.actorRole === 'staff' ? 'bg-emerald-600' : 'bg-amber-600'}`}></div>
                         </div>
                     </div>
-                    <div>
-                        <p className="text-[15px] font-bold text-[#1A1A1A] leading-tight group-hover:text-blue-600 transition-colors">
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm md:text-[15px] font-bold text-[#1A1A1A] leading-snug break-words">
                             {log.message}
                         </p>
-                        <div className="flex items-center gap-4 mt-2.5">
-                            <span className={`px-3 py-0.5 rounded-lg border text-[9px] font-bold uppercase tracking-widest ${roleColors[log.actorRole] || 'bg-gray-50 text-gray-400 border-gray-100'}`}>
+                        <div className="flex flex-wrap items-center gap-2 md:gap-4 mt-2 md:mt-2.5">
+                            <span className={`px-2.5 py-0.5 rounded-lg border text-[8px] md:text-[9px] font-bold uppercase tracking-widest flex-shrink-0 ${roleColors[log.actorRole] || 'bg-gray-50 text-gray-400 border-gray-100'}`}>
                                 {log.actorRole}
                             </span>
-                            <div className="w-1.5 h-1.5 bg-gray-200 rounded-full"></div>
-                            <span className="text-[10px] font-bold text-gray-400 flex items-center gap-2 uppercase tracking-widest">
-                                <Clock className="w-4 h-4" />
+                            <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-gray-300 rounded-full flex-shrink-0"></div>
+                            <span className="text-[9px] md:text-[10px] font-bold text-gray-400 flex items-center gap-1.5 uppercase tracking-widest whitespace-nowrap">
+                                <Clock className="w-3 h-3 md:w-4 md:h-4" />
                                 {new Date(log.createdAt).toLocaleString(undefined, {
                                     month: 'short',
                                     day: 'numeric',
@@ -158,10 +158,10 @@ const ActivityRow = ({ log }) => {
                         </div>
                     </div>
                 </div>
-                <div className="opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
-                    <div className="flex items-center gap-2 px-4 py-1.5 bg-blue-50 border border-blue-100 rounded-xl">
+                <div className="hidden sm:block opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0 ml-auto flex-shrink-0">
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-xl whitespace-nowrap">
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                        <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest">Processed</span>
+                        <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest">Recorded</span>
                     </div>
                 </div>
             </div>

@@ -116,7 +116,7 @@ const ManageAccessRequests = () => {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search by client or project..."
-                        className="w-full bg-gray-50/50 pl-14 pr-6 py-4 rounded-[18px] text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-500/5 transition-all text-sm font-medium"
+                        className="w-full bg-gray-50 border-2 border-transparent focus:bg-white pl-14 pr-6 py-4 rounded-[18px] text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:shadow-sm cursor-text transition-all text-sm font-medium"
                     />
                 </div>
                 <select
@@ -187,21 +187,21 @@ const ManageAccessRequests = () => {
                                         </div>
 
                                         {req.message && (
-                                            <div className="p-5 bg-gray-50 rounded-2xl border border-gray-100">
+                                            <div className="p-5 bg-gray-50 border border-gray-200 border-l-[3px] border-l-blue-600 rounded-2xl cursor-default">
                                                 <div className="flex gap-3 items-start">
                                                     <MessageSquare className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                                                    <p className="text-sm text-gray-600 leading-relaxed italic font-medium">"{req.message}"</p>
+                                                    <p className="text-sm text-gray-900 leading-relaxed font-medium">"{req.message}"</p>
                                                 </div>
                                             </div>
                                         )}
 
                                         {req.status === 'rejected' && req.rejectionReason && (
-                                            <div className="p-5 bg-red-50 rounded-2xl border border-red-100">
+                                            <div className="p-5 bg-gray-50 border border-gray-200 border-l-[3px] border-l-red-600 rounded-2xl cursor-default">
                                                 <div className="flex gap-3 items-start">
                                                     <XCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
                                                     <div>
-                                                        <p className="text-[10px] font-bold text-red-600 uppercase tracking-wider mb-1">Rejection Reason</p>
-                                                        <p className="text-sm text-gray-600 leading-relaxed font-medium italic">"{req.rejectionReason}"</p>
+                                                        <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Rejection Reason</p>
+                                                        <p className="text-sm text-gray-900 leading-relaxed font-medium">"{req.rejectionReason}"</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -227,9 +227,12 @@ const ManageAccessRequests = () => {
                                                 </button>
                                             </>
                                         ) : (
-                                            <div className="text-center px-6 py-4 bg-gray-50 rounded-xl border border-gray-100 min-w-[140px]">
-                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Reviewed On</p>
-                                                <p className="text-sm font-bold text-[#1A1A1A]">{req.reviewedAt ? new Date(req.reviewedAt).toLocaleDateString() : '---'}</p>
+                                            <div className="flex flex-col items-center justify-center px-6 py-4 bg-gray-50 rounded-xl border border-gray-200 border-l-[3px] border-l-blue-600 cursor-default min-w-[140px]">
+                                                <div className="flex items-center gap-1.5 mb-1 text-gray-500">
+                                                    <Clock className="w-3.5 h-3.5" />
+                                                    <p className="text-[10px] font-bold uppercase tracking-wider">Reviewed On</p>
+                                                </div>
+                                                <p className="text-sm font-medium text-gray-900">{req.reviewedAt ? new Date(req.reviewedAt).toLocaleDateString() : '---'}</p>
                                             </div>
                                         )}
                                     </div>
@@ -245,7 +248,7 @@ const ManageAccessRequests = () => {
                                             value={rejectionReason}
                                             onChange={(e) => setRejectionReason(e.target.value)}
                                             placeholder="Why are you declining this request?"
-                                            className="w-full p-5 bg-white border-none rounded-2xl text-sm focus:ring-2 focus:ring-red-500/20 h-28 resize-none transition-all placeholder:text-gray-400"
+                                            className="w-full p-5 bg-gray-50 border-2 border-transparent focus:bg-white rounded-2xl text-sm focus:outline-none focus:border-blue-600 focus:shadow-sm cursor-text h-28 resize-none transition-all placeholder:text-gray-400 font-medium"
                                         />
                                         <button
                                             onClick={() => handleReject(req._id)}
