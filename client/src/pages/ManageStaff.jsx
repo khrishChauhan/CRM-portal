@@ -193,115 +193,106 @@ const ManageStaff = () => {
                 </div>
             </div>
 
-            {/* ── Staff Table ── */}
-            <div className="bg-white rounded-[32px] border border-gray-100 shadow-2xl overflow-hidden min-h-[300px] sm:min-h-[500px] mt-6">
+            {/* ── Staff Swipeable Cards ── */}
+            <div className="mt-6">
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-20 sm:py-40">
+                    <div className="flex flex-col items-center justify-center py-20 sm:py-40 bg-white rounded-[32px] border border-gray-100 shadow-2xl min-h-[300px]">
                         <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-blue-600 mb-4" />
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compiling Personnel...</p>
                     </div>
                 ) : staff.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-16 sm:py-32 md:py-40 px-4 text-center text-gray-400">
+                    <div className="flex flex-col items-center justify-center py-16 sm:py-32 md:py-40 px-4 text-center text-gray-400 bg-white rounded-[32px] border border-gray-100 shadow-2xl min-h-[300px]">
                         <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 rounded-2xl md:rounded-[32px] flex items-center justify-center mb-4 md:mb-6">
                             <Users className="w-8 h-8 md:w-10 md:h-10 opacity-20" />
                         </div>
-                        <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Staff Found</h3>
-                        <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic">Try broader search parameters.</p>
+                        <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No staff available</h3>
+                        <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic mb-6">Let's get your team on board.</p>
+                        <button onClick={() => openModal()} className="px-6 py-3 blue-gradient text-white rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all btn-shadow active:scale-95 flex items-center gap-2">
+                            <Plus className="w-4 h-4" /> Add Staff
+                        </button>
                     </div>
                 ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                            <thead>
-                                <tr className="bg-gray-50/50 border-b border-gray-100">
-                                    <th className="text-left px-10 py-7 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Personnel Identity</th>
-                                    <th className="text-left px-8 py-7 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Organisation Unit</th>
-                                    <th className="text-left px-8 py-7 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Designation</th>
-                                    <th className="text-left px-8 py-7 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Direct Supervisor</th>
-                                    <th className="text-left px-8 py-7 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Current State</th>
-                                    <th className="text-right px-10 py-7 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Operations</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-50">
-                                {staff.map((s) => (
-                                    <tr key={s._id} className="group hover:bg-gray-50 transition-colors duration-300">
-                                        <td className="px-10 py-7">
-                                            <div className="flex items-center gap-5">
-                                                <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100/50 text-blue-600 flex items-center justify-center font-display font-bold text-sm group-hover:scale-110 transition-transform">
-                                                    {s.name?.charAt(0).toUpperCase()}
-                                                </div>
-                                                <div>
-                                                    <p className="font-bold text-[#1A1A1A] group-hover:text-blue-600 transition-colors text-base tracking-tight">{s.name}</p>
-                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{s.email}</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-7">
-                                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 border border-gray-100 text-gray-500 rounded-lg text-[10px] font-bold uppercase tracking-widest group-hover:text-blue-600 transition-colors">
-                                                <Building2 className="w-3.5 h-3.5" />
-                                                {s.department || '—'}
-                                            </span>
-                                        </td>
-                                        <td className="px-8 py-7 font-bold text-gray-600 text-[13px]">{s.designation || '—'}</td>
-                                        <td className="px-8 py-7">
-                                            <div className="flex items-center gap-2">
-                                                {s.reportingManager ? (
-                                                    <>
-                                                        <div className="w-6 h-6 rounded-lg bg-gray-100 flex items-center justify-center text-[10px] font-bold text-gray-400 uppercase">
-                                                            {s.reportingManager.name?.charAt(0)}
-                                                        </div>
-                                                        <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">{s.reportingManager.name}</span>
-                                                    </>
-                                                ) : <span className="text-gray-300 text-[10px] font-bold uppercase tracking-widest">Top Level</span>}
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-7">
-                                            <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest border ${s.isActive ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
-                                                <div className={`w-1.5 h-1.5 rounded-full ${s.isActive ? 'bg-current animate-pulse' : 'bg-current'}`}></div>
-                                                {s.isActive ? 'Operational' : 'Deactivated'}
-                                            </span>
-                                        </td>
-                                        <td className="px-10 py-7">
-                                            <div className="flex items-center justify-end gap-3">
-                                                <button onClick={() => openModal(s)} className="p-3 rounded-xl bg-gray-50 text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all" title="Edit">
-                                                    <Edit3 className="w-5 h-5" />
-                                                </button>
-                                                <button onClick={() => handleToggleStatus(s._id, s.name)} className="p-3 rounded-xl bg-gray-50 text-gray-400 hover:text-amber-600 hover:bg-amber-50 transition-all" title={s.isActive ? 'Deactivate' : 'Restore'}>
-                                                    {s.isActive ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
-                                                </button>
-                                                <button onClick={() => handleDelete(s._id, s.name)} className="p-3 rounded-xl bg-gray-50 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all" title="Delete">
-                                                    <Trash2 className="w-5 h-5" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+                    <div className="space-y-6">
+                        {/* Horizontal Scroll Track */}
+                        <div className="-mx-4 px-4 sm:-mx-6 sm:px-6 md:-mx-8 md:px-8 flex overflow-x-auto gap-4 md:gap-5 pb-8 pt-2 snap-x snap-mandatory scrollbar-hide" style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}>
+                            {staff.map((s) => (
+                                <div key={s._id} className="bg-white rounded-[24px] p-5 sm:p-6 shrink-0 w-[85vw] sm:w-[320px] md:w-[340px] snap-start flex flex-col justify-between shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-gray-100 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 group">
+                                    
+                                    {/* Top Section */}
+                                    <div className="flex justify-between items-start mb-5 gap-3">
+                                        <div className="flex flex-col min-w-0 pr-1">
+                                            <h3 className="font-display font-bold text-[#1A1A1A] text-[18px] sm:text-[20px] truncate leading-tight tracking-tight">{s.name}</h3>
+                                            <p className="text-[13px] text-gray-500 truncate mt-0.5">{s.email}</p>
+                                        </div>
+                                        <span className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-widest ${s.isActive ? 'bg-emerald-50 text-emerald-600 border border-emerald-100/50' : 'bg-gray-50 text-gray-500 border border-gray-100/50'}`}>
+                                            <div className={`w-1.5 h-1.5 rounded-full ${s.isActive ? 'bg-emerald-500 animate-pulse' : 'bg-gray-400'}`}></div>
+                                            {s.isActive ? 'Active' : 'Inactive'}
+                                        </span>
+                                    </div>
 
-                {/* ── Pagination ── */}
-                {pagination.totalPages > 1 && (
-                    <div className="flex items-center justify-between px-10 py-8 border-t border-gray-50 bg-gray-50/30">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                            Page {pagination.page} <span className="text-gray-200 mx-2">/</span> {pagination.totalPages}
-                        </p>
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={() => fetchStaff(pagination.page - 1)}
-                                disabled={!pagination.hasPrev}
-                                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-blue-600 transition-all shadow-sm"
-                            >
-                                <ChevronLeft className="w-5 h-5" />
-                            </button>
-                            <button
-                                onClick={() => fetchStaff(pagination.page + 1)}
-                                disabled={!pagination.hasNext}
-                                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-blue-600 transition-all shadow-sm"
-                            >
-                                <ChevronRight className="w-5 h-5" />
-                            </button>
+                                    {/* Middle Section */}
+                                    <div className="space-y-3.5 mb-6 flex-1 bg-gray-50/50 rounded-[16px] p-4 border border-gray-50">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-[10px] bg-blue-50 flex flex-shrink-0 items-center justify-center text-blue-600">
+                                                <Briefcase className="w-4 h-4" />
+                                            </div>
+                                            <div className="min-w-0">
+                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Role</p>
+                                                <p className="text-sm font-bold text-[#2C3E50] truncate">{s.designation || 'Staff Member'}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-[10px] bg-slate-50 flex flex-shrink-0 items-center justify-center text-slate-500 border border-slate-100">
+                                                <Building2 className="w-4 h-4" />
+                                            </div>
+                                            <div className="min-w-0">
+                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Department</p>
+                                                <p className="text-[13px] font-medium text-gray-600 truncate">{s.department || 'Unassigned Unit'}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Footer Actions */}
+                                    <div className="flex items-center gap-2 pt-1 border-gray-50">
+                                        <button onClick={() => openModal(s)} className="flex-1 py-3 bg-gray-50 hover:bg-blue-50 text-gray-600 hover:text-blue-600 rounded-[14px] text-xs font-bold transition-all duration-300 flex justify-center items-center gap-2 group-hover:bg-white group-hover:border group-hover:border-blue-100 group-hover:shadow-sm">
+                                            <Edit3 className="w-4 h-4" /> Edit Profile
+                                        </button>
+                                        <button onClick={() => handleToggleStatus(s._id, s.name)} className={`p-3 rounded-[14px] transition-all duration-300 border ${s.isActive ? 'bg-amber-50 text-amber-600 hover:bg-amber-100 border-transparent hover:border-amber-200' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border-transparent hover:border-emerald-200'}`} title={s.isActive ? 'Deactivate' : 'Restore'}>
+                                            {s.isActive ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
+                                        </button>
+                                        <button onClick={() => handleDelete(s._id, s.name)} className="p-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-[14px] transition-all duration-300 border border-transparent hover:border-red-200" title="Delete">
+                                            <Trash2 className="w-5 h-5" />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
+
+                        {/* Pagination Overlay beneath cards */}
+                        {pagination.totalPages > 1 && (
+                            <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-5 bg-white rounded-[24px] border border-gray-100 shadow-sm gap-4">
+                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest order-2 sm:order-1">
+                                    Page {pagination.page} <span className="text-gray-200 mx-2">/</span> {pagination.totalPages}
+                                </p>
+                                <div className="flex items-center justify-center gap-3 order-1 sm:order-2">
+                                    <button
+                                        onClick={() => fetchStaff(pagination.page - 1)}
+                                        disabled={!pagination.hasPrev}
+                                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-500 disabled:opacity-30 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
+                                    >
+                                        <ChevronLeft className="w-5 h-5" />
+                                    </button>
+                                    <button
+                                        onClick={() => fetchStaff(pagination.page + 1)}
+                                        disabled={!pagination.hasNext}
+                                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-500 disabled:opacity-30 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
+                                    >
+                                        <ChevronRight className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
