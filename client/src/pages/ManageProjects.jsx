@@ -5,7 +5,7 @@ import {
     Plus, Search, ChevronLeft, ChevronRight, Loader2, FolderOpen,
     Edit3, Trash2, X, AlertCircle, CheckCircle, Calendar, MapPin,
     Clock, AlertTriangle, Briefcase, TrendingUp, MessageSquare,
-    ChevronDown, Users
+    ChevronDown, Users, User
 } from 'lucide-react';
 
 const STATUSES = ['Planned', 'In Progress', 'On Hold', 'Completed', 'Delayed', 'Cancelled'];
@@ -177,111 +177,130 @@ const ManageProjects = () => {
                 </div>
             </div>
 
-            {/* ── Main Data Mesh ── */}
-            <div className="bg-white rounded-[32px] border border-gray-100 shadow-2xl overflow-hidden min-h-[300px] sm:min-h-[500px] mt-6">
+            {/* ── Project Swipeable Cards ── */}
+            <div className="mt-6">
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-20 sm:py-40">
+                    <div className="flex flex-col items-center justify-center py-20 sm:py-40 bg-white rounded-[32px] border border-gray-100 shadow-2xl min-h-[300px]">
                         <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-blue-600 mb-4" />
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Initialising Database...</p>
                     </div>
                 ) : projects.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-16 sm:py-32 md:py-40 px-4 text-center text-gray-400">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-gray-50 rounded-2xl md:rounded-[32px] flex items-center justify-center mb-4 md:mb-6">
+                    <div className="flex flex-col items-center justify-center py-16 sm:py-32 md:py-40 px-4 text-center text-gray-400 bg-white rounded-[32px] border border-gray-100 shadow-2xl min-h-[300px]">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 rounded-2xl md:rounded-[32px] flex items-center justify-center mb-4 md:mb-6">
                             <FolderOpen className="w-8 h-8 md:w-10 md:h-10 opacity-20" />
                         </div>
-                        <h3 className="text-lg sm:text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Projects Found</h3>
-                        <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium">Try adjusting your search or filters.</p>
+                        <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Projects Found</h3>
+                        <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic mb-6">Create your first operational project.</p>
+                        <button onClick={() => setShowModal(true)} className="px-6 py-3 blue-gradient text-white rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all btn-shadow active:scale-95 flex items-center gap-2">
+                            <Plus className="w-4 h-4" /> Add Project
+                        </button>
                     </div>
                 ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                            <thead>
-                                <tr className="bg-gray-50/50 border-b border-gray-100">
-                                    <th className="text-left px-10 py-7 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Project Details</th>
-                                    <th className="text-left px-8 py-7 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Lead Manager</th>
-                                    <th className="text-left px-8 py-7 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Operational Status</th>
-                                    <th className="text-left px-8 py-7 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Security Level</th>
-                                    <th className="text-left px-8 py-7 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Timeline</th>
-                                    <th className="text-right px-10 py-7 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Commands</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-50">
-                                {projects.map((p) => (
-                                    <tr key={p._id} className="group hover:bg-gray-50 transition-colors duration-300">
-                                        <td className="px-10 py-7">
-                                            <div className="flex flex-col">
-                                                <p className="font-bold text-[#1A1A1A] group-hover:text-blue-600 transition-colors text-base tracking-tight leading-tight mb-1">{p.projectName}</p>
-                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                                                    <span className="w-2 h-2 rounded-full bg-blue-500/20"></span>
-                                                    {p.projectCode} • {p.projectCategory || 'General'}
-                                                </p>
+                    <div className="space-y-6">
+                        {/* Horizontal Scroll Track */}
+                        <div className="flex overflow-x-auto gap-4 md:gap-6 pb-8 pt-4 px-4 sm:px-6 md:px-8 snap-x snap-mandatory scrollbar-hide" style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}>
+                            {/* Inner pseudo-margin spacer for perfect center alignment of the first item on mobile */}
+                            <div className="w-[calc(50vw-42.5vw-16px)] sm:w-[calc(50vw-170px-24px)] md:hidden shrink-0 pointer-events-none" />
+                            
+                            {projects.map((p) => (
+                                <div key={p._id} className="bg-white rounded-[24px] shrink-0 w-[85vw] sm:w-[340px] md:w-[360px] snap-center flex flex-col shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-gray-100 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-400 group overflow-hidden">
+                                    
+                                    {/* Top Section Header (Off-white) */}
+                                    <div className="bg-[#FAFBFD] px-6 pt-6 pb-5 flex flex-col gap-3 border-b border-gray-100/60">
+                                        <div className="flex justify-between items-start gap-4">
+                                            <div className="flex flex-col min-w-0 pr-1">
+                                                <h3 className="font-display font-bold text-[#1A1A1A] text-[18px] sm:text-[20px] truncate leading-tight tracking-tight">{p.projectName}</h3>
+                                                <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1.5 flex items-center gap-1.5"><div className="w-1.5 h-1.5 bg-blue-500/30 rounded-full shrink-0"></div><span className="truncate">{p.projectCode} • {p.projectCategory || 'General'}</span></div>
                                             </div>
-                                        </td>
-                                        <td className="px-8 py-7 font-bold text-gray-600 text-[13px]">{p.projectManager?.name || '---'}</td>
-                                        <td className="px-8 py-7">
-                                            <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest border ${STATUS_COLORS[p.projectStatus] || 'border-gray-100 text-gray-400 bg-gray-50'}`}>
+                                            <span className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-widest border ${STATUS_COLORS[p.projectStatus] || 'border-gray-100 text-gray-400 bg-gray-50 shadow-sm'}`}>
                                                 <div className={`w-1.5 h-1.5 rounded-full ${p.projectStatus === 'In Progress' ? 'bg-current animate-pulse' : 'bg-current'}`}></div>
                                                 {p.projectStatus}
                                             </span>
-                                        </td>
-                                        <td className="px-8 py-7">
-                                            <span className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 ${PRIORITY_COLORS[p.priority]}`}>
-                                                <TrendingUp className="w-3.5 h-3.5" />
-                                                {p.priority}
-                                            </span>
-                                        </td>
-                                        <td className="px-8 py-7">
-                                            <div className="flex flex-col gap-1.5">
-                                                <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                                                    <Calendar className="w-3.5 h-3.5 text-blue-500" />
-                                                    {p.startDate ? new Date(p.startDate).toLocaleDateString() : '---'}
-                                                </div>
-                                                <div className="flex items-center gap-2 text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
-                                                    <CheckCircle className="w-3.5 h-3.5" />
-                                                    {p.expectedCompletion ? new Date(p.expectedCompletion).toLocaleDateString() : '---'}
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-10 py-7">
-                                            <div className="flex items-center justify-end gap-3">
-                                                <button onClick={() => navigate(`/admin/projects/${p._id}/updates`)} className="p-3 rounded-xl bg-gray-50 text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all" title="Updates">
-                                                    <MessageSquare className="w-5 h-5" />
-                                                </button>
-                                                <button onClick={() => openEdit(p._id)} className="p-3 rounded-xl bg-gray-50 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all" title="Edit">
-                                                    <Edit3 className="w-5 h-5" />
-                                                </button>
-                                                <button onClick={() => handleDelete(p._id, p.projectName)} className="p-3 rounded-xl bg-gray-50 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all" title="Delete">
-                                                    <Trash2 className="w-5 h-5" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
+                                        </div>
+                                    </div>
 
-                {/* ── Pagination ── */}
-                {pagination.totalPages > 1 && (
-                    <div className="flex items-center justify-between px-10 py-8 border-t border-gray-50 bg-gray-50/30">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Page {pagination.page} of {pagination.totalPages}</p>
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={() => fetchProjects(pagination.page - 1)}
-                                disabled={!pagination.hasPrev}
-                                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-blue-600 transition-all"
-                            >
-                                <ChevronLeft className="w-5 h-5" />
-                            </button>
-                            <button
-                                onClick={() => fetchProjects(pagination.page + 1)}
-                                disabled={!pagination.hasNext}
-                                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-blue-600 transition-all"
-                            >
-                                <ChevronRight className="w-5 h-5" />
-                            </button>
+                                    {/* Body Section */}
+                                    <div className="p-6 flex-1 flex flex-col justify-between bg-white">
+                                        {/* Middle Section */}
+                                        <div className="space-y-4 mb-6 flex-1">
+                                            <div className="flex justify-between items-center bg-gray-50/50 p-3.5 rounded-[14px]">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 rounded-[12px] bg-[#F0F5FF] flex flex-shrink-0 items-center justify-center text-blue-600 border border-[#E0E7FF]/50 shadow-sm">
+                                                        <User className="w-4 h-4" />
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Lead Manager</p>
+                                                        <p className="text-[13px] font-bold text-[#1A1A1A] truncate">{p.projectManager?.name || 'Unassigned'}</p>
+                                                    </div>
+                                                </div>
+                                                <span className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] text-[9px] font-bold uppercase tracking-widest border ${{ Low: 'bg-emerald-50 text-emerald-600 border-emerald-100', Medium: 'bg-amber-50 text-amber-500 border-amber-100', High: 'bg-red-50 text-red-500 border-red-100' }[p.priority] || 'border-gray-100 text-gray-400 bg-gray-50'}`}>
+                                                    <TrendingUp className="w-3 h-3" />
+                                                    {p.priority}
+                                                </span>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <div className="flex flex-col gap-1.5 bg-[#F8FAFC] p-3.5 rounded-[14px] border border-[#F1F5F9] shadow-sm">
+                                                    <div className="flex items-center gap-2 mb-0.5">
+                                                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Start Date</p>
+                                                    </div>
+                                                    <p className="text-[12px] font-bold text-gray-600 truncate pt-0.5">{p.startDate ? new Date(p.startDate).toLocaleDateString() : '---'}</p>
+                                                </div>
+                                                <div className="flex flex-col gap-1.5 bg-[#ECFDF5]/60 p-3.5 rounded-[14px] border border-[#D1FAE5]/60 shadow-sm">
+                                                    <div className="flex items-center gap-2 mb-0.5">
+                                                        <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                                                        <p className="text-[9px] font-bold text-emerald-600/70 uppercase tracking-widest">Expected End</p>
+                                                    </div>
+                                                    <p className="text-[12px] font-bold text-emerald-700 truncate pt-0.5">{p.expectedCompletion ? new Date(p.expectedCompletion).toLocaleDateString() : '---'}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Footer Actions */}
+                                        <div className="flex items-center gap-2 pt-2 border-t border-transparent">
+                                            <button onClick={() => navigate(`/admin/projects/${p._id}/updates`)} className="flex-1 py-3 text-blue-600 hover:text-white bg-blue-50 border border-blue-100 hover:bg-blue-600 rounded-[12px] text-[11px] font-bold uppercase tracking-widest transition-all duration-300 flex justify-center items-center gap-2 shadow-sm">
+                                                <MessageSquare className="w-4 h-4" /> Updates
+                                            </button>
+                                            <button onClick={() => openEdit(p._id)} className="p-3 text-emerald-600 hover:text-emerald-700 bg-emerald-50 border border-emerald-100 hover:bg-emerald-100 rounded-[12px] transition-all duration-300 shadow-sm" title="Edit">
+                                                <Edit3 className="w-5 h-5" />
+                                            </button>
+                                            <button onClick={() => handleDelete(p._id, p.projectName)} className="p-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-[12px] transition-all duration-300 border border-red-100 hover:border-red-200 shadow-sm" title="Delete">
+                                                <Trash2 className="w-5 h-5" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                            
+                            {/* Inner pseudo-margin spacer for perfect center alignment of the last item on mobile */}
+                            <div className="w-[calc(50vw-42.5vw-16px)] sm:w-[calc(50vw-170px-24px)] md:hidden shrink-0 pointer-events-none" />
                         </div>
+
+                        {/* Pagination Overlay beneath cards */}
+                        {pagination.totalPages > 1 && (
+                            <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-5 bg-white rounded-[24px] border border-gray-100 shadow-sm gap-4">
+                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest order-2 sm:order-1">
+                                    Page {pagination.page} <span className="text-gray-200 mx-2">/</span> {pagination.totalPages}
+                                </p>
+                                <div className="flex items-center justify-center gap-3 order-1 sm:order-2">
+                                    <button
+                                        onClick={() => fetchProjects(pagination.page - 1)}
+                                        disabled={!pagination.hasPrev}
+                                        className="w-10 h-10 flex items-center justify-center rounded-[12px] bg-gray-50 text-gray-500 disabled:opacity-30 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
+                                    >
+                                        <ChevronLeft className="w-5 h-5" />
+                                    </button>
+                                    <button
+                                        onClick={() => fetchProjects(pagination.page + 1)}
+                                        disabled={!pagination.hasNext}
+                                        className="w-10 h-10 flex items-center justify-center rounded-[12px] bg-gray-50 text-gray-500 disabled:opacity-30 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
+                                    >
+                                        <ChevronRight className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
