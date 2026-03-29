@@ -935,7 +935,7 @@ const ProjectUpdates = () => {
                             {/* Image upload */}
                             <label className="flex-1 group/upload h-12 px-5 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center sm:justify-start gap-3 text-gray-400 hover:text-blue-600 hover:border-blue-500/20 hover:bg-blue-50 transition-all cursor-pointer active:scale-95">
                                 <Camera className="w-5 h-5 group-hover/upload:scale-110 transition-transform" />
-                                <span className="text-[10px] font-bold uppercase tracking-[0.15em]">Capture Photo</span>
+                                <span className="text-[10px] py-4 font-bold uppercase tracking-[0.15em]">Capture Photo</span>
                                 <input
                                     type="file"
                                     accept="image/*"
