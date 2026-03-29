@@ -116,11 +116,53 @@ body {
   @apply overflow-x-hidden max-w-full;
 }
 
-button,
 input,
 select,
 textarea {
   min-height: 48px;
+}
+
+/* ── PREMIUM BUTTON ENHANCEMENTS ── */
+button {
+  min-height: 46px; /* 44px-48px */
+  padding: 10px 18px; /* Ideal touch target padding */
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Specific standard form buttons spacing to prevent cramped layout */
+form button,
+form button[type="submit"] {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Interaction Effects */
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+@media (hover: hover) {
+  button:hover:not(:disabled) {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* Disabled UI State */
+button:disabled {
+  opacity: 0.6 !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* Mobile responsive full-width */
+@media (max-width: 768px) {
+  button[type="submit"] {
+    width: 100% !important;
+  }
 }
 
 .scrollbar-hide::-webkit-scrollbar {

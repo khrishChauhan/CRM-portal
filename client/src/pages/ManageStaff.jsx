@@ -214,59 +214,68 @@ const ManageStaff = () => {
                 ) : (
                     <div className="space-y-6">
                         {/* Horizontal Scroll Track */}
-                        <div className="-mx-4 px-4 sm:-mx-6 sm:px-6 md:-mx-8 md:px-8 flex overflow-x-auto gap-4 md:gap-5 pb-8 pt-2 snap-x snap-mandatory scrollbar-hide" style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}>
+                        <div className="flex overflow-x-auto gap-4 md:gap-6 pb-8 pt-4 px-4 sm:px-6 md:px-8 snap-x snap-mandatory scrollbar-hide" style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}>
+                            {/* Inner pseudo-margin spacer for perfect center alignment of the first item on mobile */}
+                            <div className="w-[calc(50vw-42.5vw-16px)] sm:w-[calc(50vw-170px-24px)] md:hidden shrink-0 pointer-events-none" />
+                            
                             {staff.map((s) => (
-                                <div key={s._id} className="bg-white rounded-[24px] p-5 sm:p-6 shrink-0 w-[85vw] sm:w-[320px] md:w-[340px] snap-start flex flex-col justify-between shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-gray-100 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 group">
+                                <div key={s._id} className="bg-white rounded-[24px] shrink-0 w-[85vw] sm:w-[340px] md:w-[350px] snap-center flex flex-col shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-gray-100 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-400 group overflow-hidden">
                                     
-                                    {/* Top Section */}
-                                    <div className="flex justify-between items-start mb-5 gap-3">
+                                    {/* Top Section Header (Off-white) */}
+                                    <div className="bg-[#FAFBFD] px-6 pt-6 pb-5 flex justify-between items-start gap-4 border-b border-gray-100/60">
                                         <div className="flex flex-col min-w-0 pr-1">
                                             <h3 className="font-display font-bold text-[#1A1A1A] text-[18px] sm:text-[20px] truncate leading-tight tracking-tight">{s.name}</h3>
-                                            <p className="text-[13px] text-gray-500 truncate mt-0.5">{s.email}</p>
+                                            <p className="text-[13px] text-gray-500 font-medium truncate mt-0.5">{s.email}</p>
                                         </div>
-                                        <span className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-widest ${s.isActive ? 'bg-emerald-50 text-emerald-600 border border-emerald-100/50' : 'bg-gray-50 text-gray-500 border border-gray-100/50'}`}>
+                                        <span className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-widest ${s.isActive ? 'bg-[#ECFDF5] text-emerald-600 border border-[#D1FAE5]' : 'bg-white text-gray-500 border border-gray-200 shadow-sm'}`}>
                                             <div className={`w-1.5 h-1.5 rounded-full ${s.isActive ? 'bg-emerald-500 animate-pulse' : 'bg-gray-400'}`}></div>
                                             {s.isActive ? 'Active' : 'Inactive'}
                                         </span>
                                     </div>
 
-                                    {/* Middle Section */}
-                                    <div className="space-y-3.5 mb-6 flex-1 bg-gray-50/50 rounded-[16px] p-4 border border-gray-50">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-[10px] bg-blue-50 flex flex-shrink-0 items-center justify-center text-blue-600">
-                                                <Briefcase className="w-4 h-4" />
+                                    {/* Body Section */}
+                                    <div className="p-6 flex-1 flex flex-col justify-between bg-white">
+                                        {/* Middle Section */}
+                                        <div className="space-y-4 mb-6 flex-1">
+                                            <div className="flex items-center gap-3.5">
+                                                <div className="w-10 h-10 rounded-[12px] bg-[#F0F5FF] flex flex-shrink-0 items-center justify-center text-blue-600 border border-[#E0E7FF]/50 shadow-sm">
+                                                    <Briefcase className="w-4 h-4" />
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Role</p>
+                                                    <p className="text-sm font-bold text-[#1A1A1A] truncate">{s.designation || 'Staff Member'}</p>
+                                                </div>
                                             </div>
-                                            <div className="min-w-0">
-                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Role</p>
-                                                <p className="text-sm font-bold text-[#2C3E50] truncate">{s.designation || 'Staff Member'}</p>
+
+                                            <div className="flex items-center gap-3.5">
+                                                <div className="w-10 h-10 rounded-[12px] bg-[#F8FAFC] flex flex-shrink-0 items-center justify-center text-slate-500 border border-[#F1F5F9] shadow-sm">
+                                                    <Building2 className="w-4 h-4" />
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Department</p>
+                                                    <p className="text-sm font-bold text-gray-600 truncate">{s.department || 'Unassigned Unit'}</p>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-[10px] bg-slate-50 flex flex-shrink-0 items-center justify-center text-slate-500 border border-slate-100">
-                                                <Building2 className="w-4 h-4" />
-                                            </div>
-                                            <div className="min-w-0">
-                                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Department</p>
-                                                <p className="text-[13px] font-medium text-gray-600 truncate">{s.department || 'Unassigned Unit'}</p>
-                                            </div>
+                                        {/* Footer Actions */}
+                                        <div className="flex items-center gap-2 pt-2 border-t border-transparent">
+                                            <button onClick={() => openModal(s)} className="flex-1 py-3 text-gray-600 hover:text-blue-600 rounded-[12px] text-[11px] sm:text-[12px] font-bold transition-all duration-300 flex justify-center items-center gap-2 bg-white border border-gray-200 hover:border-blue-100 hover:bg-blue-50/50 shadow-sm">
+                                                <Edit3 className="w-4 h-4" /> Edit Profile
+                                            </button>
+                                            <button onClick={() => handleToggleStatus(s._id, s.name)} className={`p-3 rounded-[12px] transition-all duration-300 shadow-sm border ${s.isActive ? 'bg-[#FFFBEB] text-amber-600 hover:bg-[#FEF3C7] border-[#FEF3C7] hover:border-[#FDE68A]' : 'bg-[#ECFDF5] text-emerald-600 hover:bg-[#D1FAE5] border-[#D1FAE5] hover:border-[#A7F3D0]'}`} title={s.isActive ? 'Deactivate' : 'Restore'}>
+                                                {s.isActive ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
+                                            </button>
+                                            <button onClick={() => handleDelete(s._id, s.name)} className="p-3 bg-white hover:bg-red-50 text-red-600 rounded-[12px] transition-all duration-300 border border-red-100 hover:border-red-200 shadow-sm" title="Delete">
+                                                <Trash2 className="w-5 h-5" />
+                                            </button>
                                         </div>
-                                    </div>
-
-                                    {/* Footer Actions */}
-                                    <div className="flex items-center gap-2 pt-1 border-gray-50">
-                                        <button onClick={() => openModal(s)} className="flex-1 py-3 bg-gray-50 hover:bg-blue-50 text-gray-600 hover:text-blue-600 rounded-[14px] text-xs font-bold transition-all duration-300 flex justify-center items-center gap-2 group-hover:bg-white group-hover:border group-hover:border-blue-100 group-hover:shadow-sm">
-                                            <Edit3 className="w-4 h-4" /> Edit Profile
-                                        </button>
-                                        <button onClick={() => handleToggleStatus(s._id, s.name)} className={`p-3 rounded-[14px] transition-all duration-300 border ${s.isActive ? 'bg-amber-50 text-amber-600 hover:bg-amber-100 border-transparent hover:border-amber-200' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border-transparent hover:border-emerald-200'}`} title={s.isActive ? 'Deactivate' : 'Restore'}>
-                                            {s.isActive ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
-                                        </button>
-                                        <button onClick={() => handleDelete(s._id, s.name)} className="p-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-[14px] transition-all duration-300 border border-transparent hover:border-red-200" title="Delete">
-                                            <Trash2 className="w-5 h-5" />
-                                        </button>
                                     </div>
                                 </div>
                             ))}
+                            
+                            {/* Inner pseudo-margin spacer for perfect center alignment of the last item on mobile */}
+                            <div className="w-[calc(50vw-42.5vw-16px)] sm:w-[calc(50vw-170px-24px)] md:hidden shrink-0 pointer-events-none" />
                         </div>
 
                         {/* Pagination Overlay beneath cards */}
