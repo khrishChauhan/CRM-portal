@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import {
     Users,
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react';
 
 const AdminDashboard = () => {
+    const navigate = useNavigate();
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -54,9 +56,9 @@ const AdminDashboard = () => {
     }
 
     const cards = [
-        { name: 'Total Users', value: stats.totalUsers, subtitle: 'System-wide', icon: Users, color: 'text-blue-600', bgColor: 'bg-blue-50' },
-        { name: 'Total Staff', value: stats.totalStaff, subtitle: 'Operators', icon: UserCheck, color: 'text-emerald-600', bgColor: 'bg-emerald-50' },
-        { name: 'Total Clients', value: stats.totalClients, subtitle: 'Subscribers', icon: Briefcase, color: 'text-amber-600', bgColor: 'bg-amber-50' },
+        { name: 'Total Users', value: stats.totalUsers, subtitle: 'System-wide', icon: Users, color: 'text-blue-600', bgColor: 'bg-blue-50', path: '/admin/staff' },
+        { name: 'Total Staff', value: stats.totalStaff, subtitle: 'Operators', icon: UserCheck, color: 'text-emerald-600', bgColor: 'bg-emerald-50', path: '/admin/staff' },
+        { name: 'Total Clients', value: stats.totalClients, subtitle: 'Subscribers', icon: Briefcase, color: 'text-amber-600', bgColor: 'bg-amber-50', path: '/admin/clients' },
     ];
 
     return (
@@ -75,7 +77,7 @@ const AdminDashboard = () => {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
                 {cards.map((card, idx) => (
-                    <div key={card.name} className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group hover:-translate-y-1 transition-all duration-300 flex flex-col items-start h-full relative overflow-hidden">
+                    <div key={card.name} onClick={() => navigate(card.path)} className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group hover:-translate-y-1 transition-all duration-300 flex flex-col items-start h-full relative overflow-hidden cursor-pointer active:scale-[0.98] select-none">
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${card.bgColor} ${card.color} mb-3 shadow-sm group-hover:scale-110 transition-transform duration-500`}>
                             <card.icon className="w-5 h-5" />
                         </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import {
     Search, ChevronLeft, ChevronRight, Loader2, Users,
@@ -17,7 +18,8 @@ const ManageAccessRequests = () => {
     const [pagination, setPagination] = useState({ total: 0, page: 1, limit: 10, totalPages: 1 });
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
-    const [statusFilter, setStatusFilter] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '');
     const [toast, setToast] = useState(null);
     const [processingId, setProcessingId] = useState(null);
     const [rejectingId, setRejectingId] = useState(null);
@@ -101,10 +103,10 @@ const ManageAccessRequests = () => {
 
             {/* Dashboard Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
-                <StatCard label="Total" value={stats.total} icon={FileText} color="text-blue-600" bgColor="bg-blue-50" />
-                <StatCard label="Pending" value={stats.pending} icon={Clock} color="text-amber-600" bgColor="bg-amber-50" />
-                <StatCard label="Approved" value={stats.approved} icon={CheckCircle} color="text-emerald-600" bgColor="bg-emerald-50" />
-                <StatCard label="Declined" value={stats.rejected} icon={XCircle} color="text-red-600" bgColor="bg-red-50" />
+                <StatCard label="Total" value={stats.total} icon={FileText} color="text-blue-600" bgColor="bg-blue-50" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
+                <StatCard label="Pending" value={stats.pending} icon={Clock} color="text-amber-600" bgColor="bg-amber-50" onClick={() => { setStatusFilter('pending'); setSearchParams({ status: 'pending' }); }} />
+                <StatCard label="Approved" value={stats.approved} icon={CheckCircle} color="text-emerald-600" bgColor="bg-emerald-50" onClick={() => { setStatusFilter('approved'); setSearchParams({ status: 'approved' }); }} />
+                <StatCard label="Declined" value={stats.rejected} icon={XCircle} color="text-red-600" bgColor="bg-red-50" onClick={() => { setStatusFilter('rejected'); setSearchParams({ status: 'rejected' }); }} />
             </div>
 
             {/* Filters */}
@@ -143,8 +145,13 @@ const ManageAccessRequests = () => {
                         <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 rounded-2xl md:rounded-[22px] flex items-center justify-center mb-4 sm:mb-6">
                             <FileText className="w-8 h-8 sm:w-10 sm:h-10 opacity-20" />
                         </div>
-                        <h3 className="text-base sm:text-lg font-display font-bold text-gray-900">No requests found</h3>
-                        <p className="text-[13px] sm:text-sm font-medium mt-1">Check back later for new access requests.</p>
+                        <h3 className="text-base sm:text-lg font-display font-bold text-gray-900">{statusFilter || search ? 'No results found for this filter' : 'No requests found'}</h3>
+                        <p className="text-[13px] sm:text-sm font-medium mt-1 mb-6">{statusFilter || search ? 'Try adjusting your search or filters.' : 'Check back later for new access requests.'}</p>
+                        {(statusFilter || search) && (
+                            <button onClick={() => { setStatusFilter(''); setSearch(''); setSearchParams({}); }} className="px-6 py-3 bg-gray-100 text-gray-600 rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all active:scale-95 flex items-center gap-2">
+                                Clear Filters
+                            </button>
+                        )}
                     </div>
                 ) : (
                     <div className="divide-y divide-gray-100">
@@ -291,9 +298,9 @@ const ManageAccessRequests = () => {
     );
 };
 
-const StatCard = ({ label, value, icon: Icon, color, bgColor }) => {
+const StatCard = ({ label, value, icon: Icon, color, bgColor, onClick }) => {
     return (
-        <div className="bg-white p-4 sm:p-5 rounded-[20px] shadow-md border border-gray-100 group flex flex-col items-start h-full hover:-translate-y-1 transition-all duration-300">
+        <div onClick={onClick} className="bg-white p-4 sm:p-5 rounded-[20px] shadow-md border border-gray-100 group flex flex-col items-start h-full hover:-translate-y-1 transition-all duration-300 cursor-pointer active:scale-[0.98] select-none">
             <div className={`w-10 h-10 rounded-xl ${bgColor} flex items-center justify-center mb-3 shadow-sm group-hover:scale-110 transition-transform duration-500`}>
                 <Icon className={`w-5 h-5 ${color}`} />
             </div>

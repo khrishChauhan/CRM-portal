@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import {
     Search, ChevronLeft, ChevronRight, Loader2, Users, UserCheck, UserX,
@@ -18,7 +19,8 @@ const ManageClients = () => {
     const [stats, setStats] = useState({ total: 0, active: 0, inactive: 0, suspended: 0 });
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
-    const [statusFilter, setStatusFilter] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '');
     const [toast, setToast] = useState(null);
     const [selectedClient, setSelectedClient] = useState(null);
 
@@ -119,10 +121,10 @@ const ManageClients = () => {
 
             {/* ── Stats Cards ── */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
-                <StatCard icon={Users} label="Total Assets" value={stats.total} color="blue" />
-                <StatCard icon={UserCheck} label="Operational" value={stats.active} color="emerald" />
-                <StatCard icon={UserX} label="Deactivated" value={stats.inactive} color="gray" />
-                <StatCard icon={AlertTriangle} label="Suspended" value={stats.suspended} color="red" />
+                <StatCard icon={Users} label="Total Assets" value={stats.total} color="blue" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
+                <StatCard icon={UserCheck} label="Operational" value={stats.active} color="emerald" onClick={() => { setStatusFilter('active'); setSearchParams({ status: 'active' }); }} />
+                <StatCard icon={UserX} label="Deactivated" value={stats.inactive} color="gray" onClick={() => { setStatusFilter('inactive'); setSearchParams({ status: 'inactive' }); }} />
+                <StatCard icon={AlertTriangle} label="Suspended" value={stats.suspended} color="red" onClick={() => { setStatusFilter('suspended'); setSearchParams({ status: 'suspended' }); }} />
             </div>
 
             {/* ── Filters Bar ── */}
@@ -163,8 +165,13 @@ const ManageClients = () => {
                         <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 rounded-2xl md:rounded-[32px] flex items-center justify-center mb-4 md:mb-6">
                             <Users className="w-8 h-8 md:w-10 md:h-10 opacity-20" />
                         </div>
-                        <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Clients Registered</h3>
-                        <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic">Try adjusting your filters.</p>
+                        <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">{statusFilter || search ? 'No results found for this filter' : 'No Clients Registered'}</h3>
+                        <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic mb-6">{statusFilter || search ? 'Try adjusting your search or filters.' : 'Client registrations will appear here.'}</p>
+                        {(statusFilter || search) && (
+                            <button onClick={() => { setStatusFilter(''); setSearch(''); setSearchParams({}); }} className="px-6 py-3 bg-gray-100 text-gray-600 rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all active:scale-95 flex items-center gap-2">
+                                Clear Filters
+                            </button>
+                        )}
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
@@ -312,7 +319,7 @@ const ManageClients = () => {
     );
 };
 
-const StatCard = ({ icon: Icon, label, value, color }) => {
+const StatCard = ({ icon: Icon, label, value, color, onClick }) => {
     const colors = {
         blue: 'bg-blue-50 text-blue-600 border-blue-100',
         emerald: 'bg-emerald-50 text-emerald-600 border-emerald-100',
@@ -320,7 +327,7 @@ const StatCard = ({ icon: Icon, label, value, color }) => {
         gray: 'bg-gray-50 text-gray-500 border-gray-100',
     };
     return (
-        <div className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group flex flex-col items-start h-full hover:border-blue-500/20 hover:-translate-y-1 transition-all duration-300">
+        <div onClick={onClick} className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group flex flex-col items-start h-full hover:border-blue-500/20 hover:-translate-y-1 transition-all duration-300 cursor-pointer active:scale-[0.98] select-none">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center border shadow-sm ${colors[color]} mb-3 group-hover:scale-110 transition-transform duration-500`}>
                 <Icon className="w-5 h-5" />
             </div>

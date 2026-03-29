@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import {
     Plus, Search, ChevronLeft, ChevronRight, Loader2, FolderOpen,
@@ -27,7 +27,8 @@ const ManageProjects = () => {
     const [dashboard, setDashboard] = useState(null);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
-    const [statusFilter, setStatusFilter] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '');
     const [priorityFilter, setPriorityFilter] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [editingProject, setEditingProject] = useState(null);
@@ -136,12 +137,12 @@ const ManageProjects = () => {
             {/* ── Dashboard Stats ── */}
             {dashboard && (
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
-                    <MiniStat label="Total" value={ov.total || 0} icon={FolderOpen} color="text-blue-500" bgColor="bg-blue-50" />
-                    <MiniStat label="Active" value={ov.active || 0} icon={TrendingUp} color="text-emerald-500" bgColor="bg-emerald-50" />
-                    <MiniStat label="Completed" value={ov.completed || 0} icon={CheckCircle} color="text-sky-500" bgColor="bg-sky-50" />
-                    <MiniStat label="Delayed" value={ov.delayed || 0} icon={AlertTriangle} color="text-red-500" bgColor="bg-red-50" />
-                    <MiniStat label="On Hold" value={ov.onHold || 0} icon={Clock} color="text-amber-500" bgColor="bg-amber-50" />
-                    <MiniStat label="Deleted" value={ov.deleted || 0} icon={Trash2} color="text-gray-500" bgColor="bg-gray-50" />
+                    <MiniStat label="Total" value={ov.total || 0} icon={FolderOpen} color="text-blue-500" bgColor="bg-blue-50" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
+                    <MiniStat label="Active" value={ov.active || 0} icon={TrendingUp} color="text-emerald-500" bgColor="bg-emerald-50" onClick={() => { setStatusFilter('In Progress'); setSearchParams({ status: 'In Progress' }); }} />
+                    <MiniStat label="Completed" value={ov.completed || 0} icon={CheckCircle} color="text-sky-500" bgColor="bg-sky-50" onClick={() => { setStatusFilter('Completed'); setSearchParams({ status: 'Completed' }); }} />
+                    <MiniStat label="Delayed" value={ov.delayed || 0} icon={AlertTriangle} color="text-red-500" bgColor="bg-red-50" onClick={() => { setStatusFilter('Delayed'); setSearchParams({ status: 'Delayed' }); }} />
+                    <MiniStat label="On Hold" value={ov.onHold || 0} icon={Clock} color="text-amber-500" bgColor="bg-amber-50" onClick={() => { setStatusFilter('On Hold'); setSearchParams({ status: 'On Hold' }); }} />
+                    <MiniStat label="Deleted" value={ov.deleted || 0} icon={Trash2} color="text-gray-500" bgColor="bg-gray-50" onClick={() => { setStatusFilter('Cancelled'); setSearchParams({ status: 'Cancelled' }); }} />
                 </div>
             )}
 
@@ -189,11 +190,17 @@ const ManageProjects = () => {
                         <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 rounded-2xl md:rounded-[32px] flex items-center justify-center mb-4 md:mb-6">
                             <FolderOpen className="w-8 h-8 md:w-10 md:h-10 opacity-20" />
                         </div>
-                        <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Projects Found</h3>
-                        <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic mb-6">Create your first operational project.</p>
-                        <button onClick={() => setShowModal(true)} className="px-6 py-3 blue-gradient text-white rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all btn-shadow active:scale-95 flex items-center gap-2">
-                            <Plus className="w-4 h-4" /> Add Project
-                        </button>
+                        <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">{statusFilter || priorityFilter || search ? 'No results found for this filter' : 'No Projects Found'}</h3>
+                        <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic mb-6">{statusFilter || priorityFilter || search ? 'Try adjusting your search or filters.' : 'Create your first operational project.'}</p>
+                        {statusFilter || priorityFilter || search ? (
+                            <button onClick={() => { setStatusFilter(''); setPriorityFilter(''); setSearch(''); setSearchParams({}); }} className="px-6 py-3 bg-gray-100 text-gray-600 rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all active:scale-95 flex items-center gap-2">
+                                Clear Filters
+                            </button>
+                        ) : (
+                            <button onClick={() => setShowModal(true)} className="px-6 py-3 blue-gradient text-white rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all btn-shadow active:scale-95 flex items-center gap-2">
+                                <Plus className="w-4 h-4" /> Add Project
+                            </button>
+                        )}
                     </div>
                 ) : (
                     <div className="space-y-6">
@@ -328,8 +335,8 @@ const ManageProjects = () => {
     );
 };
 
-const MiniStat = ({ label, value, icon: Icon, color, bgColor }) => (
-    <div className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group hover:border-blue-500/20 hover:-translate-y-1 transition-all duration-300 flex flex-col items-start h-full">
+const MiniStat = ({ label, value, icon: Icon, color, bgColor, onClick }) => (
+    <div onClick={onClick} className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group hover:border-blue-500/20 hover:-translate-y-1 transition-all duration-300 flex flex-col items-start h-full cursor-pointer active:scale-[0.98] select-none">
         <div className={`w-10 h-10 rounded-xl ${bgColor} flex items-center justify-center mb-3 transition-transform group-hover:scale-110`}>
             <Icon className={`w-5 h-5 ${color}`} />
         </div>
