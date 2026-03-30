@@ -21,7 +21,7 @@ const ManageStaffProjects = () => {
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedProject, setSelectedProject] = useState(null);
+    const [selectedProject, setSelectedProject] = useState(null);   
     const [updating, setUpdating] = useState(false);
     const [editForm, setEditForm] = useState({
         projectStatus: '',
