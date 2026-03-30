@@ -274,8 +274,13 @@ const ManageClients = () => {
                     <div className="bg-white w-[94%] max-w-[460px] h-auto max-h-[92vh] rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col relative z-[160] animate-in slide-in-from-top-4 duration-300 overflow-hidden">
                         <div className="flex items-center justify-between p-[22px] pb-3 bg-white shrink-0">
                             <h2 className="text-[20px] font-bold text-[#2C3E50] tracking-tight">{selectedClient.name}</h2>
-                            <button onClick={() => setSelectedClient(null)} className="p-1.5 text-gray-400 hover:text-red-500 transition-all">
-                                <X className="w-5 h-5" />
+                            <button
+                                onClick={() => setSelectedClient(null)}
+                                className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-800 hover:text-red-600 hover:bg-red-50 transition-all duration-200 border border-slate-200/50"
+                                aria-label="Close"
+                                type="button"
+                            >
+                                <span className="text-[22px] leading-none mb-0.5">&times;</span>
                             </button>
                         </div>
 

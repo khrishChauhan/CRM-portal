@@ -428,8 +428,13 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                     <h2 className="text-[20px] font-bold text-[#2C3E50] tracking-tight">
                         {isEdit ? 'Modify Profile' : 'Add Staff'}
                     </h2>
-                    <button type="button" onClick={onClose} className="p-1.5 text-gray-400 hover:text-red-500 transition-all font-bold">
-                        <X className="w-5 h-5" />
+                    <button 
+                        type="button" 
+                        onClick={onClose} 
+                        className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-800 hover:text-red-600 hover:bg-red-50 transition-all duration-200 border border-slate-200/50"
+                        aria-label="Close"
+                    >
+                        <span className="text-[22px] leading-none mb-0.5">&times;</span>
                     </button>
                 </div>
 

@@ -429,37 +429,45 @@ const ProjectUpdates = () => {
             )}
 
             {/* ── Header ── */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5 mb-4 sm:mb-5 flex-shrink-0">
-                <div className="flex items-center gap-3 w-full sm:w-auto flex-1 min-w-0">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-6 flex-shrink-0 animate-in fade-in slide-in-from-top-2 duration-500">
+                <div className="flex items-center gap-4 w-full sm:w-auto flex-1 min-w-0">
                     <button
                         onClick={goBack}
-                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white card-shadow border border-gray-100 flex items-center justify-center text-gray-400 hover:text-blue-600 transition-all active:scale-95 flex-shrink-0"
+                        className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-800 hover:bg-slate-50 transition-all active:scale-95 flex-shrink-0"
+                        title="Close"
+                        type="button"
                     >
-                        <ArrowLeft className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+                        <span className="text-[24px] leading-none mb-0.5 font-light" style={{ transform: 'scaleX(1.1)' }}>&times;</span>
                     </button>
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-[#1A1A1A] tracking-tight truncate">
+                        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight truncate leading-tight">
                             {project?.projectName || 'Project'}
                         </h1>
-                        <p className="text-gray-400 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mt-1 truncate">
-                            ID: {project?.projectCode} • {updates.length} Updates
-                        </p>
+                        <div className="flex items-center gap-2 mt-1">
+                            <span className="text-[9px] font-bold text-blue-600 bg-blue-50/80 px-2 py-0.5 rounded-md border border-blue-100/50 uppercase tracking-widest leading-none">
+                                {project?.projectCode}
+                            </span>
+                            <span className="text-slate-300 text-[10px]">•</span>
+                            <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest leading-none">
+                                {updates.length} Updates
+                            </span>
+                        </div>
                     </div>
                 </div>
 
-                {/* Tab Switcher */}
-                <div className="flex bg-gray-200 p-1.5 rounded-2xl w-full sm:w-auto overflow-x-auto scrollbar-none">
+                {/* Minimal Tab Switcher (With Spacing) */}
+                <div className="flex bg-slate-100 p-1 rounded-[14px] w-full sm:w-auto self-start sm:self-center gap-1.5">
                     {!isClient ? (
                         <>
                             <button
                                 onClick={() => setActiveTab('updates')}
-                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'updates' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === 'updates' ? 'bg-white text-slate-900 shadow-sm border border-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
                             >
                                 Updates
                             </button>
                             <button
                                 onClick={() => setActiveTab('queries')}
-                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'queries' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === 'queries' ? 'bg-white text-slate-900 shadow-sm border border-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
                             >
                                 Queries
                             </button>
@@ -468,13 +476,13 @@ const ProjectUpdates = () => {
                         <>
                             <button
                                 onClick={() => setActiveTab('overview')}
-                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'overview' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === 'overview' ? 'bg-white text-slate-900 shadow-sm border border-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
                             >
                                 Overview
                             </button>
                             <button
                                 onClick={() => setActiveTab('queries')}
-                                className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeTab === 'queries' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white hover:bg-white/5'}`}
+                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === 'queries' ? 'bg-white text-slate-900 shadow-sm border border-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
                             >
                                 Queries
                             </button>

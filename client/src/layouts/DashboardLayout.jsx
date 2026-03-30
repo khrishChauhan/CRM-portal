@@ -100,10 +100,10 @@ const Navbar = ({ user, toggleSidebar, title }) => {
         <header className="sticky top-0 z-[100] w-full bg-[#F5F7FA]/80 backdrop-blur-xl py-4 px-6 flex items-center justify-between transition-all duration-300">
             <button
                 onClick={toggleSidebar}
-                className="p-3 rounded-xl bg-white card-shadow text-gray-600 hover:text-blue-600 transition-all active:scale-95 lg:hidden"
+                className="p-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 hover:text-blue-600 transition-all active:scale-95 lg:hidden shadow-sm"
                 aria-label="Toggle Menu"
             >
-                <Menu className="w-6 h-6" />
+                <Menu className="w-6 h-6 stroke-[2.5]" />
             </button>
 
             <div className="flex-1 flex justify-center lg:justify-start lg:ml-6">
