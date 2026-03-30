@@ -5,11 +5,15 @@ const upload = require('../middleware/upload');
 const {
     submitQuery,
     getQueries,
-    respondToQuery
+    respondToQuery,
+    getAllQueries
 } = require('../controllers/projectQueryController');
 
 // All routes require authentication
 router.use(protect);
+
+// Centralized queries inbox
+router.get('/queries/all', authorize('admin', 'staff'), getAllQueries);
 
 // Routes for /api/projects/:projectId/...
 router.post('/projects/:projectId/query', upload.single('image'), authorize('client'), submitQuery);

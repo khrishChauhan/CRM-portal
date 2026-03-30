@@ -8,7 +8,8 @@ import {
     X,
     FolderOpen,
     FileText,
-    Building2
+    Building2,
+    MessageSquare
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
@@ -21,12 +22,14 @@ const Sidebar = ({ role, user, logout }) => {
         { name: 'Staff', path: '/admin/staff', icon: Users },
         { name: 'Clients', path: '/admin/clients', icon: Briefcase },
         { name: 'Projects', path: '/admin/projects', icon: FolderOpen },
+        { name: 'Queries', path: '/admin/queries', icon: MessageSquare },
         { name: 'Access Requests', path: '/admin/access-requests', icon: FileText },
     ];
 
     const staffLinks = [
         { name: 'Dashboard', path: '/staff/dashboard', icon: LayoutDashboard },
         { name: 'My Projects', path: '/staff/projects', icon: FolderOpen },
+        { name: 'Queries', path: '/staff/queries', icon: MessageSquare },
     ];
 
     const clientLinks = [
@@ -141,8 +144,10 @@ export const DashboardLayout = ({ children }) => {
         '/admin/clients': 'Manage Clients',
         '/admin/projects': 'Manage Projects',
         '/admin/access-requests': 'Access Requests',
+        '/admin/queries': 'Query Inbox',
         '/staff/dashboard': 'Staff Dashboard',
         '/staff/projects': 'My Assignments',
+        '/staff/queries': 'Query Inbox',
         '/client/dashboard': 'Overview',
         '/client/projects': 'Project Gallery',
     };

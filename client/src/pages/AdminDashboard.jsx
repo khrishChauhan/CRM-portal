@@ -9,7 +9,8 @@ import {
     AlertCircle,
     Activity,
     Clock,
-    User
+    User,
+    MessageSquare
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -21,8 +22,11 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const { data } = await api.get('/dashboard/admin');
-                setStats(data.data);
+                const [{ data: dashData }, { data: queryData }] = await Promise.all([
+                    api.get('/dashboard/admin'),
+                    api.get('/queries/all'),
+                ]);
+                setStats({ ...dashData.data, totalQueries: queryData.data.open || 0 });
             } catch (err) {
                 setError(err.response?.data?.message || 'Could not load dashboard');
             } finally {
@@ -59,6 +63,7 @@ const AdminDashboard = () => {
         { name: 'Total Users', value: stats.totalUsers, subtitle: 'System-wide', icon: Users, color: 'text-blue-600', bgColor: 'bg-blue-50', path: '/admin/staff' },
         { name: 'Total Staff', value: stats.totalStaff, subtitle: 'Operators', icon: UserCheck, color: 'text-emerald-600', bgColor: 'bg-emerald-50', path: '/admin/staff' },
         { name: 'Total Clients', value: stats.totalClients, subtitle: 'Subscribers', icon: Briefcase, color: 'text-amber-600', bgColor: 'bg-amber-50', path: '/admin/clients' },
+        { name: 'Open Queries', value: stats.totalQueries, subtitle: 'Active', icon: MessageSquare, color: 'text-violet-600', bgColor: 'bg-violet-50', path: '/admin/queries' },
     ];
 
     return (

@@ -16,6 +16,7 @@ import ClientDashboard from './pages/ClientDashboard';
 import MyProjects from './pages/MyProjects';
 import ManageAccessRequests from './pages/ManageAccessRequests';
 import ProjectUpdates from './pages/ProjectUpdates';
+import ManageQueries from './pages/ManageQueries';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -49,6 +50,9 @@ function App() {
                 <Route path="/admin/access-requests" element={
                   <DashboardLayout><ManageAccessRequests /></DashboardLayout>
                 } />
+                <Route path="/admin/queries" element={
+                  <DashboardLayout><ManageQueries /></DashboardLayout>
+                } />
 
                 <Route path="/admin/projects/:id/updates" element={
                   <DashboardLayout><ProjectUpdates /></DashboardLayout>
@@ -62,6 +66,9 @@ function App() {
                 } />
                 <Route path="/staff/projects" element={
                   <DashboardLayout><ManageStaffProjects /></DashboardLayout>
+                } />
+                <Route path="/staff/queries" element={
+                  <DashboardLayout><ManageQueries /></DashboardLayout>
                 } />
                 <Route path="/staff/projects/:id/updates" element={
                   <DashboardLayout><ProjectUpdates /></DashboardLayout>

@@ -153,3 +153,67 @@ exports.respondToQuery = async (req, res) => {
         return sendError(res, error.message, 500);
     }
 };
+
+/**
+ * GET /api/queries/all
+ * Admin/Staff: Get all queries across all projects
+ */
+exports.getAllQueries = async (req, res) => {
+    try {
+        const user = req.user;
+        const { status, projectId } = req.query;
+
+        let filter = {};
+
+        // Status filter
+        if (status && status !== 'all') {
+            filter.status = status;
+        }
+
+        // Project filter
+        if (projectId) {
+            filter.projectId = projectId;
+        }
+
+        // Staff can only see queries from their assigned projects
+        if (user.role === 'staff') {
+            const staffProjects = await Project.find({
+                $or: [
+                    { projectManager: user.id },
+                    { assignedStaff: user.id }
+                ],
+                isDeleted: false
+            }).select('_id');
+
+            const projectIds = staffProjects.map(p => p._id);
+            filter.projectId = filter.projectId
+                ? (projectIds.some(id => id.toString() === filter.projectId) ? filter.projectId : null)
+                : { $in: projectIds };
+
+            if (!filter.projectId) {
+                return sendSuccess(res, { queries: [], total: 0, open: 0, answered: 0, closed: 0 }, 'No queries found');
+            }
+        }
+
+        const queries = await ProjectQuery.find(filter)
+            .populate('projectId', 'projectName projectCode')
+            .populate('clientId', 'name email role')
+            .populate('respondedBy', 'name role')
+            .sort({ createdAt: -1 });
+
+        // Counts
+        const countFilter = user.role === 'admin' ? {} : { projectId: filter.projectId };
+        const [total, open, answered, closed] = await Promise.all([
+            ProjectQuery.countDocuments(countFilter),
+            ProjectQuery.countDocuments({ ...countFilter, status: 'open' }),
+            ProjectQuery.countDocuments({ ...countFilter, status: 'answered' }),
+            ProjectQuery.countDocuments({ ...countFilter, status: 'closed' }),
+        ]);
+
+        return sendSuccess(res, { queries, total, open, answered, closed }, 'All queries fetched');
+    } catch (error) {
+        console.error('❌ getAllQueries error:', error);
+        return sendError(res, error.message, 500);
+    }
+};
+

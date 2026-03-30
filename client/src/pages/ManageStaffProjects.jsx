@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import {
     Search, Loader2, FolderOpen, AlertCircle,
@@ -18,6 +18,8 @@ const PROJECT_STATUS_COLORS = {
 
 const ManageStaffProjects = () => {
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const statusFilter = searchParams.get('status') || 'All';
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -95,6 +97,33 @@ const ManageStaffProjects = () => {
                     <h1 className="text-3xl font-display font-bold text-[#1A1A1A]">Project Assignments</h1>
                     <p className="text-[#6B7280] font-medium">Manage and update progress on your active projects.</p>
                 </div>
+                {/* Auto-applied Filter Dropdown */}
+                <div className="flex items-center gap-3">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest hidden sm:inline-block">Filter:</span>
+                    <div className="relative">
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => {
+                                if (e.target.value === 'All') {
+                                    searchParams.delete('status');
+                                } else {
+                                    searchParams.set('status', e.target.value);
+                                }
+                                setSearchParams(searchParams);
+                            }}
+                            className="h-10 pl-4 pr-10 bg-white border border-gray-100 rounded-xl text-sm font-bold text-[#1A1A1A] appearance-none focus:outline-none focus:border-blue-500 shadow-sm transition-all cursor-pointer"
+                        >
+                            <option value="All">All Projects</option>
+                            <option value="Planned">Planned</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="On Hold">On Hold</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Delayed">Delayed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                        <ChevronDown className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    </div>
+                </div>
             </div>
 
             {error && (
@@ -108,7 +137,7 @@ const ManageStaffProjects = () => {
             )}
 
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                {projects.map(project => (
+                {(statusFilter === 'All' ? projects : projects.filter(p => p.projectStatus === statusFilter)).map(project => (
                     <div key={project._id} className="bg-white p-8 rounded-[24px] card-shadow border border-transparent hover:border-blue-500/30 transition-all duration-300 group">
                         <div className="flex justify-between items-start mb-6">
                             <div className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-bold uppercase tracking-wider">
@@ -139,10 +168,10 @@ const ManageStaffProjects = () => {
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => navigate(`/staff/projects/${project._id}/updates`)}
-                                    className="p-3 bg-gray-50 hover:bg-emerald-50 text-gray-400 hover:text-emerald-600 rounded-xl transition-all border border-transparent hover:border-emerald-100"
-                                    title="View Updates"
+                                    className="px-5 py-3.5 bg-gray-50 hover:bg-emerald-50 text-gray-500 hover:text-emerald-600 rounded-xl transition-all border border-transparent hover:border-emerald-100 text-[10px] font-bold uppercase tracking-wider"
+                                    title="Upload Updates"
                                 >
-                                    <MessageSquare className="w-5 h-5" />
+                                    Upload
                                 </button>
                                 <button
                                     onClick={() => handleEdit(project)}
@@ -156,13 +185,17 @@ const ManageStaffProjects = () => {
                     </div>
                 ))}
 
-                {projects.length === 0 && (
+                {(statusFilter === 'All' ? projects : projects.filter(p => p.projectStatus === statusFilter)).length === 0 && (
                     <div className="xl:col-span-2 bg-white py-12 md:py-20 px-4 rounded-[24px] md:rounded-[32px] card-shadow flex flex-col items-center justify-center text-center max-w-2xl mx-auto w-full">
                         <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-50 rounded-2xl md:rounded-[22px] flex items-center justify-center mb-4 md:mb-6">
                             <FolderOpen className="w-8 h-8 md:w-10 md:h-10 text-gray-300" />
                         </div>
-                        <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A]">No active projects</h3>
-                        <p className="text-[#6B7280] text-[13px] md:text-sm font-medium mt-1 md:mt-2">You haven't been assigned to any projects yet.</p>
+                        <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A]">No projects found</h3>
+                        <p className="text-[#6B7280] text-[13px] md:text-sm font-medium mt-1 md:mt-2">
+                            {statusFilter === 'All' 
+                                ? "You haven't been assigned to any projects yet." 
+                                : `No assigned projects match the status '${statusFilter}'.`}
+                        </p>
                     </div>
                 )}
             </div>
