@@ -169,71 +169,81 @@ const ManageStaffProjects = () => {
 
             {/* Update Modal */}
             {selectedProject && (
-                <div className="fixed inset-0 z-[110] flex justify-center items-start p-4">
+                <div className="fixed inset-0 z-[110] flex justify-center items-center p-4">
                     <div className="absolute inset-0 bg-black/45 backdrop-blur-sm animate-in fade-in duration-300" onClick={() => setSelectedProject(null)}></div>
-                    <div className="bg-white w-[94%] max-w-[460px] h-auto max-h-[92vh] rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col relative z-[120] animate-in slide-in-from-top-4 duration-300 overflow-hidden">
-                        <div className="flex items-center justify-between p-[22px] pb-3 shrink-0 bg-white">
-                            <div>
-                                <h2 className="text-[20px] font-bold text-[#2C3E50] tracking-tight">Project Update</h2>
-                                <p className="text-[11px] font-bold text-blue-600 uppercase tracking-widest mt-1.5 px-3 py-1 bg-blue-50 rounded-lg inline-block">Ref: {selectedProject.projectCode}</p>
+                    <div className="bg-white w-[94%] max-w-[420px] h-auto max-h-[92vh] rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col relative z-[120] animate-in slide-in-from-top-4 duration-300 overflow-hidden">
+                        
+                        {/* Header */}
+                        <div className="flex items-start justify-between p-5 pb-3 shrink-0 bg-white border-b border-gray-50/50">
+                            <div className="flex flex-col gap-1">
+                                <h2 className="text-[18px] font-bold text-[#1A1A1A] tracking-tight">Project Update</h2>
+                                <div className="flex">
+                                    <span className="text-[8px] font-bold text-blue-600 uppercase tracking-widest px-2 py-0.5 bg-blue-50/80 rounded-md border border-blue-100/50">
+                                        Ref: {selectedProject.projectCode}
+                                    </span>
+                                </div>
                             </div>
-                            <button onClick={() => setSelectedProject(null)} className="p-1.5 text-gray-400 hover:text-red-500 transition-all">
-                                <X className="w-5 h-5" />
+                            <button 
+                                onClick={() => setSelectedProject(null)} 
+                                className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-800 hover:text-red-600 hover:bg-red-50 transition-all duration-200 border border-slate-200/50"
+                                aria-label="Close"
+                                type="button"
+                            >
+                                <span className="text-[22px] leading-none mb-0.5 font-light" style={{ transform: 'scaleX(1.1)' }}>&times;</span>
                             </button>
                         </div>
 
                         <form onSubmit={handleUpdate} className="flex-1 flex flex-col min-h-0 bg-white">
-                            <div className="flex-1 overflow-y-auto scrollbar-hide px-[22px] pt-2 pb-2">
-                                <div className="grid grid-cols-2 gap-4 mb-5">
+                            <div className="flex-1 overflow-y-auto scrollbar-hide px-5 pt-4 pb-4 space-y-4">
+                                
+                                {/* Status & Date - Side by Side */}
+                                <div className="grid grid-cols-2 gap-3">
                                     <div className="space-y-1.5">
-                                        <label className="text-[15px] font-bold text-[#34495E] ml-1">Current Status</label>
-                                        <div className="relative">
+                                        <label className="text-[13px] font-bold text-[#34495E] px-1">Status</label>
+                                        <div className="relative group">
                                             <select
                                                 value={editForm.projectStatus}
                                                 onChange={e => setEditForm({ ...editForm, projectStatus: e.target.value })}
-                                                className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none"
+                                                className="w-full h-11 px-3.5 bg-gray-50/50 border border-gray-100 rounded-[12px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:bg-white transition-all cursor-pointer appearance-none"
                                             >
                                                 <option value="Planned">Planned</option>
-                                                <option value="In Progress">In Progress</option>
+                                                <option value="In Progress">Progress</option>
                                                 <option value="On Hold">On Hold</option>
-                                                <option value="Completed">Completed</option>
-                                                <option value="Delayed">Delayed</option>
-                                                <option value="Cancelled">Cancelled</option>
+                                                <option value="Completed">Done</option>
+                                                <option value="Delayed">Delay</option>
+                                                <option value="Cancelled">Cancel</option>
                                             </select>
-                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                                                <ChevronDown className="w-4 h-4 text-gray-400" />
+                                            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                                <ChevronDown className="w-3.5 h-3.5" />
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <label className="text-[15px] font-bold text-[#34495E] ml-1">Completion</label>
-                                        <div className="relative">
-                                            <input
-                                                type="date"
-                                                value={editForm.actualCompletion}
-                                                onChange={e => setEditForm({ ...editForm, actualCompletion: e.target.value })}
-                                                className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
-                                            />
-                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                                                <ChevronDown className="w-4 h-4 text-gray-400" />
-                                            </div>
-                                        </div>
+                                        <label className="text-[13px] font-bold text-[#34495E] px-1">Due Date</label>
+                                        <input
+                                            type="date"
+                                            value={editForm.actualCompletion}
+                                            onChange={e => setEditForm({ ...editForm, actualCompletion: e.target.value })}
+                                            className="w-full h-11 px-3.5 bg-gray-50/50 border border-gray-100 rounded-[12px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
+                                        />
                                     </div>
                                 </div>
 
-                                <div className="space-y-1.5 mb-5">
-                                    <label className="text-[15px] font-bold text-[#34495E] ml-1">Risk Level</label>
-                                    <div className="grid grid-cols-3 gap-2 p-1.5 bg-gray-50 border border-gray-200 rounded-[14px]">
+                                {/* Risk Level - Segmented Control (Tighter) */}
+                                <div className="space-y-1.5">
+                                    <label className="text-[13px] font-bold text-[#34495E] px-1">Risk Level</label>
+                                    <div className="flex p-1 bg-gray-50/80 border border-gray-100 rounded-[12px] gap-1">
                                         {['Low', 'Medium', 'High'].map(level => (
                                             <button
                                                 key={level}
                                                 type="button"
                                                 onClick={() => setEditForm({ ...editForm, riskLevel: level })}
-                                                className={`py-2 rounded-[10px] text-[11px] font-bold uppercase tracking-wider transition-all ${editForm.riskLevel === level
-                                                    ? 'bg-blue-600 shadow-lg shadow-blue-200 text-white'
-                                                    : 'bg-transparent text-gray-400 hover:text-gray-600'
-                                                    }`}
+                                                className={`flex-1 py-2 rounded-[9px] text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${
+                                                    editForm.riskLevel === level
+                                                        ? 'bg-blue-600 shadow-md shadow-blue-500/10 text-white'
+                                                        : 'bg-white/50 text-gray-400 border border-transparent hover:text-gray-600'
+                                                }`}
                                             >
                                                 {level}
                                             </button>
@@ -241,26 +251,33 @@ const ManageStaffProjects = () => {
                                     </div>
                                 </div>
 
-                                <div className="space-y-1.5 mb-5">
-                                    <label className="text-[15px] font-bold text-[#34495E] ml-1">Update Notes</label>
+                                {/* Update Notes (Tighter) */}
+                                <div className="space-y-1.5">
+                                    <label className="text-[13px] font-bold text-[#34495E] px-1">Progress Notes</label>
                                     <textarea
                                         value={editForm.delayReason}
                                         onChange={e => setEditForm({ ...editForm, delayReason: e.target.value })}
-                                        placeholder="Add any internal notes..."
-                                        style={{ minHeight: '110px' }}
-                                        className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                                        placeholder="Add internal progress notes..."
+                                        className="w-full min-h-[90px] max-h-[140px] px-3.5 py-2.5 bg-gray-50/50 border border-gray-100 rounded-[12px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
                                     />
                                 </div>
                             </div>
 
-                            <div className="p-[22px] pt-3 bg-white border-t border-gray-50 shrink-0">
+                            {/* Footer Buttons (Tighter) */}
+                            <div className="p-5 pt-2 bg-white border-t border-gray-50/50 shrink-0">
                                 <button
                                     type="submit"
                                     disabled={updating}
-                                    className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                                    className="w-full h-11 blue-gradient text-white font-bold rounded-[12px] shadow-[0_4px_12px_rgba(37,99,235,0.15)] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
-                                    {updating ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : <Save className="w-5 h-5" />}
-                                    Save Progress
+                                    {updating ? (
+                                        <Loader2 className="w-4 h-4 animate-spin text-white" />
+                                    ) : (
+                                        <>
+                                            <Save className="w-4 h-4" />
+                                            <span className="text-[13px]">Save Progress</span>
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         </form>
