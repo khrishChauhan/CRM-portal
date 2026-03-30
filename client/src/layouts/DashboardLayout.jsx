@@ -43,12 +43,12 @@ const Sidebar = ({ role, user, logout }) => {
         <div className="flex flex-col h-full bg-white text-[#1A1A1A] w-full max-w-[300px] border-r border-gray-100 shadow-xl font-body">
             {/* TOP SECTION */}
             <div className="p-8 flex items-center space-x-4">
-                <div className="w-12 h-12 blue-gradient rounded-[14px] flex items-center justify-center btn-shadow">
+                <div className="w-12 h-12 blue-gradient rounded-[14px] flex items-center justify-center shadow-lg shadow-[#173d9f]/20">
                     <Building2 className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                    <h2 className="font-display font-bold text-lg leading-tight tracking-tight">Khushi Technology Application</h2>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Project Tracker v1.1</p>
+                    <h2 className="font-display font-bold text-lg leading-tight tracking-tight text-[#173d9f]">KHUSHITECH CRM</h2>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">Enterprise Portal v1.1</p>
                 </div>
             </div>
 
@@ -60,14 +60,17 @@ const Sidebar = ({ role, user, logout }) => {
                         <Link
                             key={link.path}
                             to={link.path}
-                            className={`flex items-center space-x-4 px-5 py-4 rounded-[16px] transition-all duration-300 group ${
+                            className={`flex items-center justify-between px-5 py-4 rounded-[16px] transition-all duration-300 group ${
                                 isActive
-                                    ? 'blue-gradient text-white btn-shadow'
-                                    : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
+                                    ? 'bg-[#173d9f]/5 text-[#173d9f] shadow-sm'
+                                    : 'text-gray-500 hover:bg-[#faf8f8] hover:text-[#173d9f]'
                             }`}
                         >
-                            <link.icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-gray-600'}`} />
-                            <span className="font-bold text-sm tracking-wide">{link.name}</span>
+                            <div className="flex items-center space-x-4">
+                                <link.icon className={`w-5 h-5 ${isActive ? 'text-[#173d9f]' : 'text-gray-400 group-hover:text-[#173d9f]'}`} />
+                                <span className={`font-bold text-sm tracking-wide ${isActive ? 'text-[#173d9f]' : 'text-gray-500 group-hover:text-[#173d9f]'}`}>{link.name}</span>
+                            </div>
+                            {isActive && <div className="w-1.5 h-1.5 rounded-full bg-[#f86a1f] shadow-[0_0_8px_rgba(248,106,31,0.5)]"></div>}
                         </Link>
                     );
                 })}
@@ -77,12 +80,12 @@ const Sidebar = ({ role, user, logout }) => {
             <div className="p-4 border-t border-gray-100">
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-[20px]">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full blue-gradient flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                        <div className="w-10 h-10 rounded-full bg-[#8192c4] flex items-center justify-center text-white text-sm font-bold shadow-sm">
                             {user?.name?.charAt(0) || 'U'}
                         </div>
                         <div className="flex flex-col">
                             <span className="text-xs font-bold text-[#1A1A1A] truncate max-w-[120px]">{user?.name || 'Guest User'}</span>
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{user?.role?.toUpperCase() || 'PUBLIC'}</span>
+                            <span className="text-[10px] font-bold text-[#8192c4] uppercase tracking-widest">{user?.role?.toUpperCase() || 'PUBLIC'}</span>
                         </div>
                     </div>
                     <button 
@@ -100,10 +103,10 @@ const Sidebar = ({ role, user, logout }) => {
 
 const Navbar = ({ user, toggleSidebar, title }) => {
     return (
-        <header className="sticky top-0 z-[100] w-full bg-[#F5F7FA]/80 backdrop-blur-xl py-4 px-6 flex items-center justify-between transition-all duration-300">
+        <header className="sticky top-0 z-[100] w-full bg-[#faf8f8]/80 backdrop-blur-xl py-4 px-6 flex items-center justify-between transition-all duration-300 border-b border-gray-100">
             <button
                 onClick={toggleSidebar}
-                className="p-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 hover:text-blue-600 transition-all active:scale-95 lg:hidden shadow-sm"
+                className="p-3 rounded-xl bg-white border border-gray-100 text-[#173d9f] hover:text-[#f86a1f] transition-all active:scale-95 lg:hidden shadow-sm"
                 aria-label="Toggle Menu"
             >
                 <Menu className="w-6 h-6 stroke-[2.5]" />
@@ -160,7 +163,7 @@ export const DashboardLayout = ({ children }) => {
     }, [location]);
 
     return (
-        <div className="flex h-screen bg-[#F5F7FA] overflow-hidden font-body selection:bg-blue-500/20 relative">
+        <div className="flex h-screen bg-[#faf8f8] overflow-hidden font-body selection:bg-[#f86a1f]/20 relative text-[#1A1A1A]">
             
             {/* Mobile Sidebar Overlay */}
             {sidebarOpen && (

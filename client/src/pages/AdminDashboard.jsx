@@ -39,7 +39,7 @@ const AdminDashboard = () => {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-20 md:py-32 min-h-[300px] md:min-h-[500px]">
-                <Loader2 className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600 mb-4" />
+                <Loader2 className="w-10 h-10 md:w-12 md:h-12 animate-spin text-[#173d9f] mb-4" />
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compiling Analytics...</p>
             </div>
         );
@@ -60,10 +60,10 @@ const AdminDashboard = () => {
     }
 
     const cards = [
-        { name: 'Total Users', value: stats.totalUsers, subtitle: 'System-wide', icon: Users, color: 'text-blue-600', bgColor: 'bg-blue-50', path: '/admin/staff' },
-        { name: 'Total Staff', value: stats.totalStaff, subtitle: 'Operators', icon: UserCheck, color: 'text-emerald-600', bgColor: 'bg-emerald-50', path: '/admin/staff' },
-        { name: 'Total Clients', value: stats.totalClients, subtitle: 'Subscribers', icon: Briefcase, color: 'text-amber-600', bgColor: 'bg-amber-50', path: '/admin/clients' },
-        { name: 'Open Queries', value: stats.totalQueries, subtitle: 'Active', icon: MessageSquare, color: 'text-violet-600', bgColor: 'bg-violet-50', path: '/admin/queries' },
+        { name: 'Total Users', value: stats.totalUsers, subtitle: 'System-wide', icon: Users, color: 'text-[#173d9f]', bgColor: 'bg-[#173d9f]/5', path: '/admin/staff' },
+        { name: 'Total Staff', value: stats.totalStaff, subtitle: 'Operators', icon: UserCheck, color: 'text-[#173d9f]', bgColor: 'bg-[#173d9f]/5', path: '/admin/staff' },
+        { name: 'Total Clients', value: stats.totalClients, subtitle: 'Subscribers', icon: Briefcase, color: 'text-[#173d9f]', bgColor: 'bg-[#173d9f]/5', path: '/admin/clients' },
+        { name: 'Open Queries', value: stats.totalQueries, subtitle: 'Active', icon: MessageSquare, color: 'text-[#f86a1f]', bgColor: 'bg-[#f86a1f]/5', path: '/admin/queries' },
     ];
 
     return (
@@ -74,15 +74,15 @@ const AdminDashboard = () => {
                     <p className="text-gray-500 mt-2 font-medium text-base leading-relaxed">Cross-platform metrics and operational intelligence.</p>
                 </div>
                 <div className="self-start md:self-end px-4 py-2 bg-white border border-gray-100 rounded-xl flex items-center gap-3 shadow-sm">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(47,107,255,0.4)]"></div>
-                    <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Real-time Stream</span>
+                    <div className="w-2 h-2 bg-[#173d9f] rounded-full animate-pulse shadow-[0_0_8px_rgba(23,61,159,0.4)]"></div>
+                    <span className="text-[10px] font-bold text-[#173d9f] uppercase tracking-widest">Real-time Stream</span>
                 </div>
             </header>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
                 {cards.map((card, idx) => (
-                    <div key={card.name} onClick={() => navigate(card.path)} className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group hover:-translate-y-1 transition-all duration-300 flex flex-col items-start h-full relative overflow-hidden cursor-pointer active:scale-[0.98] select-none">
+                    <div key={card.name} onClick={() => navigate(card.path)} className={`bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group hover:-translate-y-1 transition-all duration-300 flex flex-col items-start h-full relative overflow-hidden cursor-pointer active:scale-[0.98] select-none hover:border-${card.color === 'text-[#f86a1f]' ? '[#f86a1f]' : '[#173d9f]'}/20`}>
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${card.bgColor} ${card.color} mb-3 shadow-sm group-hover:scale-110 transition-transform duration-500`}>
                             <card.icon className="w-5 h-5" />
                         </div>
@@ -96,10 +96,10 @@ const AdminDashboard = () => {
 
             {/* Recent Activities Section */}
             <div className="bg-white rounded-[32px] border border-gray-100 shadow-2xl overflow-hidden mt-6">
-                <div className="px-8 py-8 md:px-10 md:py-10 border-b border-gray-50 flex items-center justify-between bg-gray-50/20">
+                <div className="px-8 py-8 md:px-10 md:py-10 border-b border-gray-50 flex items-center justify-between bg-[#faf8f8]/50">
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100/50">
-                            <Activity className="w-6 h-6 text-blue-600" />
+                        <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center border border-[#173d9f]/10 shadow-sm">
+                            <Activity className="w-6 h-6 text-[#173d9f]" />
                         </div>
                         <h2 className="text-2xl font-display font-bold text-[#1A1A1A] tracking-tight">Intelligence Feed</h2>
                     </div>
@@ -127,21 +127,21 @@ const AdminDashboard = () => {
 
 const ActivityRow = ({ log }) => {
     const roleColors = {
-        admin: 'bg-blue-50 text-blue-600 border-blue-100',
-        staff: 'bg-emerald-50 text-emerald-600 border-emerald-100',
-        client: 'bg-amber-50 text-amber-600 border-amber-100'
+        admin: 'bg-[#f86a1f]/5 text-[#f86a1f] border-[#f86a1f]/10',
+        staff: 'bg-[#173d9f]/5 text-[#173d9f] border-[#173d9f]/10',
+        client: 'bg-gray-50 text-gray-400 border-gray-100'
     };
 
     return (
-        <div className="mx-4 md:mx-6 my-3 md:my-4 p-4 md:p-6 bg-white border border-gray-100 border-l-[3px] border-l-blue-600 rounded-2xl cursor-default group hover:shadow-sm transition-shadow">
+        <div className="mx-4 md:mx-6 my-3 md:my-4 p-4 md:p-6 bg-white border border-gray-100 border-l-[3px] border-l-[#173d9f] rounded-2xl cursor-default group hover:shadow-sm transition-shadow">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 md:gap-6">
                 <div className="flex items-start sm:items-center gap-4 md:gap-6">
                     <div className="relative shrink-0">
-                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center bg-gray-50 group-hover:bg-white border border-gray-100 group-hover:border-blue-100/50 group-hover:scale-105 transition-all duration-500 shadow-sm">
-                            <User className="w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center bg-[#faf8f8] group-hover:bg-white border border-gray-100 group-hover:border-[#173d9f]/20 group-hover:scale-105 transition-all duration-500 shadow-sm">
+                            <User className="w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-[#173d9f] transition-colors" />
                         </div>
                         <div className="absolute -bottom-1 -right-1 w-5 h-5 md:w-6 md:h-6 bg-white border-2 border-white rounded-full flex items-center justify-center shadow-md">
-                            <div className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${log.actorRole === 'admin' ? 'bg-blue-600' : log.actorRole === 'staff' ? 'bg-emerald-600' : 'bg-amber-600'}`}></div>
+                            <div className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${log.actorRole === 'admin' ? 'bg-[#f86a1f]' : log.actorRole === 'staff' ? 'bg-[#173d9f]' : 'bg-gray-400'}`}></div>
                         </div>
                     </div>
                     <div>
@@ -166,8 +166,8 @@ const ActivityRow = ({ log }) => {
                     </div>
                 </div>
                 <div className="hidden sm:block opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-xl">
-                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-[#173d9f]/5 border border-[#173d9f]/10 rounded-xl">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#173d9f]" />
                     </div>
                 </div>
             </div>

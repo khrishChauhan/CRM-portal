@@ -7,9 +7,9 @@ import {
 } from 'lucide-react';
 
 const STATUS_COLORS = {
-    pending: 'bg-amber-50 text-amber-700',
-    approved: 'bg-emerald-50 text-emerald-700',
-    rejected: 'bg-red-50 text-red-600',
+    pending: 'bg-[#f86a1f]/10 text-[#f86a1f] border-[#f86a1f]/20',
+    approved: 'bg-[#173d9f]/10 text-[#173d9f] border-[#173d9f]/20',
+    rejected: 'bg-red-50 text-red-600 border-red-100',
 };
 
 const ManageAccessRequests = () => {
@@ -89,7 +89,7 @@ const ManageAccessRequests = () => {
         <div className="space-y-8 animate-reveal pb-10">
             {toast && (
                 <div className={`fixed top-8 right-8 z-[100] flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl ${toast.type === 'error' ? 'bg-red-600 text-white' : 'blue-gradient text-white'} text-sm font-bold animate-in slide-in-from-right-10`}>
-                    {toast.type === 'error' ? <AlertCircle className="w-5 h-5" /> : <CheckCircle className="w-5 h-5" />}
+                    {toast.type === 'error' ? <AlertCircle className="w-5 h-5 flex-shrink-0" /> : <CheckCircle className="w-5 h-5 flex-shrink-0" />}
                     {toast.message}
                 </div>
             )}
@@ -103,22 +103,22 @@ const ManageAccessRequests = () => {
 
             {/* Dashboard Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
-                <StatCard label="Total" value={stats.total} icon={FileText} color="text-blue-600" bgColor="bg-blue-50" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
-                <StatCard label="Pending" value={stats.pending} icon={Clock} color="text-amber-600" bgColor="bg-amber-50" onClick={() => { setStatusFilter('pending'); setSearchParams({ status: 'pending' }); }} />
-                <StatCard label="Approved" value={stats.approved} icon={CheckCircle} color="text-emerald-600" bgColor="bg-emerald-50" onClick={() => { setStatusFilter('approved'); setSearchParams({ status: 'approved' }); }} />
+                <StatCard label="Total" value={stats.total} icon={FileText} color="text-[#173d9f]" bgColor="bg-[#173d9f]/5" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
+                <StatCard label="Pending" value={stats.pending} icon={Clock} color="text-[#f86a1f]" bgColor="bg-[#f86a1f]/5" onClick={() => { setStatusFilter('pending'); setSearchParams({ status: 'pending' }); }} />
+                <StatCard label="Approved" value={stats.approved} icon={CheckCircle} color="text-[#173d9f]" bgColor="bg-[#173d9f]/5" onClick={() => { setStatusFilter('approved'); setSearchParams({ status: 'approved' }); }} />
                 <StatCard label="Declined" value={stats.rejected} icon={XCircle} color="text-red-600" bgColor="bg-red-50" onClick={() => { setStatusFilter('rejected'); setSearchParams({ status: 'rejected' }); }} />
             </div>
 
             {/* Filters */}
             <div className="bg-white p-2 rounded-[22px] card-shadow flex flex-col md:flex-row gap-2">
                 <div className="relative flex-1 group">
-                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
+                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#173d9f] transition-colors" />
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search by client or project..."
-                        className="w-full bg-gray-50 border-2 border-transparent focus:bg-white pl-14 pr-6 py-4 rounded-[18px] text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:shadow-sm cursor-text transition-all text-sm font-medium"
+                        className="w-full bg-[#faf8f8] border-2 border-transparent focus:bg-white pl-14 pr-6 py-4 rounded-[18px] text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:border-[#173d9f] focus:shadow-sm cursor-text transition-all text-sm font-medium"
                     />
                 </div>
                 <select
@@ -137,7 +137,7 @@ const ManageAccessRequests = () => {
             <div className="bg-white rounded-[24px] card-shadow overflow-hidden min-h-[300px] sm:min-h-[400px]">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20 sm:py-32">
-                        <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 animate-spin text-blue-600 mb-4" />
+                        <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 animate-spin text-[#173d9f] mb-4" />
                         <p className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest">Loading requests...</p>
                     </div>
                 ) : requests.length === 0 ? (
@@ -160,7 +160,7 @@ const ManageAccessRequests = () => {
                                 <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8">
                                     <div className="space-y-6 flex-1">
                                         <div className="flex items-center gap-4">
-                                            <span className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${STATUS_COLORS[req.status] || 'bg-gray-100 text-gray-600'}`}>
+                                            <span className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border ${STATUS_COLORS[req.status] || 'bg-gray-100 text-gray-600'}`}>
                                                 {req.status}
                                             </span>
                                             <span className="text-[11px] font-bold text-gray-400 flex items-center gap-1.5">
@@ -171,13 +171,13 @@ const ManageAccessRequests = () => {
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                             <div className="flex gap-4">
-                                                <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                                                <div className="w-12 h-12 rounded-xl bg-[#173d9f]/5 text-[#173d9f] flex items-center justify-center flex-shrink-0">
                                                     <Briefcase className="w-6 h-6" />
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Project</p>
                                                     <h3 className="font-display font-bold text-[#1A1A1A] text-lg leading-tight uppercase">{req.project?.projectName}</h3>
-                                                    <p className="text-xs font-bold text-blue-600/70 mt-0.5">{req.project?.projectCode}</p>
+                                                    <p className="text-xs font-bold text-[#173d9f]/70 mt-0.5">{req.project?.projectCode}</p>
                                                 </div>
                                             </div>
 
@@ -194,9 +194,9 @@ const ManageAccessRequests = () => {
                                         </div>
 
                                         {req.message && (
-                                            <div className="p-5 bg-gray-50 border border-gray-200 border-l-[3px] border-l-blue-600 rounded-2xl cursor-default">
+                                            <div className="p-5 bg-[#faf8f8] border border-gray-200 border-l-[3px] border-l-[#173d9f] rounded-2xl cursor-default">
                                                 <div className="flex gap-3 items-start">
-                                                    <MessageSquare className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                                                    <MessageSquare className="w-4 h-4 text-[#173d9f] mt-0.5 flex-shrink-0" />
                                                     <p className="text-sm text-gray-900 leading-relaxed font-medium">"{req.message}"</p>
                                                 </div>
                                             </div>
@@ -221,7 +221,7 @@ const ManageAccessRequests = () => {
                                                 <button
                                                     onClick={() => handleApprove(req._id)}
                                                     disabled={processingId === req._id}
-                                                    className="flex-1 lg:w-40 px-6 py-4 blue-gradient text-white text-[10px] font-bold uppercase tracking-wider rounded-xl transition-all btn-shadow flex items-center justify-center gap-2 disabled:opacity-50"
+                                                    className="flex-1 lg:w-40 px-6 py-4 accent-gradient text-white text-[10px] font-bold uppercase tracking-wider rounded-xl transition-all btn-shadow flex items-center justify-center gap-2 disabled:opacity-50"
                                                 >
                                                     {processingId === req._id ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
                                                     Approve
@@ -234,7 +234,7 @@ const ManageAccessRequests = () => {
                                                 </button>
                                             </>
                                         ) : (
-                                            <div className="flex flex-col items-center justify-center px-6 py-4 bg-gray-50 rounded-xl border border-gray-200 border-l-[3px] border-l-blue-600 cursor-default min-w-[140px]">
+                                            <div className="flex flex-col items-center justify-center px-6 py-4 bg-[#faf8f8] rounded-xl border border-gray-200 border-l-[3px] border-l-[#173d9f] cursor-default min-w-[140px]">
                                                 <div className="flex items-center gap-1.5 mb-1 text-gray-500">
                                                     <Clock className="w-3.5 h-3.5" />
                                                     <p className="text-[10px] font-bold uppercase tracking-wider">Reviewed On</p>
@@ -255,7 +255,7 @@ const ManageAccessRequests = () => {
                                             value={rejectionReason}
                                             onChange={(e) => setRejectionReason(e.target.value)}
                                             placeholder="Why are you declining this request?"
-                                            className="w-full p-5 bg-gray-50 border-2 border-transparent focus:bg-white rounded-2xl text-sm focus:outline-none focus:border-blue-600 focus:shadow-sm cursor-text h-28 resize-none transition-all placeholder:text-gray-400 font-medium"
+                                            className="w-full p-5 bg-[#faf8f8] border-2 border-transparent focus:bg-white rounded-2xl text-sm focus:outline-none focus:border-[#173d9f] focus:shadow-sm cursor-text h-28 resize-none transition-all placeholder:text-gray-400 font-medium"
                                         />
                                         <button
                                             onClick={() => handleReject(req._id)}
@@ -279,7 +279,7 @@ const ManageAccessRequests = () => {
                             <button
                                 onClick={() => fetchRequests(pagination.page - 1)}
                                 disabled={!pagination.hasPrev}
-                                className="p-3 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-400 disabled:opacity-30 transition-all"
+                                className="p-3 rounded-xl border border-gray-200 bg-white hover:bg-[#faf8f8] text-gray-400 disabled:opacity-30 transition-all hover:text-[#173d9f]"
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>

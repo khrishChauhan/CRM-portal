@@ -6,18 +6,22 @@
 
 @layer base {
   :root {
-    --bg-main: #F5F7FA;
+    --bg-main: #faf8f8;
     --bg-card: #FFFFFF;
-    --primary-gradient: linear-gradient(135deg, #2F6BFF 0%, #1F4ED8 100%);
-    --primary: #2F6BFF;
-    --primary-dark: #1F4ED8;
+    --primary-blue: #173d9f;
+    --secondary: #8192c4;
+    --accent: #f86a1f;
+    --accent-dark: #d55a1a;
+    --blue-gradient: linear-gradient(135deg, #173d9f 0%, #253d8b 100%);
+    --accent-gradient: linear-gradient(135deg, #f86a1f 0%, #d55a1a 100%);
     --text-primary: #1A1A1A;
     --text-secondary: #6B7280;
-    --input-bg: #2E2E2E;
+    --input-bg: #FFFFFF;
     --border-radius-card: 18px;
     --border-radius-button: 14px;
     --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
-    --shadow-medium: 0 8px 30px rgba(31, 78, 216, 0.15);
+    --shadow-medium: 0 8px 30px rgba(23, 61, 159, 0.15);
+    --shadow-accent: 0 8px 30px rgba(248, 106, 31, 0.15);
   }
 
   * {
@@ -25,7 +29,7 @@
   }
 
   body {
-    @apply bg-[#F5F7FA] text-[#1A1A1A] antialiased selection:bg-blue-500/20 selection:text-blue-700 font-body;
+    @apply bg-[#faf8f8] text-[#1A1A1A] antialiased selection:bg-[#f86a1f]/20 selection:text-[#f86a1f] font-body;
   }
 
   h1,
@@ -41,16 +45,20 @@
   --font-display: "Outfit", sans-serif;
   --font-body: "Plus Jakarta Sans", sans-serif;
 
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
+  --color-secondary: #8192c4;
+  --color-accent: #f86a1f;
+  --color-accent-dark: #d55a1a;
+  
+  --color-primary-50: #fff7ed;
+  --color-primary-100: #ffedd5;
+  --color-primary-200: #fed7aa;
+  --color-primary-300: #fdba74;
+  --color-primary-400: #fb923c;
+  --color-primary-500: #f86a1f;
+  --color-primary-600: #ea580c;
+  --color-primary-700: #c2410c;
+  --color-primary-800: #9a3412;
+  --color-primary-900: #7c2d12;
 }
 
 @layer utilities {
@@ -63,7 +71,11 @@
   }
 
   .blue-gradient {
-    background: var(--primary-gradient);
+    background: var(--blue-gradient);
+  }
+  
+  .accent-gradient {
+    background: var(--accent-gradient);
   }
 
   .bg-dark-input {

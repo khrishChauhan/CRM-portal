@@ -7,9 +7,9 @@ import {
 } from 'lucide-react';
 
 const PROJECT_STATUS_COLORS = {
-    Planned: 'bg-blue-50 text-blue-600 border-blue-100',
-    'In Progress': 'bg-emerald-50 text-emerald-600 border-emerald-100',
-    'On Hold': 'bg-amber-50 text-amber-600 border-amber-100',
+    Planned: 'bg-[#faf8f8] text-gray-400 border-gray-100',
+    'In Progress': 'bg-[#173d9f]/5 text-[#173d9f] border-[#173d9f]/10',
+    'On Hold': 'bg-gray-50 text-gray-500 border-gray-100',
     Completed: 'bg-green-50 text-green-600 border-green-100',
     Delayed: 'bg-red-50 text-red-600 border-red-100',
     Cancelled: 'bg-gray-50 text-gray-400 border-gray-100',
@@ -99,8 +99,8 @@ const ClientDashboard = () => {
     return (
         <div className="space-y-8 animate-reveal pb-20 font-body">
             {toast && (
-                <div className={`fixed top-8 right-8 z-[150] flex items-center gap-4 px-6 py-4 rounded-[20px] shadow-2xl bg-white border border-gray-100 text-[10px] font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-500' : 'text-blue-600'}`}>
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${toast.type === 'error' ? 'bg-red-50' : 'bg-blue-50'}`}>
+                <div className={`fixed top-8 right-8 z-[150] flex items-center gap-4 px-6 py-4 rounded-[20px] shadow-2xl bg-white border border-gray-100 text-[10px] font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-500' : 'text-[#173d9f]'}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${toast.type === 'error' ? 'bg-red-50' : 'bg-[#173d9f]/5'}`}>
                         {toast.type === 'error' ? <AlertCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
                     </div>
                     {toast.message}
@@ -119,13 +119,13 @@ const ClientDashboard = () => {
 
                     {/* SEARCH BAR */}
                     <div className="relative group max-w-2xl">
-                        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-blue-500 transition-colors z-10" />
+                        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-[#173d9f] transition-colors z-10" />
                         <input
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Search by project name or location..."
-                            className="w-full bg-gray-50 border border-transparent text-[#1A1A1A] pl-14 pr-6 py-4.5 rounded-2xl focus:bg-white focus:border-blue-500/20 focus:ring-4 focus:ring-blue-500/5 transition-all outline-none placeholder:text-gray-400 text-sm font-medium"
+                            className="w-full bg-[#faf8f8] border border-transparent text-[#1A1A1A] pl-14 pr-6 py-4.5 rounded-2xl focus:bg-white focus:border-[#173d9f]/20 focus:ring-4 focus:ring-[#173d9f]/5 transition-all outline-none placeholder:text-gray-400 text-sm font-medium"
                         />
                     </div>
                 </div>
@@ -133,7 +133,7 @@ const ClientDashboard = () => {
                 {/* PROJECT LIST */}
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-12 md:py-20">
-                        <Loader2 className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600 mb-4" />
+                        <Loader2 className="w-10 h-10 md:w-12 md:h-12 animate-spin text-[#173d9f] mb-4" />
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compiling Database...</p>
                     </div>
                 ) : projects.length === 0 ? (
@@ -152,20 +152,20 @@ const ClientDashboard = () => {
                             const isApproved = reqStatus === 'approved';
 
                             return (
-                                <div key={p._id} className="bg-white border border-gray-100 rounded-[24px] p-6 sm:p-8 hover:border-blue-500/20 hover:shadow-xl transition-all duration-500 group">
+                                <div key={p._id} className="bg-white border border-gray-100 rounded-[24px] p-6 sm:p-8 hover:border-[#173d9f]/20 hover:shadow-xl transition-all duration-500 group">
                                     <div className="flex justify-between items-start gap-4 mb-5">
-                                        <h3 className="text-xl font-display font-bold text-[#1A1A1A] leading-tight group-hover:text-blue-600 transition-colors">
+                                        <h3 className="text-xl font-display font-bold text-[#1A1A1A] leading-tight group-hover:text-[#173d9f] transition-colors">
                                             {p.projectName}
                                         </h3>
-                                        <span className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest flex-shrink-0 border ${PROJECT_STATUS_COLORS[p.projectStatus] || 'bg-gray-50 text-gray-400 border-gray-100'
+                                        <span className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest flex-shrink-0 border ${PROJECT_STATUS_COLORS[p.projectStatus] || 'bg-[#faf8f8] text-gray-400 border-gray-100'
                                             }`}>
                                             {p.projectStatus}
                                         </span>
                                     </div>
 
                                     <div className="flex items-center gap-3 mb-5">
-                                        <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                                            <MapPin className="w-4 h-4 text-blue-500" />
+                                        <div className="w-8 h-8 rounded-lg bg-[#173d9f]/5 flex items-center justify-center">
+                                            <MapPin className="w-4 h-4 text-[#173d9f]" />
                                         </div>
                                         <span className="text-sm font-bold text-gray-500">{p.siteAddress || 'Location Undefined'}</span>
                                     </div>
@@ -202,7 +202,7 @@ const ClientDashboard = () => {
                                                 disabled={reqStatus === 'pending'}
                                                 className={`w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest border transition-all flex items-center justify-center gap-2 shadow-sm ${reqStatus === 'pending'
                                                         ? 'bg-amber-50 border-amber-100 text-amber-600 opacity-80'
-                                                        : 'bg-white border-blue-500 text-blue-600 hover:bg-blue-50'
+                                                        : 'bg-white border-[#173d9f] text-[#173d9f] hover:bg-[#173d9f]/5'
                                                     }`}
                                             >
                                                 {reqStatus === 'pending' ? <Clock className="w-4 h-4" /> : <Send className="w-4 h-4" />}
@@ -222,7 +222,7 @@ const ClientDashboard = () => {
                         <button
                             onClick={() => fetchBrowseProjects(pagination.page - 1)}
                             disabled={!pagination.hasPrev}
-                            className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-blue-600 transition-all shadow-sm"
+                            className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-[#173d9f] transition-all shadow-sm"
                         >
                             <ChevronLeft className="w-6 h-6" />
                         </button>
@@ -234,7 +234,7 @@ const ClientDashboard = () => {
                         <button
                             onClick={() => fetchBrowseProjects(pagination.page + 1)}
                             disabled={!pagination.hasNext}
-                            className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-blue-600 transition-all shadow-sm"
+                            className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-[#173d9f] transition-all shadow-sm"
                         >
                             <ChevronRight className="w-6 h-6" />
                         </button>
@@ -255,7 +255,7 @@ const ClientDashboard = () => {
                         </div>
 
                         <div className="flex-1 overflow-y-auto scrollbar-hide px-[22px] pt-2 pb-8">
-                            <p className="text-[11px] font-bold text-blue-600 uppercase tracking-widest mb-6 inline-block px-3 py-1 bg-blue-50 rounded-lg">{requestModal.projectName}</p>
+                            <p className="text-[11px] font-bold text-[#173d9f] uppercase tracking-widest mb-6 inline-block px-3 py-1 bg-[#173d9f]/5 rounded-lg">{requestModal.projectName}</p>
                             <div className="space-y-1.5 mb-8">
                                 <label className="text-[15px] font-bold text-[#34495E] ml-1">Optional Context</label>
                                 <textarea
@@ -263,7 +263,7 @@ const ClientDashboard = () => {
                                     onChange={(e) => setRequestMessage(e.target.value)}
                                     placeholder="Explain your interest in this project..."
                                     style={{ minHeight: '110px' }}
-                                    className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                                    className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all"
                                 />
                             </div>
                         </div>
@@ -272,7 +272,7 @@ const ClientDashboard = () => {
                             <button
                                 onClick={handleRequestAccess}
                                 disabled={requesting}
-                                className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                                className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-[#173d9f]/10 hover:scale-[1.01] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                             >
                                 {requesting ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : <Send className="w-5 h-5" />}
                                 Submit Request

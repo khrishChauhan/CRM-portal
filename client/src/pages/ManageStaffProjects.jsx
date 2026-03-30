@@ -8,12 +8,12 @@ import {
 } from 'lucide-react';
 
 const PROJECT_STATUS_COLORS = {
-    Planned: 'bg-blue-100 text-blue-700',
-    'In Progress': 'bg-primary-100 text-primary-700',
-    'On Hold': 'bg-amber-100 text-amber-700',
-    Completed: 'bg-emerald-100 text-emerald-700',
-    Delayed: 'bg-red-100 text-red-700',
-    Cancelled: 'bg-slate-100 text-slate-500',
+    Planned: 'bg-white text-[#8192c4] border-[#8192c4]/40',
+    'In Progress': 'bg-[#f86a1f]/10 text-[#f86a1f] border-[#f86a1f]/20',
+    'On Hold': 'bg-gray-100 text-gray-500 border-gray-200',
+    Completed: 'bg-[#8192c4]/10 text-[#8192c4] border-[#8192c4]/20',
+    Delayed: 'bg-red-50 text-red-600 border-red-100',
+    Cancelled: 'bg-slate-100 text-slate-500 border-slate-200',
 };
 
 const ManageStaffProjects = () => {
@@ -84,7 +84,7 @@ const ManageStaffProjects = () => {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-20 md:py-32 min-h-[300px] md:min-h-[400px]">
-                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-blue-600 mb-4" />
+                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-[#f86a1f] mb-4" />
                 <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest">Loading projects...</p>
             </div>
         );
@@ -111,7 +111,7 @@ const ManageStaffProjects = () => {
                                 }
                                 setSearchParams(searchParams);
                             }}
-                            className="h-10 pl-4 pr-10 bg-white border border-gray-100 rounded-xl text-sm font-bold text-[#1A1A1A] appearance-none focus:outline-none focus:border-blue-500 shadow-sm transition-all cursor-pointer"
+                            className="h-10 pl-4 pr-10 bg-white border border-gray-100 rounded-xl text-sm font-bold text-[#1A1A1A] appearance-none focus:outline-none focus:border-[#f86a1f] shadow-sm transition-all cursor-pointer"
                         >
                             <option value="All">All Projects</option>
                             <option value="Planned">Planned</option>
@@ -148,7 +148,7 @@ const ManageStaffProjects = () => {
                             </span>
                         </div>
 
-                        <h3 className="text-2xl font-display font-bold text-[#1A1A1A] mb-2 group-hover:text-blue-600 transition-colors uppercase leading-tight">
+                        <h3 className="text-2xl font-display font-bold text-[#1A1A1A] mb-2 group-hover:text-[#f86a1f] transition-colors uppercase leading-tight">
                             {project.projectName}
                         </h3>
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-8">{project.projectCategory || 'General Project'}</p>
@@ -160,7 +160,7 @@ const ManageStaffProjects = () => {
 
                         <div className="pt-6 border-t border-gray-100 flex flex-wrap items-center justify-between gap-4">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-[11px] font-bold text-blue-600">
+                                <div className="w-10 h-10 rounded-xl bg-[#faf8f8] flex items-center justify-center text-[11px] font-bold text-[#8192c4] border border-gray-100">
                                     {project.projectStatus[0]}
                                 </div>
                                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Ongoing</span>
@@ -168,7 +168,7 @@ const ManageStaffProjects = () => {
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => navigate(`/staff/projects/${project._id}/updates`)}
-                                    className="px-5 py-3.5 bg-gray-50 hover:bg-emerald-50 text-gray-500 hover:text-emerald-600 rounded-xl transition-all border border-transparent hover:border-emerald-100 text-[10px] font-bold uppercase tracking-wider"
+                                    className="px-5 py-3.5 bg-white hover:bg-[#8192c4]/10 text-gray-500 hover:text-[#8192c4] rounded-xl transition-all border border-gray-100 hover:border-[#8192c4]/20 text-[10px] font-bold uppercase tracking-wider"
                                     title="Upload Updates"
                                 >
                                     Upload
@@ -211,7 +211,7 @@ const ManageStaffProjects = () => {
                             <div className="flex flex-col gap-1">
                                 <h2 className="text-[18px] font-bold text-[#1A1A1A] tracking-tight">Project Update</h2>
                                 <div className="flex">
-                                    <span className="text-[8px] font-bold text-blue-600 uppercase tracking-widest px-2 py-0.5 bg-blue-50/80 rounded-md border border-blue-100/50">
+                                    <span className="text-[8px] font-bold text-[#f86a1f] uppercase tracking-widest px-2 py-0.5 bg-[#f86a1f]/5 rounded-md border border-[#f86a1f]/10">
                                         Ref: {selectedProject.projectCode}
                                     </span>
                                 </div>
@@ -237,7 +237,7 @@ const ManageStaffProjects = () => {
                                             <select
                                                 value={editForm.projectStatus}
                                                 onChange={e => setEditForm({ ...editForm, projectStatus: e.target.value })}
-                                                className="w-full h-11 px-3.5 bg-gray-50/50 border border-gray-100 rounded-[12px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:bg-white transition-all cursor-pointer appearance-none"
+                                                className="w-full h-11 px-3.5 bg-[#faf8f8] border border-gray-100 rounded-[12px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#f86a1f] focus:bg-white transition-all cursor-pointer appearance-none"
                                             >
                                                 <option value="Planned">Planned</option>
                                                 <option value="In Progress">Progress</option>
@@ -258,7 +258,7 @@ const ManageStaffProjects = () => {
                                             type="date"
                                             value={editForm.actualCompletion}
                                             onChange={e => setEditForm({ ...editForm, actualCompletion: e.target.value })}
-                                            className="w-full h-11 px-3.5 bg-gray-50/50 border border-gray-100 rounded-[12px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
+                                            className="w-full h-11 px-3.5 bg-[#faf8f8] border border-gray-100 rounded-[12px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#f86a1f] focus:bg-white transition-all"
                                         />
                                     </div>
                                 </div>
@@ -274,8 +274,8 @@ const ManageStaffProjects = () => {
                                                 onClick={() => setEditForm({ ...editForm, riskLevel: level })}
                                                 className={`flex-1 py-2 rounded-[9px] text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${
                                                     editForm.riskLevel === level
-                                                        ? 'bg-blue-600 shadow-md shadow-blue-500/10 text-white'
-                                                        : 'bg-white/50 text-gray-400 border border-transparent hover:text-gray-600'
+                                                        ? 'accent-gradient shadow-md shadow-[#f86a1f]/20 text-white'
+                                                        : 'bg-white text-gray-400 border border-gray-100 hover:text-[#8192c4]'
                                                 }`}
                                             >
                                                 {level}
@@ -291,7 +291,7 @@ const ManageStaffProjects = () => {
                                         value={editForm.delayReason}
                                         onChange={e => setEditForm({ ...editForm, delayReason: e.target.value })}
                                         placeholder="Add internal progress notes..."
-                                        className="w-full min-h-[90px] max-h-[140px] px-3.5 py-2.5 bg-gray-50/50 border border-gray-100 rounded-[12px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
+                                        className="w-full min-h-[90px] max-h-[140px] px-3.5 py-2.5 bg-[#faf8f8] border border-gray-100 rounded-[12px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-[#f86a1f] focus:bg-white transition-all"
                                     />
                                 </div>
                             </div>
@@ -301,7 +301,7 @@ const ManageStaffProjects = () => {
                                 <button
                                     type="submit"
                                     disabled={updating}
-                                    className="w-full h-11 blue-gradient text-white font-bold rounded-[12px] shadow-[0_4px_12px_rgba(37,99,235,0.15)] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                                    className="w-full h-11 accent-gradient text-white font-bold rounded-[12px] shadow-lg active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
                                     {updating ? (
                                         <Loader2 className="w-4 h-4 animate-spin text-white" />
@@ -323,7 +323,7 @@ const ManageStaffProjects = () => {
 
 const DetailItem = ({ icon: Icon, value }) => (
     <div className="flex items-center gap-3 text-gray-500 group/item">
-        <Icon className="w-5 h-5 text-blue-500/40 group-hover/item:text-blue-600 transition-colors" />
+        <Icon className="w-5 h-5 text-[#8192c4]/40 group-hover/item:text-[#f86a1f] transition-colors" />
         <span className="text-sm font-medium tracking-tight group-hover/item:text-gray-900 transition-colors">{value}</span>
     </div>
 );

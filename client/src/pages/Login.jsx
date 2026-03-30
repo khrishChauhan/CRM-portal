@@ -152,12 +152,12 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F5F7FA] flex flex-col font-body">
+        <div className="min-h-screen bg-[#faf8f8] flex flex-col font-body">
             <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
                 <div className="w-full max-w-[440px] animate-reveal">
                     {/* TOP SECTION */}
                     <div className="flex flex-col items-center mb-10">
-                        <div className="w-20 h-20 blue-gradient rounded-[22px] flex items-center justify-center mb-6 btn-shadow">
+                        <div className="w-20 h-20 bg-[#f86a1f] rounded-[22px] flex items-center justify-center mb-6 shadow-xl shadow-[#f86a1f]/20">
                             <Building2 className="w-10 h-10 text-white" />
                         </div>
                         <h1 className="text-3xl font-display font-bold text-[#1A1A1A] mb-2 text-center">Khushi Technology Application</h1>
@@ -180,8 +180,8 @@ const Login = () => {
                                     }}
                                     className={`flex-1 py-3 px-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${
                                         selectedRole === role.id
-                                            ? 'bg-white text-blue-600 shadow-sm'
-                                            : 'text-gray-500 hover:text-gray-700'
+                                            ? 'bg-[#173d9f] text-white shadow-sm'
+                                            : 'text-[#173d9f] hover:text-[#f86a1f]'
                                     }`}
                                 >
                                     {role.title}
@@ -206,7 +206,7 @@ const Login = () => {
                             {selectedRole !== 'client' && (
                                 <div className="space-y-2">
                                     <div className="relative group">
-                                        <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-white transition-colors z-10" />
+                                        <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#173d9f] transition-colors z-10" />
                                         <input
                                             type="email"
                                             required
@@ -214,7 +214,7 @@ const Login = () => {
                                             value={selectedRole === 'admin' ? email : staffEmail}
                                             onChange={(e) => selectedRole === 'admin' ? setEmail(e.target.value) : setStaffEmail(e.target.value)}
                                             placeholder="Email Address"
-                                            className="w-full bg-[#2E2E2E] border-none text-white pl-14 pr-5 py-4.5 rounded-[18px] focus:ring-2 focus:ring-blue-500/50 transition-all outline-none placeholder:text-gray-500 font-medium"
+                                            className="w-full bg-[#faf8f8] border-2 border-gray-100 text-[#1A1A1A] pl-14 pr-5 py-4.5 rounded-[18px] focus:ring-2 focus:ring-[#173d9f]/20 focus:border-[#173d9f] transition-all outline-none placeholder:text-gray-400 font-medium"
                                         />
                                     </div>
                                 </div>
@@ -225,9 +225,9 @@ const Login = () => {
                                 <div className="space-y-2">
                                     <div className="relative group">
                                         {selectedRole === 'admin' ? (
-                                            <KeyRound className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-white transition-colors z-10" />
+                                            <KeyRound className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#173d9f] transition-colors z-10" />
                                         ) : (
-                                            <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-white transition-colors z-10" />
+                                            <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#173d9f] transition-colors z-10" />
                                         )}
                                         <input
                                             type={selectedRole === 'admin' ? "text" : "password"}
@@ -237,7 +237,7 @@ const Login = () => {
                                             value={selectedRole === 'admin' ? otp : password}
                                             onChange={(e) => selectedRole === 'admin' ? setOtp(e.target.value) : setPassword(e.target.value)}
                                             placeholder={selectedRole === 'admin' ? "OTP Code" : "Password"}
-                                            className="w-full bg-[#2E2E2E] border-none text-white pl-14 pr-5 py-4.5 rounded-[18px] focus:ring-2 focus:ring-blue-500/50 transition-all outline-none placeholder:text-gray-500 font-medium"
+                                            className="w-full bg-[#faf8f8] border-2 border-gray-100 text-[#1A1A1A] pl-14 pr-5 py-4.5 rounded-[18px] focus:ring-2 focus:ring-[#173d9f]/20 focus:border-[#173d9f] transition-all outline-none placeholder:text-gray-400 font-medium"
                                         />
                                     </div>
                                 </div>
@@ -253,12 +253,12 @@ const Login = () => {
                                 </div>
                             )}
 
-                            {/* Login Button */}
+                             {/* Login Button */}
                             {selectedRole !== 'client' && (
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full blue-gradient text-white font-display font-bold py-5 rounded-[18px] btn-shadow hover:opacity-90 transition-all active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-50"
+                                    className="w-full accent-gradient text-white font-display font-bold py-5 rounded-[18px] shadow-lg shadow-[#f86a1f]/20 hover:opacity-95 transition-all active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-50"
                                 >
                                     {loading ? <Loader2 className="w-6 h-6 animate-spin text-white" /> : (
                                         <>
@@ -273,7 +273,7 @@ const Login = () => {
                         {showOtpField && selectedRole === 'admin' && (
                             <button 
                                 onClick={() => setShowOtpField(false)}
-                                className="w-full mt-4 text-[11px] font-bold text-blue-600 uppercase tracking-widest hover:underline"
+                                className="w-full mt-4 text-[11px] font-bold text-[#8192c4] uppercase tracking-widest hover:text-[#f86a1f] transition-colors"
                             >
                                 Change Email
                             </button>
@@ -283,7 +283,7 @@ const Login = () => {
                     <div className="flex justify-center">
                         <button 
                             onClick={() => navigate('/privacy-policy')}
-                            className="text-[12px] text-gray-400 hover:text-blue-500 hover:underline transition-all font-medium tracking-wide flex items-center gap-1.5"
+                            className="text-[12px] text-gray-400 hover:text-[#f86a1f] transition-all font-medium tracking-wide flex items-center gap-1.5"
                         >
                             <ShieldCheck className="w-3.5 h-3.5" />
                             Privacy Policy

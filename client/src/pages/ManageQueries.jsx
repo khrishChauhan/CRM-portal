@@ -8,9 +8,9 @@ import {
 } from 'lucide-react';
 
 const STATUS_COLORS = {
-    open: 'bg-amber-100 text-amber-700 border-amber-200',
-    answered: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    closed: 'bg-slate-100 text-slate-500 border-slate-200',
+    open: 'bg-[#f86a1f]/10 text-[#f86a1f] border-[#f86a1f]/20',
+    answered: 'bg-[#173d9f]/10 text-[#173d9f] border-[#173d9f]/20',
+    closed: 'bg-[#faf8f8] text-gray-400 border-gray-100',
 };
 
 const ManageQueries = () => {
@@ -71,7 +71,7 @@ const ManageQueries = () => {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-20 md:py-32 min-h-[300px] md:min-h-[500px]">
-                <Loader2 className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600 mb-4" />
+                <Loader2 className="w-10 h-10 md:w-12 md:h-12 animate-spin text-[#173d9f] mb-4" />
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Loading Queries...</p>
             </div>
         );
@@ -110,32 +110,36 @@ const ManageQueries = () => {
                     value={data?.total || 0}
                     active={statusFilter === 'all'}
                     onClick={() => handleStatusChange('all')}
-                    color="text-blue-600"
-                    bg="bg-blue-50"
+                    color="text-[#173d9f]"
+                    bg="bg-[#173d9f]/5"
+                    activeBorder="border-[#173d9f]/20"
                 />
                 <MiniStat
                     label="Open"
                     value={data?.open || 0}
                     active={statusFilter === 'open'}
                     onClick={() => handleStatusChange('open')}
-                    color="text-amber-600"
-                    bg="bg-amber-50"
+                    color="text-[#f86a1f]"
+                    bg="bg-[#f86a1f]/5"
+                    activeBorder="border-[#f86a1f]/20"
                 />
                 <MiniStat
                     label="Answered"
                     value={data?.answered || 0}
                     active={statusFilter === 'answered'}
                     onClick={() => handleStatusChange('answered')}
-                    color="text-emerald-600"
-                    bg="bg-emerald-50"
+                    color="text-[#173d9f]"
+                    bg="bg-[#173d9f]/5"
+                    activeBorder="border-[#173d9f]/20"
                 />
                 <MiniStat
                     label="Closed"
                     value={data?.closed || 0}
                     active={statusFilter === 'closed'}
                     onClick={() => handleStatusChange('closed')}
-                    color="text-slate-600"
-                    bg="bg-slate-50"
+                    color="text-gray-400"
+                    bg="bg-[#faf8f8]"
+                    activeBorder="border-gray-200"
                 />
             </div>
 
@@ -158,11 +162,11 @@ const ManageQueries = () => {
                         <div
                             key={query._id}
                             onClick={() => handleQueryClick(query)}
-                            className="bg-white p-5 sm:p-6 rounded-[20px] border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-500/20 transition-all duration-300 cursor-pointer active:scale-[0.99] group"
+                            className="bg-white p-5 sm:p-6 rounded-[20px] border border-gray-100 shadow-sm hover:shadow-md hover:border-[#173d9f]/20 transition-all duration-300 cursor-pointer active:scale-[0.99] group"
                         >
                             <div className="flex items-start gap-4">
                                 {/* Avatar */}
-                                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-sm shrink-0">
+                                <div className="w-10 h-10 rounded-xl bg-[#173d9f]/5 flex items-center justify-center text-[#173d9f] font-bold text-sm shrink-0">
                                     {query.clientId?.name?.charAt(0) || 'C'}
                                 </div>
 
@@ -185,7 +189,7 @@ const ManageQueries = () => {
                                     </div>
 
                                     {/* Title */}
-                                    <h3 className="text-[15px] font-bold text-[#1A1A1A] leading-snug mb-1 group-hover:text-blue-600 transition-colors truncate">
+                                    <h3 className="text-[15px] font-bold text-[#1A1A1A] leading-snug mb-1 group-hover:text-[#173d9f] transition-colors truncate">
                                         {query.title}
                                     </h3>
 
@@ -197,7 +201,7 @@ const ManageQueries = () => {
                                     {/* Bottom Row: Project + Link */}
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
-                                            <span className="text-[9px] font-bold text-blue-600 bg-blue-50/80 px-2 py-0.5 rounded-md border border-blue-100/50 uppercase tracking-widest">
+                                            <span className="text-[9px] font-bold text-[#173d9f] bg-[#173d9f]/5 px-2 py-0.5 rounded-md border border-[#173d9f]/10 uppercase tracking-widest">
                                                 {query.projectId?.projectCode || 'N/A'}
                                             </span>
                                             <span className="text-gray-400 text-[11px] font-medium truncate max-w-[180px]">
@@ -210,8 +214,8 @@ const ManageQueries = () => {
                                     {/* Response indicator */}
                                     {query.status === 'answered' && query.respondedBy && (
                                         <div className="mt-3 pt-3 border-t border-gray-50 flex items-center gap-2">
-                                            <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                                            <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">
+                                            <CheckCircle className="w-3.5 h-3.5 text-[#173d9f]" />
+                                            <span className="text-[10px] font-bold text-[#173d9f] uppercase tracking-widest">
                                                 Responded by {query.respondedBy?.name}
                                             </span>
                                         </div>
@@ -226,13 +230,13 @@ const ManageQueries = () => {
     );
 };
 
-const MiniStat = ({ label, value, active, onClick, color, bg }) => (
+const MiniStat = ({ label, value, active, onClick, color, bg, activeBorder }) => (
     <div
         onClick={onClick}
         className={`p-3 sm:p-4 rounded-[16px] border transition-all duration-300 cursor-pointer active:scale-[0.98] select-none ${
             active
-                ? 'bg-white border-blue-200 shadow-md'
-                : 'bg-white border-gray-100 shadow-sm hover:border-blue-100'
+                ? `bg-white border-2 ${activeBorder} shadow-md`
+                : 'bg-white border-gray-100 shadow-sm hover:border-gray-200'
         }`}
     >
         <p className={`text-xl sm:text-2xl font-display font-bold tracking-tighter leading-none mb-0.5 ${active ? color : 'text-[#1A1A1A]'}`}>

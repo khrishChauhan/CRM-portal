@@ -402,9 +402,9 @@ const ProjectUpdates = () => {
     // ── Role badge colors ──
     const roleBadge = (role) => {
         const map = {
-            admin: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30',
-            staff: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
-            client: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
+            admin: 'bg-[#f86a1f]/10 text-[#f86a1f] border-[#f86a1f]/20',
+            staff: 'bg-[#173d9f]/10 text-[#173d9f] border-[#173d9f]/20',
+            client: 'bg-[#faf8f8] text-gray-400 border-gray-100',
         };
         return map[role] || 'bg-white/10 text-slate-400 border-white/10';
     };
@@ -412,7 +412,7 @@ const ProjectUpdates = () => {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-20 md:py-32 min-h-[300px] md:min-h-[400px]">
-                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-blue-600 mb-4" />
+                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-[#173d9f] mb-4" />
                 <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest font-body">Syncing Project Data...</p>
             </div>
         );
@@ -422,7 +422,7 @@ const ProjectUpdates = () => {
         <div className="animate-reveal flex flex-col min-h-full overflow-x-hidden">
             {/* ── Toast ── */}
             {toast && (
-                <div className={`fixed top-6 right-6 z-[200] flex items-center gap-4 px-6 py-4 rounded-2xl bg-white border border-gray-100 shadow-2xl text-[10px] font-bold uppercase tracking-[0.15em] animate-in slide-in-from-right-10 duration-500 max-w-[90vw] ${toast.type === 'error' ? 'text-red-500' : 'text-emerald-500'}`}>
+                <div className={`fixed top-6 right-6 z-[200] flex items-center gap-4 px-6 py-4 rounded-2xl bg-white border border-gray-100 shadow-2xl text-[10px] font-bold uppercase tracking-[0.15em] animate-in slide-in-from-right-10 duration-500 max-w-[90vw] ${toast.type === 'error' ? 'text-red-500' : 'text-[#173d9f]'}`}>
                     {toast.type === 'error' ? <AlertCircle className="w-5 h-5 flex-shrink-0" /> : <CheckCircle className="w-5 h-5 flex-shrink-0" />}
                     <span className="truncate">{toast.message}</span>
                 </div>
@@ -440,15 +440,15 @@ const ProjectUpdates = () => {
                         <span className="text-[24px] leading-none mb-0.5 font-light" style={{ transform: 'scaleX(1.1)' }}>&times;</span>
                     </button>
                     <div className="flex-1 min-w-0">
-                        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight truncate leading-tight">
+                        <h1 className="text-xl sm:text-2xl font-bold text-[#1A1A1A] tracking-tight truncate leading-tight">
                             {project?.projectName || 'Project'}
                         </h1>
                         <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[9px] font-bold text-blue-600 bg-blue-50/80 px-2 py-0.5 rounded-md border border-blue-100/50 uppercase tracking-widest leading-none">
+                            <span className="text-[9px] font-bold text-[#173d9f] bg-[#173d9f]/5 px-2 py-0.5 rounded-md border border-[#173d9f]/10 uppercase tracking-widest leading-none">
                                 {project?.projectCode}
                             </span>
-                            <span className="text-slate-300 text-[10px]">•</span>
-                            <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest leading-none">
+                            <span className="text-gray-300 text-[10px]">•</span>
+                            <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest leading-none">
                                 {updates.length} Updates
                             </span>
                         </div>
@@ -456,18 +456,18 @@ const ProjectUpdates = () => {
                 </div>
 
                 {/* Minimal Tab Switcher (With Spacing) */}
-                <div className="flex bg-slate-100 p-1 rounded-[14px] w-full sm:w-auto self-start sm:self-center gap-1.5">
+                <div className="flex bg-[#173d9f]/5 p-1 rounded-[14px] w-full sm:w-auto self-start sm:self-center gap-1.5 border border-[#173d9f]/10">
                     {!isClient ? (
                         <>
                             <button
                                 onClick={() => setActiveTab('updates')}
-                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === 'updates' ? 'bg-white text-slate-900 shadow-sm border border-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
+                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === 'updates' ? 'bg-[#173d9f] text-white shadow-sm' : 'text-[#173d9f] hover:text-[#173d9f]/70'}`}
                             >
                                 Updates
                             </button>
                             <button
                                 onClick={() => setActiveTab('queries')}
-                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === 'queries' ? 'bg-white text-slate-900 shadow-sm border border-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
+                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === 'queries' ? 'bg-[#173d9f] text-white shadow-sm' : 'text-[#173d9f] hover:text-[#173d9f]/70'}`}
                             >
                                 Queries
                             </button>
@@ -476,13 +476,13 @@ const ProjectUpdates = () => {
                         <>
                             <button
                                 onClick={() => setActiveTab('overview')}
-                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === 'overview' ? 'bg-white text-slate-900 shadow-sm border border-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
+                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === 'overview' ? 'bg-[#173d9f] text-white shadow-sm' : 'text-[#173d9f] hover:text-[#173d9f]/70'}`}
                             >
                                 Overview
                             </button>
                             <button
                                 onClick={() => setActiveTab('queries')}
-                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === 'queries' ? 'bg-white text-slate-900 shadow-sm border border-slate-100' : 'text-slate-500 hover:text-slate-700'}`}
+                                className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${activeTab === 'queries' ? 'bg-[#173d9f] text-white shadow-sm' : 'text-[#173d9f] hover:text-[#173d9f]/70'}`}
                             >
                                 Queries
                             </button>
@@ -497,24 +497,24 @@ const ProjectUpdates = () => {
                     /* ── Overview Tab ── */
                     <div className="space-y-4 sm:space-y-6 animate-reveal">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                            <div className="bg-white p-6 sm:p-10 rounded-[28px] card-shadow border border-gray-50 space-y-8">
-                                <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Project Information</h3>
+                            <div className="bg-white p-6 sm:p-10 rounded-[28px] border border-gray-100 shadow-sm space-y-8">
+                                <h3 className="text-[10px] font-bold text-[#173d9f] uppercase tracking-[0.4em] border-l-2 border-[#173d9f] pl-4">Project Information</h3>
                                 <div className="space-y-4">
                                     <div className="flex items-start gap-4">
-                                        <div className="w-11 h-11 rounded-[14px] bg-gray-50 flex items-center justify-center border border-gray-100">
-                                            <MapPin className="w-5 h-5 text-blue-600" />
+                                        <div className="w-11 h-11 rounded-[14px] bg-[#faf8f8] flex items-center justify-center border border-gray-100">
+                                            <MapPin className="w-5 h-5 text-[#173d9f]" />
                                         </div>
                                         <div>
-                                            <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Site Address</p>
+                                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Site Address</p>
                                             <p className="text-[#1A1A1A] font-bold">{project?.siteAddress || 'N/A'}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-start gap-4">
-                                        <div className="w-11 h-11 rounded-[14px] bg-gray-50 flex items-center justify-center border border-gray-100">
-                                            <Clock className="w-5 h-5 text-blue-600" />
+                                        <div className="w-11 h-11 rounded-[14px] bg-[#faf8f8] flex items-center justify-center border border-gray-100">
+                                            <Clock className="w-5 h-5 text-[#173d9f]" />
                                         </div>
                                         <div>
-                                            <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">Expected Completion</p>
+                                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Expected Completion</p>
                                             <p className="text-[#1A1A1A] font-bold">
                                                 {project?.expectedCompletion ? new Date(project.expectedCompletion).toLocaleDateString() : 'TBD'}
                                             </p>
@@ -523,17 +523,17 @@ const ProjectUpdates = () => {
                                 </div>
                             </div>
 
-                            <div className="bg-white p-6 sm:p-10 rounded-[28px] card-shadow border border-gray-50 flex flex-col justify-center gap-8">
+                            <div className="bg-white p-6 sm:p-10 rounded-[28px] border border-gray-100 shadow-sm flex flex-col justify-center gap-8">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.4em] border-l-2 border-indigo-500/50 pl-4">Current Status</h3>
-                                    <span className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest ${project?.projectStatus === 'Completed' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
-                                            project?.projectStatus === 'In Progress' ? 'bg-blue-50 text-blue-600 border border-blue-100' :
-                                                'bg-gray-100 text-gray-500 border border-gray-200'
+                                    <h3 className="text-[10px] font-bold text-[#173d9f] uppercase tracking-[0.4em] border-l-2 border-[#173d9f] pl-4">Current Status</h3>
+                                    <span className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest ${project?.projectStatus === 'Completed' ? 'bg-[#faf8f8] text-gray-400 border border-gray-100' :
+                                            project?.projectStatus === 'In Progress' ? 'bg-[#173d9f]/5 text-[#173d9f] border border-[#173d9f]/10' :
+                                                'bg-[#faf8f8] text-gray-400 border border-gray-100'
                                         }`}>
                                         {project?.projectStatus || 'Planned'}
                                     </span>
                                 </div>
-                                <div className="p-6 bg-gray-50 border border-gray-200 border-l-[3px] border-l-blue-600 rounded-2xl cursor-default">
+                                <div className="p-6 bg-[#faf8f8] border border-gray-100 border-l-[4px] border-l-[#173d9f] rounded-2xl cursor-default">
                                     <p className="text-gray-900 text-sm leading-relaxed font-medium">
                                         {project?.description || 'No project description available.'}
                                     </p>
@@ -542,16 +542,16 @@ const ProjectUpdates = () => {
                         </div>
 
                         {/* Project Manager Details */}
-                        <div className="bg-blue-50/50 p-6 sm:p-8 rounded-[28px] border border-blue-100 card-shadow flex flex-col sm:flex-row sm:items-center gap-6 group hover:-translate-y-1 transition-all duration-300">
-                            <div className="w-16 h-16 rounded-[20px] blue-gradient flex items-center justify-center text-white font-display font-bold text-2xl flex-shrink-0 shadow-lg group-hover:scale-105 transition-transform">
+                        <div className="bg-[#173d9f] p-6 sm:p-8 rounded-[28px] border border-[#173d9f]/20 shadow-lg flex flex-col sm:flex-row sm:items-center gap-6 group hover:-translate-y-1 transition-all duration-300">
+                            <div className="w-16 h-16 rounded-[20px] bg-white flex items-center justify-center text-[#173d9f] font-display font-bold text-2xl flex-shrink-0 shadow-lg group-hover:scale-105 transition-transform">
                                 {project?.projectManager?.name?.charAt(0) || 'M'}
                             </div>
                             <div>
-                                <p className="text-[10px] font-bold text-blue-500 uppercase tracking-widest leading-none mb-1">Project Manager</p>
-                                <p className="text-xl font-display font-bold text-[#1A1A1A] tracking-tight transition-colors">
+                                <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest leading-none mb-1">Project Manager</p>
+                                <p className="text-xl font-display font-bold text-white tracking-tight transition-colors">
                                     {project?.projectManager?.name || 'Not Assigned'}
                                 </p>
-                                <p className="text-sm text-gray-500 font-medium mt-1 opacity-80">Overseeing progress and ensuring quality standards.</p>
+                                <p className="text-sm text-white/50 font-medium mt-1 opacity-80">Overseeing progress and ensuring quality standards.</p>
                             </div>
                         </div>
                     </div>
@@ -572,24 +572,24 @@ const ProjectUpdates = () => {
                                 style={{ animationDelay: `${idx * 0.04}s` }}
                             >
                                 {/* Decorative glow */}
-                                <div className="absolute top-0 right-0 w-28 h-28 bg-blue-500/5 blur-[50px] -mr-14 -mt-14 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                <div className="absolute top-0 right-0 w-28 h-28 bg-[#f86a1f]/5 blur-[50px] -mr-14 -mt-14 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
 
                                 <div className="relative z-10">
                                     {/* ── Author row ── */}
                                     <div className="flex items-center gap-3 mb-3">
-                                        <div className="w-10 h-10 rounded-full blue-gradient flex items-center justify-center text-white font-display font-bold text-sm flex-shrink-0 btn-shadow transition-transform group-hover:scale-105">
+                                        <div className="w-10 h-10 rounded-full bg-[#173d9f] flex items-center justify-center text-white font-display font-bold text-sm flex-shrink-0 shadow-sm transition-transform group-hover:scale-105">
                                             {update.createdBy?.name?.charAt(0)?.toUpperCase() || '?'}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 flex-wrap">
-                                                <span className="font-display font-bold text-[#1A1A1A] text-sm sm:text-base tracking-tight group-hover:text-blue-600 transition-colors">
+                                                <span className="font-display font-bold text-[#1A1A1A] text-sm sm:text-base tracking-tight group-hover:text-[#173d9f] transition-colors">
                                                     {update.createdBy?.name || 'Unknown'}
                                                 </span>
                                                 <span className={`inline-flex px-2 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-widest border ${roleBadge(update.role)}`}>
                                                     {update.role}
                                                 </span>
                                             </div>
-                                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-[0.12em] mt-0.5 flex items-center gap-1.5">
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.12em] mt-0.5 flex items-center gap-1.5">
                                                 <Clock className="w-3 h-3" />
                                                 {formatTime(update.createdAt)}
                                             </p>
@@ -601,7 +601,7 @@ const ProjectUpdates = () => {
                                                 href={`https://www.google.com/maps?q=${update.location.latitude},${update.location.longitude}`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-1.5 px-3 py-2 bg-gray-50 border border-gray-100 rounded-xl text-[9px] font-bold uppercase tracking-widest text-gray-500 hover:text-blue-600 hover:border-blue-500/20 hover:bg-white transition-all flex-shrink-0 shadow-sm"
+                                                className="flex items-center gap-1.5 px-3 py-2 bg-[#faf8f8] border border-gray-100 rounded-xl text-[9px] font-bold uppercase tracking-widest text-[#173d9f] hover:text-[#173d9f]/70 transition-all flex-shrink-0 shadow-sm"
                                             >
                                                 <MapPin className="w-3 h-3" />
                                                 <span className="hidden sm:inline">Location</span>
@@ -636,10 +636,10 @@ const ProjectUpdates = () => {
                     /* ── Queries Tab ── */
                     <div className="space-y-4">
                         {user?.role === 'client' && (
-                            <div className="bg-white border border-gray-100 rounded-[24px] p-6 shadow-xl mb-6">
+                            <div className="bg-white border border-gray-100 rounded-[28px] p-6 shadow-xl mb-6">
                                 <h3 className="text-lg font-display font-bold text-[#1A1A1A] mb-4 flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                                        <MessageSquare className="w-5 h-5 text-blue-600" />
+                                    <div className="w-10 h-10 rounded-xl bg-[#faf8f8] flex items-center justify-center border border-gray-100">
+                                        <MessageSquare className="w-5 h-5 text-[#173d9f]" />
                                     </div>
                                     Ask a Query
                                 </h3>
@@ -649,14 +649,14 @@ const ProjectUpdates = () => {
                                         placeholder="What's on your mind?"
                                         value={newQuery.title}
                                         onChange={(e) => setNewQuery({ ...newQuery, title: e.target.value })}
-                                        className="w-full bg-gray-50 border-2 border-transparent focus:bg-white rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-600 focus:shadow-sm cursor-text transition-all font-medium"
+                                        className="w-full bg-[#faf8f8] border-2 border-transparent focus:bg-white rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-[#173d9f] focus:shadow-sm cursor-text transition-all font-medium"
                                     />
                                     <textarea
                                         placeholder="Describe your query in detail..."
                                         rows={3}
                                         value={newQuery.message}
                                         onChange={(e) => setNewQuery({ ...newQuery, message: e.target.value })}
-                                        className="w-full bg-gray-50 border-2 border-transparent focus:bg-white rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-600 focus:shadow-sm cursor-text transition-all resize-none font-medium"
+                                        className="w-full bg-[#faf8f8] border-2 border-transparent focus:bg-white rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-[#173d9f] focus:shadow-sm cursor-text transition-all resize-none font-medium"
                                     />
 
                                     {/* Image Upload for Query */}
@@ -675,8 +675,8 @@ const ProjectUpdates = () => {
 
                                         <div className="flex items-center gap-2">
                                             <label className="flex-1">
-                                                <div className="flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border-2 border-dashed transition-all cursor-pointer border-gray-200 hover:border-blue-500/30 hover:bg-gray-50/50">
-                                                    <Camera className="w-5 h-5 text-blue-600" />
+                                                <div className="flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border-2 border-dashed transition-all cursor-pointer border-gray-200 hover:border-[#173d9f]/30 hover:bg-[#faf8f8]">
+                                                    <Camera className="w-5 h-5 text-[#173d9f]" />
                                                     <span className="text-xs font-bold uppercase tracking-widest text-[#1A1A1A]">
                                                         {imagePreview ? 'Change Photo' : 'Add Photo (Required)'}
                                                     </span>
@@ -708,7 +708,7 @@ const ProjectUpdates = () => {
                                         )}
 
                                         {stamping && (
-                                            <div className="flex items-center gap-2.5 text-blue-600 text-[10px] font-bold uppercase tracking-widest px-1">
+                                            <div className="flex items-center gap-2.5 text-[#173d9f] text-[10px] font-bold uppercase tracking-widest px-1">
                                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
                                                 Digitally stamping query photo...
                                             </div>
@@ -718,7 +718,7 @@ const ProjectUpdates = () => {
                                     <button
                                         onClick={handleQuerySubmit}
                                         disabled={submitQueryLoading || stamping || !newQuery.title.trim() || !newQuery.message.trim() || !imageFile}
-                                        className="w-full h-12 blue-gradient text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all btn-shadow disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                                        className="w-full h-12 accent-gradient text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                                     >
                                         {submitQueryLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-4.5 h-4.5" />}
                                         Submit Query
@@ -729,7 +729,7 @@ const ProjectUpdates = () => {
 
                         {queriesLoading ? (
                             <div className="flex flex-col items-center justify-center py-12 md:py-24">
-                                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-blue-600 mb-4" />
+                                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-[#173d9f] mb-4" />
                                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Loading Queries...</p>
                             </div>
                         ) : queries.length === 0 ? (
@@ -746,7 +746,7 @@ const ProjectUpdates = () => {
                                             /* ── Chat Style for Client ── */
                                             <div className="space-y-4 mb-10">
                                                 <div className="flex flex-col items-end">
-                                                    <div className="max-w-[100%] sm:max-w-[85%] bg-blue-600 text-white rounded-[24px] rounded-tr-none px-6 py-4 shadow-xl relative">
+                                                    <div className="max-w-[100%] sm:max-w-[85%] bg-[#f86a1f] text-white rounded-[24px] rounded-tr-none px-6 py-4 shadow-xl relative">
                                                         <div className="flex items-center justify-between gap-6 mb-1.5">
                                                             <h4 className="font-bold text-sm tracking-tight">{q.title}</h4>
                                                             <span className="text-[8px] font-bold opacity-70">{formatTime(q.createdAt)}</span>
@@ -767,7 +767,7 @@ const ProjectUpdates = () => {
                                                         )}
 
                                                         {/* Status Indicator */}
-                                                        <div className={`absolute -left-2 -top-2 px-2.5 py-1 rounded-lg text-[7px] font-bold uppercase tracking-widest shadow-lg border ${q.status === 'open' ? 'bg-amber-400 text-white border-amber-300' : 'bg-emerald-500 text-white border-emerald-400'
+                                                        <div className={`absolute -left-2 -top-2 px-2.5 py-1 rounded-lg text-[7px] font-bold uppercase tracking-widest shadow-lg border ${q.status === 'open' ? 'bg-[#f86a1f] text-white border-[#f86a1f]/20' : 'bg-[#8192c4] text-white border-[#8192c4]/20'
                                                             }`}>
                                                             {q.status}
                                                         </div>
@@ -778,11 +778,11 @@ const ProjectUpdates = () => {
                                                     <div className="flex flex-col items-start translate-x-0">
                                                         <div className="max-w-[100%] sm:max-w-[85%] bg-white border border-gray-100 rounded-[24px] rounded-tl-none px-6 py-4 shadow-xl">
                                                             <div className="flex items-center gap-3 mb-2">
-                                                                <div className="w-7 h-7 rounded-full blue-gradient flex items-center justify-center text-white text-[10px] font-bold">
+                                                                <div className="w-7 h-7 rounded-full bg-[#173d9f] flex items-center justify-center text-white text-[10px] font-bold">
                                                                     {q.respondedBy?.name?.charAt(0) || 'T'}
                                                                 </div>
                                                                 <div>
-                                                                    <p className="text-blue-600 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5">
+                                                                    <p className="text-[#173d9f] text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5">
                                                                         {q.respondedBy?.name} (Team)
                                                                     </p>
                                                                     <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">{formatTime(q.respondedAt)}</p>
@@ -807,7 +807,7 @@ const ProjectUpdates = () => {
                                             <>
                                                 <div className="flex items-start justify-between mb-4">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-full blue-gradient flex items-center justify-center text-white font-bold text-xs shadow-md">
+                                                        <div className="w-10 h-10 rounded-full bg-[#8192c4] flex items-center justify-center text-white font-bold text-xs shadow-md">
                                                             {q.clientId?.name?.charAt(0)?.toUpperCase()}
                                                         </div>
                                                         <div>
@@ -846,7 +846,7 @@ const ProjectUpdates = () => {
                                                                 href={`https://www.google.com/maps?q=${q.latitude},${q.longitude}`}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-xl text-[10px] font-bold uppercase tracking-widest text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+                                                                className="inline-flex items-center gap-2 px-4 py-2 bg-[#faf8f8] border border-gray-100 rounded-xl text-[10px] font-bold uppercase tracking-widest text-[#8192c4] hover:bg-[#8192c4] hover:text-white transition-all shadow-sm"
                                                             >
                                                                 <MapPin className="w-3.5 h-3.5" />
                                                                 View Captured Location
@@ -857,9 +857,9 @@ const ProjectUpdates = () => {
                                                 )}
 
                                                 {q.response ? (
-                                                    <div className="mt-4 p-5 rounded-2xl bg-gray-50 border border-gray-200 border-l-[3px] border-l-emerald-500 cursor-default">
+                                                    <div className="mt-4 p-5 rounded-2xl bg-[#faf8f8] border border-gray-100 border-l-[3px] border-l-[#8192c4] cursor-default">
                                                         <div className="flex items-center justify-between mb-2">
-                                                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest flex items-center gap-2">
+                                                            <p className="text-[10px] font-bold text-[#8192c4] uppercase tracking-widest flex items-center gap-2">
                                                                 <CheckCircle2 className="w-4 h-4" />
                                                                 Response Sent
                                                             </p>
@@ -876,12 +876,12 @@ const ProjectUpdates = () => {
                                                                 rows={2}
                                                                 value={responseMap[q._id] || ''}
                                                                 onChange={(e) => setResponseMap({ ...responseMap, [q._id]: e.target.value })}
-                                                                className="w-full bg-gray-50 border-2 border-transparent focus:bg-white rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-600 focus:shadow-sm cursor-text transition-all font-medium resize-none"
+                                                                className="w-full bg-[#faf8f8] border-2 border-transparent focus:bg-white rounded-xl px-4 py-3 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-[#f86a1f] focus:shadow-sm cursor-text transition-all font-medium resize-none"
                                                             />
                                                             <button
                                                                 onClick={() => handleRespond(q._id)}
                                                                 disabled={submittingResponse === q._id || !(responseMap[q._id]?.trim())}
-                                                                className="w-full h-11 bg-emerald-50 text-emerald-600 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all border border-emerald-100 hover:bg-emerald-100 disabled:opacity-30 flex items-center justify-center gap-3"
+                                                                className="w-full h-11 bg-[#8192c4]/10 text-[#8192c4] rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all border border-[#8192c4]/20 hover:bg-[#8192c4]/20 disabled:opacity-30 flex items-center justify-center gap-3"
                                                             >
                                                                 {submittingResponse === q._id ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-4.5 h-4.5" />}
                                                                 Send Reply
@@ -901,8 +901,8 @@ const ProjectUpdates = () => {
 
             {/* ── Input Panel (Admin/Staff only) ── */}
             {canPost && activeTab === 'updates' && (
-                <div className="bg-white border border-gray-100 rounded-[28px] p-5 sm:p-6 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] relative overflow-hidden flex-shrink-0">
-                    <div className="absolute top-0 left-0 w-40 h-40 bg-blue-500/5 blur-[70px] -ml-20 -mt-20 pointer-events-none"></div>
+                <div className="bg-white border border-gray-100 rounded-[28px] p-5 sm:p-6 shadow-2xl relative overflow-hidden flex-shrink-0">
+                    <div className="absolute top-0 left-0 w-40 h-40 bg-[#f86a1f]/5 blur-[70px] -ml-20 -mt-20 pointer-events-none"></div>
 
                     {/* Image Preview */}
                     {imagePreview && (
@@ -919,7 +919,7 @@ const ProjectUpdates = () => {
 
                     {/* Stamping indicator */}
                     {stamping && (
-                        <div className="mb-4 flex items-center gap-3 text-blue-600 text-[10px] font-bold uppercase tracking-widest font-body">
+                        <div className="mb-4 flex items-center gap-3 text-[#f86a1f] text-[10px] font-bold uppercase tracking-widest font-body">
                             <Loader2 className="w-4 h-4 animate-spin" />
                             Digitally stamping image...
                         </div>
@@ -931,7 +931,7 @@ const ProjectUpdates = () => {
                             onChange={(e) => setMessage(e.target.value)}
                             placeholder="Share progress with the client..."
                             rows={2}
-                            className="w-full bg-gray-50 border-2 border-transparent focus:bg-white rounded-[20px] px-5 py-4 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-blue-600 focus:shadow-sm cursor-text transition-all resize-none font-medium"
+                            className="w-full bg-[#faf8f8] border-2 border-transparent focus:bg-white rounded-[20px] px-5 py-4 text-sm text-[#1A1A1A] placeholder:text-gray-400 focus:outline-none focus:border-[#f86a1f] focus:shadow-sm cursor-text transition-all resize-none font-medium"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                                     handlePost();
@@ -941,7 +941,7 @@ const ProjectUpdates = () => {
 
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                             {/* Image upload */}
-                            <label className="flex-1 group/upload h-12 px-5 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center sm:justify-start gap-3 text-gray-400 hover:text-blue-600 hover:border-blue-500/20 hover:bg-blue-50 transition-all cursor-pointer active:scale-95">
+                            <label className="flex-1 group/upload h-12 px-5 rounded-2xl bg-[#faf8f8] border border-gray-100 flex items-center justify-center sm:justify-start gap-3 text-gray-400 hover:text-[#f86a1f] hover:border-[#f86a1f]/20 transition-all cursor-pointer active:scale-95">
                                 <Camera className="w-5 h-5 group-hover/upload:scale-110 transition-transform" />
                                 <span className="text-[10px] py-4 font-bold uppercase tracking-[0.15em]">Capture Photo</span>
                                 <input
@@ -958,7 +958,7 @@ const ProjectUpdates = () => {
                                 onClick={captureLocation}
                                 disabled={locLoading}
                                 title="Pin Location"
-                                className={`flex-1 h-12 px-5 rounded-2xl border flex items-center justify-center sm:justify-start gap-3 transition-all active:scale-95 ${location ? 'bg-emerald-50 border-emerald-100 text-emerald-600' : 'bg-gray-50 border-gray-100 text-gray-400 hover:text-blue-600 hover:border-blue-500/20 hover:bg-blue-50'}`}
+                                className={`flex-1 h-12 px-5 rounded-2xl border flex items-center justify-center sm:justify-start gap-3 transition-all active:scale-95 ${location ? 'bg-[#8192c4]/10 border-[#8192c4]/20 text-[#8192c4]' : 'bg-[#faf8f8] border-gray-100 text-gray-400 hover:text-[#f86a1f] hover:border-[#f86a1f]/20'}`}
                             >
                                 {locLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
                                 <span className="text-[10px] font-bold uppercase tracking-[0.15em]">
@@ -970,7 +970,7 @@ const ProjectUpdates = () => {
                             <button
                                 onClick={handlePost}
                                 disabled={posting || !message.trim() || stamping || !location}
-                                className="sm:flex-[0.6] h-12 px-8 blue-gradient text-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all btn-shadow disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-3 active:scale-95"
+                                className="sm:flex-[0.6] h-12 px-8 accent-gradient text-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all shadow-lg disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-3 active:scale-95"
                             >
                                 {posting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                                 Post
@@ -1016,7 +1016,7 @@ const ProjectUpdates = () => {
                         {/* Info bar */}
                         <div className="shrink-0 p-6 sm:p-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 border-t border-gray-50">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-full blue-gradient flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                                <div className="w-12 h-12 rounded-full bg-[#8192c4] flex items-center justify-center text-white font-bold text-sm shadow-lg">
                                     {lightbox.createdBy?.name?.charAt(0)?.toUpperCase()}
                                 </div>
                                 <div className="min-w-0">
@@ -1034,7 +1034,7 @@ const ProjectUpdates = () => {
                                         href={`https://www.google.com/maps?q=${lightbox.location.latitude},${lightbox.location.longitude}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex-1 sm:flex-initial flex items-center justify-center gap-3 px-6 h-12 bg-gray-50 border border-gray-100 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A] hover:bg-blue-50 hover:text-blue-600 transition-all shadow-sm"
+                                        className="flex-1 sm:flex-initial flex items-center justify-center gap-3 px-6 h-12 bg-[#faf8f8] border border-gray-100 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A] hover:bg-[#8192c4]/10 hover:text-[#8192c4] transition-all shadow-sm"
                                     >
                                         <MapPin className="w-4 h-4" />
                                         <span>View Location</span>

@@ -40,7 +40,7 @@ const StaffDashboard = () => {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-20 md:py-32 min-h-[300px] md:min-h-[500px]">
-                <Loader2 className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600 mb-4" />
+                <Loader2 className="w-10 h-10 md:w-12 md:h-12 animate-spin text-[#173d9f] mb-4" />
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Initialising Portal...</p>
             </div>
         );
@@ -70,7 +70,7 @@ const StaffDashboard = () => {
                 </div>
                 <button
                     onClick={() => navigate('/staff/projects')}
-                    className="w-full lg:w-auto px-8 py-4 blue-gradient text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all btn-shadow hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3"
+                    className="w-full lg:w-auto px-8 py-4 blue-gradient text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-[#173d9f]/20 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3"
                 >
                     Project Ledger
                     <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -83,40 +83,40 @@ const StaffDashboard = () => {
                     label="Assigned Projects" 
                     value={stats.total} 
                     icon={Briefcase} 
-                    color="text-blue-600" 
-                    bg="bg-blue-50" 
+                    color="text-[#173d9f]" 
+                    bg="bg-[#173d9f]/5" 
                     onClick={() => navigate('/staff/projects')} 
                 />
                 <StatCard 
                     label="In Progress" 
                     value={stats.inProgress} 
                     icon={TrendingUp} 
-                    color="text-emerald-600" 
-                    bg="bg-emerald-50" 
+                    color="text-[#173d9f]" 
+                    bg="bg-[#173d9f]/5" 
                     onClick={() => navigate('/staff/projects?status=In+Progress')} 
                 />
                 <StatCard 
                     label="Completed" 
                     value={stats.completed} 
                     icon={CheckCircle} 
-                    color="text-sky-600" 
-                    bg="bg-sky-50" 
+                    color="text-[#173d9f]" 
+                    bg="bg-[#173d9f]/5" 
                     onClick={() => navigate('/staff/projects?status=Completed')} 
                 />
                 <StatCard 
                     label="Pending Updates" 
                     value={stats.delayed} 
                     icon={AlertCircle} 
-                    color="text-amber-600" 
-                    bg="bg-amber-50" 
+                    color="text-[#f86a1f]" 
+                    bg="bg-[#f86a1f]/5" 
                     onClick={() => navigate('/staff/projects?status=Delayed')} 
                 />
                 <StatCard 
                     label="Open Queries" 
                     value={stats.totalQueries} 
                     icon={MessageSquare} 
-                    color="text-violet-600" 
-                    bg="bg-violet-50" 
+                    color="text-[#f86a1f]" 
+                    bg="bg-[#f86a1f]/5" 
                     onClick={() => navigate('/staff/queries')} 
                 />
             </div>
@@ -127,7 +127,7 @@ const StaffDashboard = () => {
 const StatCard = ({ label, value, icon: Icon, color, bg, onClick }) => (
     <div 
         onClick={onClick}
-        className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group hover:border-blue-500/20 hover:-translate-y-1 transition-all duration-300 flex flex-col items-start h-full cursor-pointer active:scale-[0.98] select-none"
+        className={`bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group hover:border-${color === 'text-[#f86a1f]' ? '[#f86a1f]' : '[#173d9f]'}/20 hover:-translate-y-1 transition-all duration-300 flex flex-col items-start h-full cursor-pointer active:scale-[0.98] select-none`}
     >
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${bg} ${color} mb-3 shadow-sm transition-transform group-hover:scale-110`}>
             <Icon className="w-5 h-5" />

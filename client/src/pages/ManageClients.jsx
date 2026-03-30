@@ -8,9 +8,9 @@ import {
 } from 'lucide-react';
 
 const STATUS_COLORS = {
-    active: 'bg-emerald-50 text-emerald-600 border-emerald-100',
-    inactive: 'bg-gray-50 text-gray-500 border-gray-100',
-    suspended: 'bg-red-50 text-red-600 border-red-100',
+    active: 'bg-[#173d9f]/5 text-[#173d9f] border-[#173d9f]/10',
+    inactive: 'bg-[#faf8f8] text-gray-400 border-gray-100',
+    suspended: 'bg-red-50 text-red-500 border-red-100',
 };
 
 const ManageClients = () => {
@@ -103,8 +103,8 @@ const ManageClients = () => {
         <div className="space-y-10 animate-reveal">
             {/* ── Toast ── */}
             {toast && (
-                <div className={`fixed top-8 right-8 z-[150] flex items-center gap-4 px-6 py-4 rounded-[20px] shadow-2xl bg-white border border-gray-100 text-[10px] font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-500' : 'text-blue-600'}`}>
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${toast.type === 'error' ? 'bg-red-50' : 'bg-blue-50'}`}>
+                <div className={`fixed top-8 right-8 z-[150] flex items-center gap-4 px-6 py-4 rounded-[20px] shadow-2xl bg-white border border-gray-100 text-[10px] font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-500' : 'text-[#173d9f]'}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${toast.type === 'error' ? 'bg-red-50' : 'bg-[#173d9f]/5'}`}>
                         {toast.type === 'error' ? <AlertCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
                     </div>
                     {toast.message}
@@ -121,22 +121,22 @@ const ManageClients = () => {
 
             {/* ── Stats Cards ── */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
-                <StatCard icon={Users} label="Total Assets" value={stats.total} color="blue" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
-                <StatCard icon={UserCheck} label="Operational" value={stats.active} color="emerald" onClick={() => { setStatusFilter('active'); setSearchParams({ status: 'active' }); }} />
-                <StatCard icon={UserX} label="Deactivated" value={stats.inactive} color="gray" onClick={() => { setStatusFilter('inactive'); setSearchParams({ status: 'inactive' }); }} />
-                <StatCard icon={AlertTriangle} label="Suspended" value={stats.suspended} color="red" onClick={() => { setStatusFilter('suspended'); setSearchParams({ status: 'suspended' }); }} />
+                <StatCard icon={Users} label="Total Assets" value={stats.total} color="secondary" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
+                <StatCard icon={UserCheck} label="Operational" value={stats.active} color="secondary" onClick={() => { setStatusFilter('active'); setSearchParams({ status: 'active' }); }} />
+                <StatCard icon={UserX} label="Deactivated" value={stats.inactive} color="neutral" onClick={() => { setStatusFilter('inactive'); setSearchParams({ status: 'inactive' }); }} />
+                <StatCard icon={AlertTriangle} label="Suspended" value={stats.suspended} color="neutral" onClick={() => { setStatusFilter('suspended'); setSearchParams({ status: 'suspended' }); }} />
             </div>
 
             {/* ── Filters Bar ── */}
             <div className="bg-white p-2 rounded-[24px] shadow-lg border border-gray-100 flex flex-col md:flex-row gap-2 mt-6">
                 <div className="relative flex-1 group">
-                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-[#173d9f] transition-colors" />
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search by name, email or company..."
-                        className="w-full bg-gray-50/50 pl-14 pr-6 py-4.5 text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:bg-gray-50 focus:ring-4 focus:ring-blue-500/5 rounded-2xl transition-all text-sm font-medium"
+                        className="w-full bg-[#faf8f8] border border-transparent focus:bg-white focus:ring-4 focus:ring-[#173d9f]/10 focus:border-[#173d9f]/30 pl-14 pr-6 py-4.5 text-[#1A1A1A] placeholder-gray-400 rounded-2xl transition-all text-sm font-medium"
                     />
                 </div>
                 <div className="px-2 pb-2 md:p-0">
@@ -157,7 +157,7 @@ const ManageClients = () => {
             <div className="bg-white rounded-[32px] border border-gray-100 shadow-2xl overflow-hidden min-h-[300px] sm:min-h-[500px] mt-6">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20 sm:py-40">
-                        <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-blue-600 mb-4" />
+                        <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-[#173d9f] mb-4" />
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Initialising Database...</p>
                     </div>
                 ) : clients.length === 0 ? (
@@ -191,11 +191,11 @@ const ManageClients = () => {
                                     <tr key={c._id} className="group hover:bg-gray-50 transition-colors duration-300">
                                         <td className="px-10 py-7">
                                             <div className="flex items-center gap-5">
-                                                <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100/50 text-blue-600 flex items-center justify-center font-display font-bold text-sm group-hover:scale-110 transition-transform">
+                                                <div className="w-12 h-12 rounded-2xl bg-[#faf8f8] border border-gray-100 text-[#173d9f] flex items-center justify-center font-display font-bold text-sm group-hover:scale-110 transition-transform">
                                                     {c.name?.charAt(0).toUpperCase()}
                                                 </div>
                                                 <div>
-                                                    <p className="font-bold text-[#1A1A1A] group-hover:text-blue-600 transition-colors text-base tracking-tight">{c.name}</p>
+                                                    <p className="font-bold text-[#1A1A1A] group-hover:text-[#173d9f] transition-colors text-base tracking-tight">{c.name}</p>
                                                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{c.email}</p>
                                                 </div>
                                             </div>
@@ -208,7 +208,7 @@ const ManageClients = () => {
                                             </span>
                                         </td>
                                         <td className="px-8 py-7">
-                                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 border border-gray-100 text-gray-500 rounded-lg text-[10px] font-bold uppercase tracking-widest group-hover:text-blue-600 transition-colors">
+                                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#faf8f8] border border-gray-100 text-gray-500 rounded-lg text-[10px] font-bold uppercase tracking-widest group-hover:text-[#173d9f] transition-colors">
                                                 <FolderOpen className="w-3.5 h-3.5" />
                                                 {c.projectCount} Projects
                                             </span>
@@ -216,20 +216,20 @@ const ManageClients = () => {
                                         <td className="px-8 py-7 text-gray-400 text-[10px] font-bold uppercase tracking-widest">{c.createdAt ? new Date(c.createdAt).toLocaleDateString() : '—'}</td>
                                         <td className="px-10 py-7">
                                             <div className="flex items-center justify-end gap-3">
-                                                <button onClick={() => viewClient(c._id)} className="p-3 rounded-xl bg-gray-50 text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all" title="View">
+                                                <button onClick={() => viewClient(c._id)} className="p-3 rounded-xl bg-[#faf8f8] text-gray-400 hover:text-[#173d9f] hover:bg-[#173d9f]/5 transition-all" title="View">
                                                     <Eye className="w-5 h-5" />
                                                 </button>
                                                 {c.clientStatus !== 'active' && (
-                                                    <button onClick={() => handleStatusChange(c._id, 'active')} className="p-3 rounded-xl bg-gray-50 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all" title="Activate">
+                                                    <button onClick={() => handleStatusChange(c._id, 'active')} className="p-3 rounded-xl bg-[#faf8f8] text-gray-400 hover:text-[#173d9f] hover:bg-[#173d9f]/5 transition-all" title="Activate">
                                                         <ShieldCheck className="w-5 h-5" />
                                                     </button>
                                                 )}
                                                 {c.clientStatus === 'active' && (
-                                                    <button onClick={() => handleStatusChange(c._id, 'suspended')} className="p-3 rounded-xl bg-gray-50 text-gray-400 hover:text-amber-600 hover:bg-amber-50 transition-all" title="Suspend">
+                                                    <button onClick={() => handleStatusChange(c._id, 'suspended')} className="p-3 rounded-xl bg-[#faf8f8] text-gray-400 hover:text-[#173d9f] hover:bg-[#173d9f]/5 transition-all" title="Suspend">
                                                         <ShieldOff className="w-5 h-5" />
                                                     </button>
                                                 )}
-                                                <button onClick={() => handleDelete(c._id, c.name)} className="p-3 rounded-xl bg-gray-50 text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all" title="Delete">
+                                                <button onClick={() => handleDelete(c._id, c.name)} className="p-3 rounded-xl bg-[#faf8f8] text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all" title="Delete">
                                                     <Trash2 className="w-5 h-5" />
                                                 </button>
                                             </div>
@@ -251,14 +251,14 @@ const ManageClients = () => {
                             <button
                                 onClick={() => fetchClients(pagination.page - 1)}
                                 disabled={!pagination.hasPrev}
-                                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-blue-600 transition-all shadow-sm"
+                                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-[#f86a1f] hover:border-[#f86a1f]/20 transition-all shadow-sm"
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
                             <button
                                 onClick={() => fetchClients(pagination.page + 1)}
                                 disabled={!pagination.hasNext}
-                                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-blue-600 transition-all shadow-sm"
+                                className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-[#f86a1f] hover:border-[#f86a1f]/20 transition-all shadow-sm"
                             >
                                 <ChevronRight className="w-5 h-5" />
                             </button>
@@ -304,7 +304,7 @@ const ManageClients = () => {
                                                     <p className="font-bold text-[#1A1A1A] text-sm">{p.projectName}</p>
                                                     <p className="text-[10px] font-bold text-gray-400 uppercase mt-1 tracking-widest">{p.projectCode}</p>
                                                 </div>
-                                                <span className="shrink-0 text-[10px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl uppercase tracking-widest">{p.projectStatus}</span>
+                                                <span className="shrink-0 text-[10px] font-bold text-[#173d9f] bg-[#173d9f]/5 px-3 py-1.5 rounded-xl uppercase tracking-widest border border-[#173d9f]/10">{p.projectStatus}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -313,7 +313,7 @@ const ManageClients = () => {
                         </div>
 
                         <div className="p-7 bg-white border-t border-gray-50 flex-shrink-0">
-                            <button onClick={() => setSelectedClient(null)} className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all">
+                            <button onClick={() => setSelectedClient(null)} className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-[#173d9f]/20 hover:scale-[1.01] active:scale-95 transition-all">
                                 Close Viewer
                             </button>
                         </div>
@@ -326,14 +326,13 @@ const ManageClients = () => {
 
 const StatCard = ({ icon: Icon, label, value, color, onClick }) => {
     const colors = {
-        blue: 'bg-blue-50 text-blue-600 border-blue-100',
-        emerald: 'bg-emerald-50 text-emerald-600 border-emerald-100',
-        red: 'bg-red-50 text-red-600 border-red-100',
-        gray: 'bg-gray-50 text-gray-500 border-gray-100',
+        accent: 'bg-[#f86a1f]/5 text-[#f86a1f] border-[#f86a1f]/10',
+        secondary: 'bg-[#173d9f]/5 text-[#173d9f] border-[#173d9f]/10',
+        neutral: 'bg-white text-gray-400 border-gray-100',
     };
     return (
-        <div onClick={onClick} className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group flex flex-col items-start h-full hover:border-blue-500/20 hover:-translate-y-1 transition-all duration-300 cursor-pointer active:scale-[0.98] select-none">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center border shadow-sm ${colors[color]} mb-3 group-hover:scale-110 transition-transform duration-500`}>
+        <div onClick={onClick} className={`bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group flex flex-col items-start h-full cursor-pointer active:scale-[0.98] select-none hover:border-${color === 'accent' ? '[#f86a1f]' : '[#173d9f]'}/20 hover:-translate-y-1 transition-all duration-300`}>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center border shadow-sm ${colors[color] || colors.neutral} mb-3 group-hover:scale-110 transition-transform duration-500`}>
                 <Icon className="w-5 h-5" />
             </div>
             <div>
@@ -345,8 +344,8 @@ const StatCard = ({ icon: Icon, label, value, color, onClick }) => {
 };
 
 const InfoRow = ({ icon: Icon, label, value }) => (
-    <div className="flex items-center gap-5 py-4 px-4 bg-gray-50 border border-gray-100 rounded-2xl group transition-all">
-        <div className="w-11 h-11 rounded-[14px] bg-white border border-gray-100 flex items-center justify-center text-gray-400 group-hover:text-blue-600 transition-all duration-300 shadow-sm">
+    <div className="flex items-center gap-5 py-4 px-4 bg-[#faf8f8] border border-gray-100 rounded-2xl group transition-all">
+        <div className="w-11 h-11 rounded-[14px] bg-white border border-gray-100 flex items-center justify-center text-gray-400 group-hover:text-[#173d9f] transition-all duration-300 shadow-sm">
             <Icon className="w-5 h-5" />
         </div>
         <div className="flex flex-col">

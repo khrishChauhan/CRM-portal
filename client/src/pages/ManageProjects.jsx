@@ -11,14 +11,14 @@ import {
 const STATUSES = ['Planned', 'In Progress', 'On Hold', 'Completed', 'Delayed', 'Cancelled'];
 const PRIORITIES = ['Low', 'Medium', 'High'];
 const STATUS_COLORS = {
-    Planned: 'bg-blue-50 text-blue-600 border-blue-100',
-    'In Progress': 'bg-emerald-50 text-emerald-600 border-emerald-100',
-    'On Hold': 'bg-amber-50 text-amber-600 border-amber-100',
-    Completed: 'bg-green-50 text-green-600 border-green-100',
+    Planned: 'bg-[#faf8f8] text-[#173d9f] border-gray-100',
+    'In Progress': 'bg-[#173d9f]/5 text-[#173d9f] border-[#173d9f]/10',
+    'On Hold': 'bg-gray-50 text-gray-500 border-gray-100',
+    Completed: 'bg-[#faf8f8] text-gray-400 border-gray-100',
     Delayed: 'bg-red-50 text-red-600 border-red-100',
-    Cancelled: 'bg-gray-50 text-gray-500 border-gray-100',
+    Cancelled: 'bg-gray-50 text-gray-400 border-gray-100',
 };
-const PRIORITY_COLORS = { Low: 'text-blue-500', Medium: 'text-amber-500', High: 'text-red-500' };
+const PRIORITY_COLORS = { Low: 'text-gray-400', Medium: 'text-[#173d9f]', High: 'text-[#f86a1f]' };
 
 const ManageProjects = () => {
     const navigate = useNavigate();
@@ -111,8 +111,8 @@ const ManageProjects = () => {
         <div className="space-y-10 animate-reveal pb-20">
             {/* ── Toast ── */}
             {toast && (
-                <div className={`fixed top-8 right-8 z-[150] flex items-center gap-4 px-6 py-4 rounded-[20px] shadow-2xl bg-white border border-gray-100 text-[10px] font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-500' : 'text-blue-600'}`}>
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${toast.type === 'error' ? 'bg-red-50' : 'bg-blue-50'}`}>
+                <div className={`fixed top-8 right-8 z-[150] flex items-center gap-4 px-6 py-4 rounded-[20px] shadow-2xl bg-white border border-gray-100 text-[10px] font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-500' : 'text-[#f86a1f]'}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${toast.type === 'error' ? 'bg-red-50' : 'bg-[#f86a1f]/5'}`}>
                         {toast.type === 'error' ? <AlertCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
                     </div>
                     {toast.message}
@@ -127,9 +127,9 @@ const ManageProjects = () => {
                 </div>
                 <button
                     onClick={() => { setEditingProject(null); setShowModal(true); }}
-                    className="w-full md:w-auto blue-gradient text-white font-bold text-xs uppercase tracking-widest px-8 py-4 rounded-xl transition-all btn-shadow hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3"
+                    className="w-full md:w-auto accent-gradient text-white font-bold text-xs uppercase tracking-widest px-8 py-4 rounded-xl transition-all shadow-lg shadow-[#f86a1f]/20 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3"
                 >
-                    <Plus className="w-5 h-5" />
+                    <UserPlus className="w-5 h-5" />
                     New Project
                 </button>
             </div>
@@ -137,25 +137,23 @@ const ManageProjects = () => {
             {/* ── Dashboard Stats ── */}
             {dashboard && (
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
-                    <MiniStat label="Total" value={ov.total || 0} icon={FolderOpen} color="text-blue-500" bgColor="bg-blue-50" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
-                    <MiniStat label="Active" value={ov.active || 0} icon={TrendingUp} color="text-emerald-500" bgColor="bg-emerald-50" onClick={() => { setStatusFilter('In Progress'); setSearchParams({ status: 'In Progress' }); }} />
-                    <MiniStat label="Completed" value={ov.completed || 0} icon={CheckCircle} color="text-sky-500" bgColor="bg-sky-50" onClick={() => { setStatusFilter('Completed'); setSearchParams({ status: 'Completed' }); }} />
-                    <MiniStat label="Delayed" value={ov.delayed || 0} icon={AlertTriangle} color="text-red-500" bgColor="bg-red-50" onClick={() => { setStatusFilter('Delayed'); setSearchParams({ status: 'Delayed' }); }} />
-                    <MiniStat label="On Hold" value={ov.onHold || 0} icon={Clock} color="text-amber-500" bgColor="bg-amber-50" onClick={() => { setStatusFilter('On Hold'); setSearchParams({ status: 'On Hold' }); }} />
-                    <MiniStat label="Deleted" value={ov.deleted || 0} icon={Trash2} color="text-gray-500" bgColor="bg-gray-50" onClick={() => { setStatusFilter('Cancelled'); setSearchParams({ status: 'Cancelled' }); }} />
+                     <MiniStat label="Total" value={ov.total || 0} icon={FolderOpen} color="text-[#8192c4]" bgColor="bg-[#8192c4]/10" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
+                    <MiniStat label="Active" value={ov.active || 0} icon={TrendingUp} color="text-[#f86a1f]" bgColor="bg-[#f86a1f]/10" onClick={() => { setStatusFilter('In Progress'); setSearchParams({ status: 'In Progress' }); }} />
+                    <MiniStat label="Completed" value={ov.completed || 0} icon={CheckCircle} color="text-gray-400" bgColor="bg-[#faf8f8]" onClick={() => { setStatusFilter('Completed'); setSearchParams({ status: 'Completed' }); }} />
+                    <MiniStat label="On Hold" value={ov.onHold || 0} icon={Clock} color="text-[#8192c4]" bgColor="bg-[#faf8f8]" onClick={() => { setStatusFilter('On Hold'); setSearchParams({ status: 'On Hold' }); }} />
                 </div>
             )}
 
             {/* ── Control Center (Filters) ── */}
             <div className="bg-white p-2 rounded-[24px] shadow-lg border border-gray-100 flex flex-col lg:flex-row gap-2 mt-6">
                 <div className="relative flex-1 group">
-                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
+                    <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-[#f86a1f] transition-colors" />
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search projects by name..."
-                        className="w-full bg-gray-50/50 pl-14 pr-6 py-4.5 text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:bg-gray-50 focus:ring-4 focus:ring-blue-500/5 rounded-2xl transition-all text-sm font-medium"
+                        className="w-full bg-[#faf8f8] border border-transparent focus:bg-white focus:ring-4 focus:ring-[#f86a1f]/10 focus:border-[#f86a1f]/30 pl-14 pr-6 py-4.5 text-[#1A1A1A] placeholder-gray-400 rounded-2xl transition-all text-sm font-medium"
                     />
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 px-2 pb-2 md:p-0">
@@ -182,7 +180,7 @@ const ManageProjects = () => {
             <div className="mt-6">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20 sm:py-40 bg-white rounded-[32px] border border-gray-100 shadow-2xl min-h-[300px]">
-                        <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-blue-600 mb-4" />
+                        <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-[#173d9f] mb-4" />
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Initialising Database...</p>
                     </div>
                 ) : projects.length === 0 ? (
@@ -193,11 +191,11 @@ const ManageProjects = () => {
                         <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">{statusFilter || priorityFilter || search ? 'No results found for this filter' : 'No Projects Found'}</h3>
                         <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic mb-6">{statusFilter || priorityFilter || search ? 'Try adjusting your search or filters.' : 'Create your first operational project.'}</p>
                         {statusFilter || priorityFilter || search ? (
-                            <button onClick={() => { setStatusFilter(''); setPriorityFilter(''); setSearch(''); setSearchParams({}); }} className="px-6 py-3 bg-gray-100 text-gray-600 rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all active:scale-95 flex items-center gap-2">
+                            <button onClick={() => { setStatusFilter(''); setPriorityFilter(''); setSearch(''); setSearchParams({}); }} className="px-6 py-3 bg-[#faf8f8] text-gray-600 rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all active:scale-95 flex items-center gap-2 border border-gray-100">
                                 Clear Filters
                             </button>
                         ) : (
-                            <button onClick={() => setShowModal(true)} className="px-6 py-3 blue-gradient text-white rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all btn-shadow active:scale-95 flex items-center gap-2">
+                            <button onClick={() => setShowModal(true)} className="px-6 py-3 accent-gradient text-white rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all shadow-lg shadow-[#f86a1f]/20 active:scale-95 flex items-center gap-2">
                                 <Plus className="w-4 h-4" /> Add Project
                             </button>
                         )}
@@ -213,11 +211,11 @@ const ManageProjects = () => {
                                 <div key={p._id} className="bg-white rounded-[24px] shrink-0 w-[85vw] sm:w-[340px] md:w-[360px] snap-center flex flex-col shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-gray-100 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-400 group overflow-hidden">
                                     
                                     {/* Top Section Header (Off-white) */}
-                                    <div className="bg-[#FAFBFD] px-6 pt-6 pb-5 flex flex-col gap-3 border-b border-gray-100/60">
+                                    <div className="bg-[#faf8f8] px-6 pt-6 pb-5 flex flex-col gap-3 border-b border-gray-100/60">
                                         <div className="flex justify-between items-start gap-4">
                                             <div className="flex flex-col min-w-0 pr-1">
                                                 <h3 className="font-display font-bold text-[#1A1A1A] text-[18px] sm:text-[20px] truncate leading-tight tracking-tight">{p.projectName}</h3>
-                                                <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1.5 flex items-center gap-1.5"><div className="w-1.5 h-1.5 bg-blue-500/30 rounded-full shrink-0"></div><span className="truncate">{p.projectCode} • {p.projectCategory || 'General'}</span></div>
+                                                <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1.5 flex items-center gap-1.5"><div className="w-1.5 h-1.5 bg-[#173d9f]/40 rounded-full shrink-0"></div><span className="truncate">{p.projectCode} • {p.projectCategory || 'General'}</span></div>
                                             </div>
                                             <span className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-widest border ${STATUS_COLORS[p.projectStatus] || 'border-gray-100 text-gray-400 bg-gray-50 shadow-sm'}`}>
                                                 <div className={`w-1.5 h-1.5 rounded-full ${p.projectStatus === 'In Progress' ? 'bg-current animate-pulse' : 'bg-current'}`}></div>
@@ -230,9 +228,9 @@ const ManageProjects = () => {
                                     <div className="p-6 flex-1 flex flex-col justify-between bg-white">
                                         {/* Middle Section */}
                                         <div className="space-y-4 mb-6 flex-1">
-                                            <div className="flex justify-between items-center bg-gray-50/50 p-3.5 rounded-[14px]">
+                                            <div className="flex justify-between items-center bg-[#faf8f8] p-3.5 rounded-[14px] border border-gray-100">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-[12px] bg-[#F0F5FF] flex flex-shrink-0 items-center justify-center text-blue-600 border border-[#E0E7FF]/50 shadow-sm">
+                                                    <div className="w-10 h-10 rounded-[12px] bg-white flex flex-shrink-0 items-center justify-center text-[#173d9f] border border-gray-100 shadow-sm">
                                                         <User className="w-4 h-4" />
                                                     </div>
                                                     <div className="min-w-0">
@@ -240,39 +238,39 @@ const ManageProjects = () => {
                                                         <p className="text-[13px] font-bold text-[#1A1A1A] truncate">{p.projectManager?.name || 'Unassigned'}</p>
                                                     </div>
                                                 </div>
-                                                <span className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] text-[9px] font-bold uppercase tracking-widest border ${{ Low: 'bg-emerald-50 text-emerald-600 border-emerald-100', Medium: 'bg-amber-50 text-amber-500 border-amber-100', High: 'bg-red-50 text-red-500 border-red-100' }[p.priority] || 'border-gray-100 text-gray-400 bg-gray-50'}`}>
+                                                <span className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] text-[9px] font-bold uppercase tracking-widest border ${p.priority === 'High' ? 'bg-[#f86a1f]/5 text-[#f86a1f] border-[#f86a1f]/10' : p.priority === 'Medium' ? 'bg-[#173d9f]/5 text-[#173d9f] border-[#173d9f]/10' : 'bg-[#faf8f8] text-gray-400 border-gray-100'}`}>
                                                     <TrendingUp className="w-3 h-3" />
                                                     {p.priority}
                                                 </span>
                                             </div>
 
                                             <div className="grid grid-cols-2 gap-3">
-                                                <div className="flex flex-col gap-1.5 bg-[#F8FAFC] p-3.5 rounded-[14px] border border-[#F1F5F9] shadow-sm">
+                                                <div className="flex flex-col gap-1.5 bg-[#faf8f8] p-3.5 rounded-[14px] border border-gray-100 shadow-sm">
                                                     <div className="flex items-center gap-2 mb-0.5">
-                                                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                                                        <Calendar className="w-3.5 h-3.5 text-gray-400" />
                                                         <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Start Date</p>
                                                     </div>
                                                     <p className="text-[12px] font-bold text-gray-600 truncate pt-0.5">{p.startDate ? new Date(p.startDate).toLocaleDateString() : '---'}</p>
                                                 </div>
-                                                <div className="flex flex-col gap-1.5 bg-[#ECFDF5]/60 p-3.5 rounded-[14px] border border-[#D1FAE5]/60 shadow-sm">
+                                                <div className="flex flex-col gap-1.5 bg-[#173d9f]/5 p-3.5 rounded-[14px] border border-[#173d9f]/10 shadow-sm">
                                                     <div className="flex items-center gap-2 mb-0.5">
-                                                        <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                                                        <p className="text-[9px] font-bold text-emerald-600/70 uppercase tracking-widest">Expected End</p>
+                                                        <CheckCircle className="w-3.5 h-3.5 text-[#173d9f]" />
+                                                        <p className="text-[9px] font-bold text-[#173d9f]/70 uppercase tracking-widest">Expected End</p>
                                                     </div>
-                                                    <p className="text-[12px] font-bold text-emerald-700 truncate pt-0.5">{p.expectedCompletion ? new Date(p.expectedCompletion).toLocaleDateString() : '---'}</p>
+                                                    <p className="text-[12px] font-bold text-[#173d9f] truncate pt-0.5">{p.expectedCompletion ? new Date(p.expectedCompletion).toLocaleDateString() : '---'}</p>
                                                 </div>
                                             </div>
                                         </div>
 
                                         {/* Footer Actions */}
                                         <div className="flex items-center gap-2 pt-2 border-t border-transparent">
-                                            <button onClick={() => navigate(`/admin/projects/${p._id}/updates`)} className="flex-1 py-3 text-blue-600 hover:text-white bg-blue-50 border border-blue-100 hover:bg-blue-600 rounded-[12px] text-[11px] font-bold uppercase tracking-widest transition-all duration-300 flex justify-center items-center gap-2 shadow-sm">
+                                            <button onClick={() => navigate(`/admin/projects/${p._id}/updates`)} className="flex-1 py-3 text-[#173d9f] hover:text-white bg-[#173d9f]/5 border border-[#173d9f]/10 hover:bg-[#173d9f] rounded-[12px] text-[11px] font-bold uppercase tracking-widest transition-all duration-300 flex justify-center items-center gap-2 shadow-sm">
                                                 <MessageSquare className="w-4 h-4" /> Updates
                                             </button>
-                                            <button onClick={() => openEdit(p._id)} className="p-3 text-emerald-600 hover:text-emerald-700 bg-emerald-50 border border-emerald-100 hover:bg-emerald-100 rounded-[12px] transition-all duration-300 shadow-sm" title="Edit">
+                                            <button onClick={() => openEdit(p._id)} className="p-3 text-gray-400 hover:text-[#173d9f] bg-white border border-gray-100 hover:border-[#173d9f]/20 rounded-[12px] transition-all duration-300 shadow-sm" title="Edit">
                                                 <Edit3 className="w-5 h-5" />
                                             </button>
-                                            <button onClick={() => handleDelete(p._id, p.projectName)} className="p-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-[12px] transition-all duration-300 border border-red-100 hover:border-red-200 shadow-sm" title="Delete">
+                                            <button onClick={() => handleDelete(p._id, p.projectName)} className="p-3 bg-white hover:bg-red-50 text-red-600 rounded-[12px] transition-all duration-300 border border-red-100 hover:border-red-200 shadow-sm" title="Delete">
                                                 <Trash2 className="w-5 h-5" />
                                             </button>
                                         </div>
@@ -294,14 +292,14 @@ const ManageProjects = () => {
                                     <button
                                         onClick={() => fetchProjects(pagination.page - 1)}
                                         disabled={!pagination.hasPrev}
-                                        className="w-10 h-10 flex items-center justify-center rounded-[12px] bg-gray-50 text-gray-500 disabled:opacity-30 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
+                                        className="w-10 h-10 flex items-center justify-center rounded-[12px] bg-[#faf8f8] text-gray-500 disabled:opacity-30 hover:text-[#173d9f] transition-all font-bold border border-gray-100"
                                     >
                                         <ChevronLeft className="w-5 h-5" />
                                     </button>
                                     <button
                                         onClick={() => fetchProjects(pagination.page + 1)}
                                         disabled={!pagination.hasNext}
-                                        className="w-10 h-10 flex items-center justify-center rounded-[12px] bg-gray-50 text-gray-500 disabled:opacity-30 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
+                                        className="w-10 h-10 flex items-center justify-center rounded-[12px] bg-[#faf8f8] text-gray-500 disabled:opacity-30 hover:text-[#173d9f] transition-all font-bold border border-gray-100"
                                     >
                                         <ChevronRight className="w-5 h-5" />
                                     </button>
@@ -336,7 +334,7 @@ const ManageProjects = () => {
 };
 
 const MiniStat = ({ label, value, icon: Icon, color, bgColor, onClick }) => (
-    <div onClick={onClick} className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group hover:border-blue-500/20 hover:-translate-y-1 transition-all duration-300 flex flex-col items-start h-full cursor-pointer active:scale-[0.98] select-none">
+    <div onClick={onClick} className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group hover:border-[#173d9f]/20 hover:-translate-y-1 transition-all duration-300 flex flex-col items-start h-full cursor-pointer active:scale-[0.98] select-none">
         <div className={`w-10 h-10 rounded-xl ${bgColor} flex items-center justify-center mb-3 transition-transform group-hover:scale-110`}>
             <Icon className={`w-5 h-5 ${color}`} />
         </div>
@@ -500,7 +498,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                                         name="projectManager"
                                         value={form.projectManager}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none min-h-[48px]"
+                                        className="w-full px-4 py-3 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all cursor-pointer appearance-none min-h-[48px]"
                                     >
                                         <option value="">Select Manager</option>
                                         {staffList.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
@@ -513,7 +511,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
 
                             <div className="space-y-1.5 mb-4">
                                 <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Staff Allocation</label>
-                                <div className="p-4 bg-white border border-gray-200 rounded-[14px] min-h-[52px] focus-within:border-blue-600 focus-within:ring-4 focus-within:ring-blue-500/5 transition-all" tabIndex="0">
+                                <div className="p-4 bg-[#faf8f8] border border-gray-100 rounded-[20px] min-h-[52px] focus-within:border-[#173d9f] focus-within:ring-4 focus-within:ring-[#173d9f]/5 transition-all" tabIndex="0">
                                     <div className="flex items-center gap-2 mb-3 text-sm text-gray-400 font-medium select-none pointer-events-none">
                                         <Users className="w-4 h-4" /> Select staff members
                                     </div>
@@ -525,7 +523,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                                                     key={s._id}
                                                     type="button"
                                                     onClick={() => toggleStaff(s._id)}
-                                                    className={`px-3 py-2 rounded-lg text-[10px] sm:text-xs font-bold tracking-wider transition-all border cursor-pointer ${selected ? 'bg-blue-600 border-blue-500 text-white shadow-md' : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100 hover:text-gray-700'}`}
+                                                    className={`px-3 py-2 rounded-lg text-[10px] sm:text-xs font-bold tracking-wider transition-all border cursor-pointer ${selected ? 'bg-[#173d9f] border-transparent text-white shadow-md' : 'bg-white border-gray-200 text-gray-500 hover:bg-[#faf8f8] hover:text-gray-700'}`}
                                                 >
                                                     {s.name} {selected && <CheckCircle className="w-3 h-3 inline-block ml-1 opacity-80" />}
                                                 </button>
@@ -542,7 +540,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                         <button
                             type="submit"
                             disabled={saving}
-                            className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50"
+                            className="w-full py-4.5 accent-gradient text-white font-bold rounded-[16px] shadow-lg shadow-[#f86a1f]/20 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50"
                         >
                             {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : (isEdit ? 'Update Project' : 'Create Project')}
                         </button>
@@ -566,7 +564,7 @@ const Field = ({ label, name, value, onChange, placeholder, type = 'text', requi
                     placeholder={placeholder}
                     rows={4}
                     style={{ minHeight: '110px' }}
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/5 transition-all hover:border-blue-300 cursor-text"
+                    className="w-full px-4 py-3 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all cursor-text"
                 />
             ) : (
                 <input
@@ -577,7 +575,7 @@ const Field = ({ label, name, value, onChange, placeholder, type = 'text', requi
                     required={required}
                     placeholder={placeholder}
                     style={{ minHeight: '48px' }}
-                    className={`w-full px-4 py-3 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/5 transition-all hover:border-blue-300 ${type === 'date' ? 'cursor-pointer pr-10' : 'cursor-text'}`}
+                    className={`w-full px-4 py-3 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all ${type === 'date' ? 'cursor-pointer pr-10' : 'cursor-text'}`}
                 />
             )}
             {type === 'date' && (
@@ -598,7 +596,7 @@ const SelectField = ({ label, name, value, onChange, options }) => (
                 value={value}
                 onChange={onChange}
                 style={{ minHeight: '48px' }}
-                className="w-full px-4 py-3 pr-10 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/5 transition-all hover:border-blue-300 cursor-pointer appearance-none"
+                className="w-full px-4 py-3 pr-10 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all cursor-pointer appearance-none"
             >
                 {options.map((o) => <option key={o} value={o}>{o}</option>)}
             </select>
@@ -613,7 +611,7 @@ const ConfirmationModal = ({ title, message, onConfirm, onCancel, confirmText, i
     <div className="fixed inset-0 z-[300] flex justify-center items-start p-4">
         <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={onCancel}></div>
         <div className="bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] w-[94%] max-w-[420px] relative z-[310] animate-in slide-in-from-top-4 duration-300 p-8 text-center">
-            <div className={`w-16 h-16 rounded-2xl ${isDestructive ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-blue-500'} flex items-center justify-center mx-auto mb-6`}>
+            <div className={`w-16 h-16 rounded-2xl ${isDestructive ? 'bg-red-50 text-red-500' : 'bg-[#173d9f]/5 text-[#173d9f]'} flex items-center justify-center mx-auto mb-6`}>
                 {isDestructive ? <Trash2 className="w-8 h-8" /> : <AlertCircle className="w-8 h-8" />}
             </div>
             <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">{title}</h3>
@@ -621,7 +619,7 @@ const ConfirmationModal = ({ title, message, onConfirm, onCancel, confirmText, i
             <div className="flex flex-col gap-3">
                 <button
                     onClick={onConfirm}
-                    className={`w-full py-4 ${isDestructive ? 'bg-red-500 shadow-red-200' : 'blue-gradient shadow-blue-200'} text-white font-bold rounded-[16px] shadow-lg hover:opacity-90 active:scale-[0.98] transition-all`}
+                    className={`w-full py-4 ${isDestructive ? 'bg-red-500 shadow-red-100' : 'blue-gradient shadow-[#173d9f]/10'} text-white font-bold rounded-[16px] shadow-lg hover:opacity-90 active:scale-[0.98] transition-all`}
                 >
                     {confirmText || 'Confirm'}
                 </button>

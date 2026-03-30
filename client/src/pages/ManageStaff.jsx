@@ -130,8 +130,8 @@ const ManageStaff = () => {
         <div className="space-y-10 animate-reveal">
             {/* ── Toast ── */}
             {toast && (
-                <div className={`fixed top-8 right-8 z-[150] flex items-center gap-4 px-6 py-4 rounded-[20px] shadow-2xl bg-white border border-gray-100 text-[10px] font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-500' : 'text-blue-600'}`}>
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${toast.type === 'error' ? 'bg-red-50' : 'bg-blue-50'}`}>
+                <div className={`fixed top-8 right-8 z-[150] flex items-center gap-4 px-6 py-4 rounded-[20px] shadow-2xl bg-white border border-gray-100 text-[10px] font-bold uppercase tracking-widest animate-in slide-in-from-right-10 duration-500 ${toast.type === 'error' ? 'text-red-500' : 'text-[#173d9f]'}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${toast.type === 'error' ? 'bg-red-50' : 'bg-[#173d9f]/5'}`}>
                         {toast.type === 'error' ? <AlertCircle className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
                     </div>
                     {toast.message}
@@ -146,7 +146,7 @@ const ManageStaff = () => {
                 </div>
                 <button
                     onClick={() => openModal()}
-                    className="w-full md:w-auto px-8 py-4 blue-gradient text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all btn-shadow hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3"
+                    className="w-full md:w-auto px-8 py-4 accent-gradient text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-[#f86a1f]/20 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3"
                 >
                     <UserPlus className="w-5 h-5" />
                     <span>Onboard Staff</span>
@@ -155,22 +155,22 @@ const ManageStaff = () => {
 
             {/* ── Stats Cards ── */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
-                <StatCard icon={Users} label="Total Assets" value={stats.total} color="blue" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
-                <StatCard icon={UserCheck} label="Operational" value={stats.active} color="emerald" onClick={() => { setStatusFilter('active'); setSearchParams({ status: 'active' }); }} />
-                <StatCard icon={UserX} label="Deactivated" value={stats.inactive} color="red" onClick={() => { setStatusFilter('inactive'); setSearchParams({ status: 'inactive' }); }} />
+                <StatCard icon={Users} label="Total Assets" value={stats.total} color="secondary" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
+                <StatCard icon={UserCheck} label="Operational" value={stats.active} color="secondary" onClick={() => { setStatusFilter('active'); setSearchParams({ status: 'active' }); }} />
+                <StatCard icon={UserX} label="Deactivated" value={stats.inactive} color="neutral" onClick={() => { setStatusFilter('inactive'); setSearchParams({ status: 'inactive' }); }} />
             </div>
 
             {/* ── Filters Bar ── */}
             <div className="bg-white p-2 rounded-[24px] shadow-lg border border-gray-100 mt-6">
                 <div className="flex flex-col md:flex-row gap-2">
                     <div className="relative flex-1 group">
-                        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-blue-400 transition-colors" />
+                        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-[#173d9f] transition-colors" />
                         <input
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Search by name, email or designation..."
-                            className="w-full bg-gray-50/50 pl-14 pr-6 py-4.5 text-[#1A1A1A] placeholder-gray-400 focus:outline-none focus:bg-gray-50 focus:ring-4 focus:ring-blue-500/5 rounded-2xl transition-all text-sm font-medium"
+                            className="w-full bg-[#faf8f8] border border-transparent focus:bg-white focus:ring-4 focus:ring-[#173d9f]/10 focus:border-[#173d9f]/30 pl-14 pr-6 py-4.5 text-[#1A1A1A] placeholder-gray-400 rounded-2xl transition-all text-sm font-medium"
                         />
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2 px-2 pb-2 md:p-0">
@@ -199,7 +199,7 @@ const ManageStaff = () => {
             <div className="mt-6">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20 sm:py-40 bg-white rounded-[32px] border border-gray-100 shadow-2xl min-h-[300px]">
-                        <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-blue-600 mb-4" />
+                        <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-[#173d9f] mb-4" />
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compiling Personnel...</p>
                     </div>
                 ) : staff.length === 0 ? (
@@ -210,11 +210,11 @@ const ManageStaff = () => {
                         <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">{statusFilter || deptFilter || search ? 'No results found for this filter' : 'No staff available'}</h3>
                         <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic mb-6">{statusFilter || deptFilter || search ? 'Try adjusting your search or filters.' : "Let's get your team on board."}</p>
                         {statusFilter || deptFilter || search ? (
-                            <button onClick={() => { setStatusFilter(''); setDeptFilter(''); setSearch(''); setSearchParams({}); }} className="px-6 py-3 bg-gray-100 text-gray-600 rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all active:scale-95 flex items-center gap-2">
+                            <button onClick={() => { setStatusFilter(''); setDeptFilter(''); setSearch(''); setSearchParams({}); }} className="px-6 py-3 bg-[#faf8f8] text-gray-600 rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all active:scale-95 flex items-center gap-2 border border-gray-100">
                                 Clear Filters
                             </button>
                         ) : (
-                            <button onClick={() => openModal()} className="px-6 py-3 blue-gradient text-white rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all btn-shadow active:scale-95 flex items-center gap-2">
+                            <button onClick={() => openModal()} className="px-6 py-3 accent-gradient text-white rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all shadow-lg shadow-[#f86a1f]/20 active:scale-95 flex items-center gap-2">
                                 <Plus className="w-4 h-4" /> Add Staff
                             </button>
                         )}
@@ -230,13 +230,13 @@ const ManageStaff = () => {
                                 <div key={s._id} className="bg-white rounded-[24px] shrink-0 w-[85vw] sm:w-[340px] md:w-[350px] snap-center flex flex-col shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-gray-100 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-400 group overflow-hidden">
                                     
                                     {/* Top Section Header (Off-white) */}
-                                    <div className="bg-[#FAFBFD] px-6 pt-6 pb-5 flex justify-between items-start gap-4 border-b border-gray-100/60">
+                                    <div className="bg-[#faf8f8] px-6 pt-6 pb-5 flex justify-between items-start gap-4 border-b border-gray-100/60">
                                         <div className="flex flex-col min-w-0 pr-1">
                                             <h3 className="font-display font-bold text-[#1A1A1A] text-[18px] sm:text-[20px] truncate leading-tight tracking-tight">{s.name}</h3>
                                             <p className="text-[13px] text-gray-500 font-medium truncate mt-0.5">{s.email}</p>
                                         </div>
-                                        <span className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-widest ${s.isActive ? 'bg-[#ECFDF5] text-emerald-600 border border-[#D1FAE5]' : 'bg-white text-gray-500 border border-gray-200 shadow-sm'}`}>
-                                            <div className={`w-1.5 h-1.5 rounded-full ${s.isActive ? 'bg-emerald-500 animate-pulse' : 'bg-gray-400'}`}></div>
+                                        <span className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-widest ${s.isActive ? 'bg-[#173d9f]/10 text-[#173d9f] border border-[#173d9f]/20' : 'bg-[#faf8f8] text-gray-400 border border-gray-200'}`}>
+                                            <div className={`w-1.5 h-1.5 rounded-full ${s.isActive ? 'bg-[#173d9f] animate-pulse' : 'bg-gray-400'}`}></div>
                                             {s.isActive ? 'Active' : 'Inactive'}
                                         </span>
                                     </div>
@@ -246,7 +246,7 @@ const ManageStaff = () => {
                                         {/* Middle Section */}
                                         <div className="space-y-4 mb-6 flex-1">
                                             <div className="flex items-center gap-3.5">
-                                                <div className="w-10 h-10 rounded-[12px] bg-[#F0F5FF] flex flex-shrink-0 items-center justify-center text-blue-600 border border-[#E0E7FF]/50 shadow-sm">
+                                                <div className="w-10 h-10 rounded-[12px] bg-[#faf8f8] flex flex-shrink-0 items-center justify-center text-[#173d9f] border border-gray-100 shadow-sm">
                                                     <Briefcase className="w-4 h-4" />
                                                 </div>
                                                 <div className="min-w-0">
@@ -256,22 +256,22 @@ const ManageStaff = () => {
                                             </div>
 
                                             <div className="flex items-center gap-3.5">
-                                                <div className="w-10 h-10 rounded-[12px] bg-[#F8FAFC] flex flex-shrink-0 items-center justify-center text-slate-500 border border-[#F1F5F9] shadow-sm">
+                                                <div className="w-10 h-10 rounded-[12px] bg-[#faf8f8] flex flex-shrink-0 items-center justify-center text-[#173d9f] border border-gray-100 shadow-sm">
                                                     <Building2 className="w-4 h-4" />
                                                 </div>
                                                 <div className="min-w-0">
                                                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Department</p>
-                                                    <p className="text-sm font-bold text-gray-600 truncate">{s.department || 'Unassigned Unit'}</p>
+                                                    <p className="text-sm font-bold text-gray-600 truncate">{s.department || 'General'}</p>
                                                 </div>
                                             </div>
                                         </div>
 
                                         {/* Footer Actions */}
-                                        <div className="flex items-center gap-2 pt-2 border-t border-transparent">
-                                            <button onClick={() => openModal(s)} className="flex-1 py-3 text-gray-600 hover:text-blue-600 rounded-[12px] text-[11px] sm:text-[12px] font-bold transition-all duration-300 flex justify-center items-center gap-2 bg-white border border-gray-200 hover:border-blue-100 hover:bg-blue-50/50 shadow-sm">
+                                        <div className="flex items-center gap-2 pt-2 border-t border-gray-50">
+                                            <button onClick={() => openModal(s)} className="flex-1 py-3 text-gray-500 hover:text-[#173d9f] rounded-[12px] text-[11px] sm:text-[12px] font-bold transition-all duration-300 flex justify-center items-center gap-2 bg-white border border-gray-100 hover:border-[#173d9f]/20 hover:bg-[#faf8f8] shadow-sm">
                                                 <Edit3 className="w-4 h-4" /> Edit Profile
                                             </button>
-                                            <button onClick={() => handleToggleStatus(s._id, s.name)} className={`p-3 rounded-[12px] transition-all duration-300 shadow-sm border ${s.isActive ? 'bg-[#FFFBEB] text-amber-600 hover:bg-[#FEF3C7] border-[#FEF3C7] hover:border-[#FDE68A]' : 'bg-[#ECFDF5] text-emerald-600 hover:bg-[#D1FAE5] border-[#D1FAE5] hover:border-[#A7F3D0]'}`} title={s.isActive ? 'Deactivate' : 'Restore'}>
+                                            <button onClick={() => handleToggleStatus(s._id, s.name)} className={`p-3 rounded-[12px] transition-all duration-300 shadow-sm border ${s.isActive ? 'bg-gray-50 text-gray-400 hover:bg-gray-100 border-gray-200' : 'bg-[#173d9f]/10 text-[#173d9f] hover:bg-[#173d9f]/20 border-[#173d9f]/20'}`} title={s.isActive ? 'Deactivate' : 'Restore'}>
                                                 {s.isActive ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
                                             </button>
                                             <button onClick={() => handleDelete(s._id, s.name)} className="p-3 bg-white hover:bg-red-50 text-red-600 rounded-[12px] transition-all duration-300 border border-red-100 hover:border-red-200 shadow-sm" title="Delete">
@@ -296,14 +296,14 @@ const ManageStaff = () => {
                                     <button
                                         onClick={() => fetchStaff(pagination.page - 1)}
                                         disabled={!pagination.hasPrev}
-                                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-500 disabled:opacity-30 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
+                                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#faf8f8] text-gray-500 disabled:opacity-30 hover:text-[#173d9f] transition-all font-bold border border-gray-100"
                                     >
                                         <ChevronLeft className="w-5 h-5" />
                                     </button>
                                     <button
                                         onClick={() => fetchStaff(pagination.page + 1)}
                                         disabled={!pagination.hasNext}
-                                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-500 disabled:opacity-30 hover:bg-blue-50 hover:text-blue-600 transition-all font-bold"
+                                        className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#faf8f8] text-gray-500 disabled:opacity-30 hover:text-[#173d9f] transition-all font-bold border border-gray-100"
                                     >
                                         <ChevronRight className="w-5 h-5" />
                                     </button>
@@ -344,13 +344,13 @@ const ManageStaff = () => {
 // ════════════════════════════════════════
 const StatCard = ({ icon: Icon, label, value, color, onClick }) => {
     const colors = {
-        blue: 'bg-blue-50 text-blue-600 border-blue-100',
-        emerald: 'bg-emerald-50 text-emerald-600 border-emerald-100',
-        red: 'bg-red-50 text-red-600 border-red-100',
+        accent: 'bg-[#f86a1f]/5 text-[#f86a1f] border-[#f86a1f]/10',
+        secondary: 'bg-[#173d9f]/5 text-[#173d9f] border-[#173d9f]/10',
+        neutral: 'bg-white text-gray-400 border-gray-100',
     };
     return (
-        <div onClick={onClick} className="bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group flex flex-col items-start h-full hover:border-blue-500/20 hover:-translate-y-1 transition-all duration-300 cursor-pointer active:scale-[0.98] select-none">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center border shadow-sm ${colors[color]} mb-3 group-hover:scale-110 transition-transform duration-500`}>
+        <div onClick={onClick} className={`bg-white p-4 sm:p-5 rounded-[20px] border border-gray-100 shadow-md group flex flex-col items-start h-full cursor-pointer active:scale-[0.98] select-none hover:border-${color === 'accent' ? '[#f86a1f]' : '[#173d9f]'}/20 hover:-translate-y-1 transition-all duration-300`}>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center border shadow-sm ${colors[color] || colors.neutral} mb-3 group-hover:scale-110 transition-transform duration-500`}>
                 <Icon className="w-5 h-5" />
             </div>
             <div>
@@ -462,7 +462,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         <div className="space-y-1.5 mb-5">
                             <label className="text-[15px] font-bold text-[#34495E] ml-1">Organisation Unit</label>
                             <div className="relative">
-                                <select name="department" value={form.department} onChange={handleChange} className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none">
+                                <select name="department" value={form.department} onChange={handleChange} className="w-full px-4 py-3.5 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all cursor-pointer appearance-none">
                                     <option value="">Select department</option>
                                     {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
                                 </select>
@@ -477,7 +477,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         <div className="space-y-1.5 mb-5">
                             <label className="text-[15px] font-bold text-[#34495E] ml-1">Engagement Type</label>
                             <div className="relative">
-                                <select name="employmentType" value={form.employmentType} onChange={handleChange} className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none">
+                                <select name="employmentType" value={form.employmentType} onChange={handleChange} className="w-full px-4 py-3.5 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all cursor-pointer appearance-none">
                                     {EMPLOYMENT_TYPES.map(t => <option key={t} value={t} className="capitalize">{t}</option>)}
                                 </select>
                                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
@@ -491,7 +491,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         <div className="space-y-1.5 mb-5">
                             <label className="text-[15px] font-bold text-[#34495E] ml-1">Hierarchy Lead</label>
                             <div className="relative">
-                                <select name="reportingManager" value={form.reportingManager} onChange={handleChange} className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all cursor-pointer appearance-none">
+                                <select name="reportingManager" value={form.reportingManager} onChange={handleChange} className="w-full px-4 py-3.5 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all cursor-pointer appearance-none">
                                     <option value="">Direct to Board</option>
                                     {managers.filter(m => m._id !== staff?._id).map(m => (
                                         <option key={m._id} value={m._id}>{m.name}</option>
@@ -508,7 +508,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         <button
                             type="submit"
                             disabled={saving}
-                            className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="w-full py-4.5 accent-gradient text-white font-bold rounded-[16px] shadow-lg shadow-[#f86a1f]/20 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                             {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : (isEdit ? 'Update Staff Profile' : 'Confirm & Add Staff')}
                         </button>
@@ -536,7 +536,7 @@ const FormField = ({ label, name, type = 'text', value, onChange, placeholder, r
                 disabled={disabled}
                 inputMode={inputMode}
                 pattern={pattern}
-                className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all disabled:opacity-30"
+                className="w-full px-4 py-3.5 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-300 focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all disabled:opacity-30"
             />
             {type === 'date' && (
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -559,7 +559,7 @@ const ConfirmationModal = ({ title, message, onConfirm, onCancel, confirmText, i
             <div className="flex flex-col gap-3">
                 <button
                     onClick={onConfirm}
-                    className={`w-full py-4 ${isDestructive ? 'bg-red-500 shadow-red-200' : 'blue-gradient shadow-blue-200'} text-white font-bold rounded-[16px] shadow-lg hover:opacity-90 active:scale-[0.98] transition-all`}
+                    className={`w-full py-4 ${isDestructive ? 'bg-red-500 shadow-red-100' : 'blue-gradient shadow-[#173d9f]/10'} text-white font-bold rounded-[16px] shadow-lg hover:opacity-90 active:scale-[0.98] transition-all`}
                 >
                     {confirmText || 'Confirm'}
                 </button>
