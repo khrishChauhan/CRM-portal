@@ -20,7 +20,8 @@ exports.submitQuery = async (req, res) => {
 
         // ── Proof Validation (Image OR Location) ──
         if (!req.file && (!latitude || !longitude)) {
-            return sendError(res, 'Proof required: image or location is mandatory', 400);
+            console.warn(`[SECURITY] Failed Query Proof: User ${req.user.id} (Role: ${req.user.role}) attempted to bypass proof at ${new Date().toISOString()}`);
+            return sendError(res, 'Image or location proof is required', 400);
         }
 
         // Verify project exists

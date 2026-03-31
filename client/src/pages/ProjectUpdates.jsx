@@ -278,7 +278,7 @@ const ProjectUpdates = () => {
         const hasLocation = !!location;
 
         if (!hasImage && !hasLocation) {
-            showToast('Please upload a photo or enable location to continue', 'error');
+            showToast('Proof required: upload image or enable location', 'error');
             return;
         }
 
@@ -330,7 +330,7 @@ const ProjectUpdates = () => {
         const hasLocation = !!location;
 
         if (!hasImage && !hasLocation) {
-            showToast('Please upload a photo or enable location to continue', 'error');
+            showToast('Proof required: upload image or enable location', 'error');
             return;
         }
 
