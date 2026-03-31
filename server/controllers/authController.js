@@ -10,13 +10,6 @@ const { sendSuccess, sendError } = require('../utils/response');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// Authorized admin emails
-const ALLOWED_ADMINS = [
-    "khrishchauhan@gmail.com",
-    "rj9852107631@gmail.com",
-    "clickaarambh@gmail.com"
-];
-
 // Generate a secure 6-digit numeric OTP
 const generateOTP = () => {
     return crypto.randomInt(100000, 999999).toString();
@@ -39,6 +32,25 @@ const buildUserResponse = (user) => ({
 //  ADMIN AUTH (OTP-based)
 // ════════════════════════════════════════════
 
+/**
+ * Validates if an email is authorized as an Admin 
+ * (Supports both Primary and Internal Admins from ENV)
+ */
+const isAuthorizedAdmin = (email) => {
+    const normalized = email.trim().toLowerCase();
+    
+    // 1. Check Primary Admin
+    const primary = (process.env.PRIMARY_ADMIN_EMAIL || '').trim().toLowerCase();
+    if (normalized === primary) return true;
+
+    // 2. Check Internal Admin List
+    const internalList = (process.env.INTERNAL_ADMIN_EMAILS || '')
+        .split(',')
+        .map(e => e.trim().toLowerCase());
+        
+    return internalList.includes(normalized);
+};
+
 exports.sendAdminOTP = async (req, res) => {
     const { email } = req.body;
 
@@ -51,7 +63,7 @@ exports.sendAdminOTP = async (req, res) => {
     // ── Admin Email Validation ──
     console.log("Admin OTP requested for:", normalizedEmail);
 
-    if (!ALLOWED_ADMINS.includes(normalizedEmail)) {
+    if (!isAuthorizedAdmin(normalizedEmail)) {
         return sendError(res, 'Unauthorized admin email', 403);
     }
 

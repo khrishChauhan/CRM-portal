@@ -1,4 +1,5 @@
 const ActivityLog = require('../models/ActivityLog');
+const User = require('../models/User');
 
 /**
  * ActivityLogService — Production-grade event logging
@@ -20,6 +21,12 @@ class ActivityLogService {
      */
     static async logEvent({ actorId, actorRole, actionType, entityType, entityId, message, metadata = {} }) {
         try {
+            // Check if actor is an internal admin
+            const actor = await User.findById(actorId).select('email');
+            const internalEmails = (process.env.INTERNAL_ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
+            
+            const isInternal = actor && internalEmails.includes(actor.email.toLowerCase());
+
             return await ActivityLog.create({
                 actorId,
                 actorRole,
@@ -27,7 +34,8 @@ class ActivityLogService {
                 entityType,
                 entityId,
                 message,
-                metadata
+                metadata,
+                isInternal
             });
         } catch (error) {
             console.error('❌ ActivityLogService error:', error.message);
@@ -38,9 +46,10 @@ class ActivityLogService {
 
     /**
      * Get recent activities for admin dashboard
+     * Filters out activities by internal admins
      */
     static async getRecentActivities(limit = 15) {
-        return ActivityLog.find()
+        return ActivityLog.find({ isInternal: { $ne: true } })
             .select('message actorRole createdAt')
             .sort({ createdAt: -1 })
             .limit(limit)
