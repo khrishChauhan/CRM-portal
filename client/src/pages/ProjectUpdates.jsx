@@ -27,7 +27,6 @@ const ProjectUpdates = () => {
     const [stamping, setStamping] = useState(false);
 
     const [toast, setToast] = useState(null);
-    const [lightbox, setLightbox] = useState(null);
 
     const canPost = user?.role === 'admin' || user?.role === 'staff';
     const isClient = user?.role === 'client';
@@ -257,15 +256,6 @@ const ProjectUpdates = () => {
         setImageFile(null);
         setImagePreview(null);
     };
-
-    useEffect(() => {
-        if (lightbox) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-        return () => { document.body.style.overflow = 'unset'; };
-    }, [lightbox]);
 
     // ── Post update ──
     const handlePost = async () => {
@@ -535,8 +525,8 @@ const ProjectUpdates = () => {
                                 <div className="flex items-center justify-between">
                                     <h3 className="text-[10px] font-bold text-[#173d9f] uppercase tracking-[0.4em] border-l-2 border-[#173d9f] pl-4">Current Status</h3>
                                     <span className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest ${project?.projectStatus === 'Completed' ? 'bg-[#faf8f8] text-gray-400 border border-gray-100' :
-                                            project?.projectStatus === 'In Progress' ? 'bg-[#173d9f]/5 text-[#173d9f] border border-[#173d9f]/10' :
-                                                'bg-[#faf8f8] text-gray-400 border border-gray-100'
+                                        project?.projectStatus === 'In Progress' ? 'bg-[#173d9f]/5 text-[#173d9f] border border-[#173d9f]/10' :
+                                            'bg-[#faf8f8] text-gray-400 border border-gray-100'
                                         }`}>
                                         {project?.projectStatus || 'Planned'}
                                     </span>
@@ -581,11 +571,11 @@ const ProjectUpdates = () => {
                             >
                                 {/* ── Image Section (Top) ── */}
                                 {update.imageUrl && (
-                                    <div className="relative group/img cursor-pointer w-full" onClick={() => setLightbox(update)}>
+                                    <div className="relative group/img cursor-pointer w-full" onClick={() => navigate('/image-view', { state: { imageUrl: update.imageUrl } })}>
                                         <img
                                             src={update.imageUrl}
                                             alt="Update attachment"
-                                            className="w-full h-auto max-h-[400px] object-cover display-block"
+                                            className="w-full h-auto max-h-[400px] object-cover block"
                                         />
                                         <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/20 transition-all flex items-center justify-center">
                                             <Maximize2 className="w-6 h-6 text-white opacity-0 group-hover/img:opacity-100 transition-opacity drop-shadow-lg" />
@@ -748,7 +738,7 @@ const ProjectUpdates = () => {
                                                         <p className="text-sm leading-relaxed opacity-90">{q.message}</p>
 
                                                         {q.imageUrl && (
-                                                            <div className="mt-3 relative group/qimg cursor-pointer max-w-sm" onClick={() => setLightbox({ ...q, imageUrl: q.imageUrl })}>
+                                                            <div className="mt-3 relative group/qimg cursor-pointer max-w-sm" onClick={() => navigate('/image-view', { state: { imageUrl: q.imageUrl } })}>
                                                                 <img
                                                                     src={q.imageUrl}
                                                                     alt="Query attachment"
@@ -813,8 +803,8 @@ const ProjectUpdates = () => {
                                                         </div>
                                                     </div>
                                                     <span className={`px-3 py-1 rounded-lg text-[8px] font-bold uppercase tracking-widest border ${q.status === 'open' ? 'bg-amber-50 text-amber-600 border-amber-100' :
-                                                            q.status === 'answered' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
-                                                                'bg-gray-50 text-gray-400 border-gray-100'
+                                                        q.status === 'answered' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                                                            'bg-gray-50 text-gray-400 border-gray-100'
                                                         }`}>
                                                         {q.status}
                                                     </span>
@@ -824,7 +814,7 @@ const ProjectUpdates = () => {
 
                                                 {q.imageUrl && (
                                                     <div className="mb-6 space-y-3">
-                                                        <div className="relative group/qimg cursor-pointer max-w-md" onClick={() => setLightbox({ ...q, imageUrl: q.imageUrl })}>
+                                                        <div className="relative group/qimg cursor-pointer max-w-md" onClick={() => navigate('/image-view', { state: { imageUrl: q.imageUrl } })}>
                                                             <img
                                                                 src={q.imageUrl}
                                                                 alt="Query attachment"
@@ -983,59 +973,6 @@ const ProjectUpdates = () => {
                 </div>
             )}
 
-            {/* ── Lightbox Modal ── */}
-            {lightbox && (
-                <div className="fixed inset-0 z-[200] flex md:items-center md:justify-center">
-                    <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-3xl animate-in fade-in duration-500" onClick={() => setLightbox(null)}></div>
-                    <div className="bg-white w-full h-full md:h-auto md:w-full md:max-w-4xl md:rounded-[32px] overflow-hidden shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] flex flex-col relative z-[210] animate-in slide-in-from-bottom md:zoom-in-95 duration-300 md:duration-500">
-                        {/* Image container */}
-                        <div className="flex-1 min-h-0 bg-gray-50 flex items-center justify-center relative">
-                            <img
-                                src={lightbox.imageUrl}
-                                alt="Full size"
-                                className="max-w-full max-h-[65vh] object-contain"
-                            />
-                            <button
-                                onClick={() => setLightbox(null)}
-                                className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/80 backdrop-blur-md border border-gray-100 flex items-center justify-center text-gray-800 hover:text-red-500 transition-all shadow-lg active:scale-90"
-                            >
-                                <X className="w-6 h-6" />
-                            </button>
-                        </div>
-
-                        {/* Info bar */}
-                        <div className="shrink-0 p-6 sm:p-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 border-t border-gray-50">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-full bg-[#8192c4] flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                                    {lightbox.createdBy?.name?.charAt(0)?.toUpperCase()}
-                                </div>
-                                <div className="min-w-0">
-                                    <p className="text-[#1A1A1A] font-bold text-base leading-none mb-1.5">{lightbox.createdBy?.name}</p>
-                                    <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
-                                        <Clock className="w-3.5 h-3.5" />
-                                        {formatTime(lightbox.createdAt)}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-3">
-                                {lightbox.location?.latitude && lightbox.location?.longitude && (
-                                    <a
-                                        href={`https://www.google.com/maps?q=${lightbox.location.latitude},${lightbox.location.longitude}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex-1 sm:flex-initial flex items-center justify-center gap-3 px-6 h-12 bg-[#faf8f8] border border-gray-100 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A] hover:bg-[#8192c4]/10 hover:text-[#8192c4] transition-all shadow-sm"
-                                    >
-                                        <MapPin className="w-4 h-4" />
-                                        <span>View Location</span>
-                                        <ExternalLink className="w-3.5 h-3.5" />
-                                    </a>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

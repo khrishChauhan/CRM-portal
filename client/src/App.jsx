@@ -18,6 +18,7 @@ import ManageAccessRequests from './pages/ManageAccessRequests';
 import ProjectUpdates from './pages/ProjectUpdates';
 import ManageQueries from './pages/ManageQueries';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import ImageViewer from './pages/ImageViewer';
 import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
 
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
+              <Route path="/image-view" element={<ImageViewer />} />
 
               {/* ── Admin Routes ── */}
               <Route element={<RoleProtectedRoute allowedRoles={['admin']} />}>
