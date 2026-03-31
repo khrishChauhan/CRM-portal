@@ -275,10 +275,9 @@ const ProjectUpdates = () => {
         }
 
         const hasImage = !!imageFile;
-        const hasLocation = !!location;
 
-        if (!hasImage && !hasLocation) {
-            showToast('Proof required: upload image or enable location', 'error');
+        if (!hasImage) {
+            showToast('Image is required to post update', 'error');
             return;
         }
 
@@ -327,10 +326,9 @@ const ProjectUpdates = () => {
         }
 
         const hasImage = !!imageFile;
-        const hasLocation = !!location;
 
-        if (!hasImage && !hasLocation) {
-            showToast('Proof required: upload image or enable location', 'error');
+        if (!hasImage) {
+            showToast('Image is required to post update', 'error');
             return;
         }
 
@@ -719,8 +717,8 @@ const ProjectUpdates = () => {
 
                                     <button
                                         onClick={handleQuerySubmit}
-                                        disabled={submitQueryLoading || stamping || (!imageFile && !location)}
-                                        className="w-full h-12 accent-gradient text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                                        disabled={submitQueryLoading || stamping || !imageFile}
+                                        className="w-full h-12 accent-gradient text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                                     >
                                         {submitQueryLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-4.5 h-4.5" />}
                                         Submit Query
@@ -973,8 +971,8 @@ const ProjectUpdates = () => {
                             {/* Post */}
                             <button
                                 onClick={handlePost}
-                                disabled={posting || stamping || (!location && !imageFile)}
-                                className="sm:flex-[0.6] h-12 px-8 accent-gradient text-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all shadow-lg disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-3 active:scale-95"
+                                disabled={posting || stamping || !imageFile}
+                                className="sm:flex-[0.6] h-12 px-8 accent-gradient text-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 active:scale-95"
                             >
                                 {posting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                                 Post

@@ -44,10 +44,10 @@ const createProjectUpdate = async (req, res) => {
             role: user.role,
         };
 
-        // ── Proof Validation (Image OR Location) ──
-        if (!req.file && (!latitude || !longitude)) {
-            console.warn(`[SECURITY] Failed Update Proof: User ${user.id} (Role: ${user.role}) attempted to bypass proof at ${new Date().toISOString()}`);
-            return sendError(res, 'Image or location proof is required', 400);
+        // ── Proof Validation (Image REQUIRED) ──
+        if (!req.file) {
+            console.warn(`[SECURITY] Failed Update Proof: User ${user.id} (Role: ${user.role}) attempted to bypass image proof at ${new Date().toISOString()}`);
+            return sendError(res, 'Image is required to post update', 400);
         }
 
         if (req.file) {

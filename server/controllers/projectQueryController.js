@@ -18,10 +18,10 @@ exports.submitQuery = async (req, res) => {
             return sendError(res, 'Title and message are required', 400);
         }
 
-        // ── Proof Validation (Image OR Location) ──
-        if (!req.file && (!latitude || !longitude)) {
-            console.warn(`[SECURITY] Failed Query Proof: User ${req.user.id} (Role: ${req.user.role}) attempted to bypass proof at ${new Date().toISOString()}`);
-            return sendError(res, 'Image or location proof is required', 400);
+        // ── Proof Validation (Image REQUIRED) ──
+        if (!req.file) {
+            console.warn(`[SECURITY] Failed Query Proof: User ${req.user.id} (Role: ${req.user.role}) attempted to bypass image proof at ${new Date().toISOString()}`);
+            return sendError(res, 'Image is required to post query', 400);
         }
 
         // Verify project exists
