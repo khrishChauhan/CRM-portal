@@ -102,6 +102,11 @@ exports.verifyAdminOTP = async (req, res) => {
 
     const normalizedEmail = email.trim().toLowerCase();
 
+    // ── Double-Check Admin Authorization ──
+    if (!isAuthorizedAdmin(normalizedEmail)) {
+        return sendError(res, 'Unauthorized admin access attempt', 403);
+    }
+
     try {
         const record = await OTP.findOne({ email: normalizedEmail });
 
