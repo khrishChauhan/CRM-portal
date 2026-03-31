@@ -274,9 +274,15 @@ const ProjectUpdates = () => {
             return;
         }
 
+        // ── Photo is REQUIRED ──
+        if (!imageFile) {
+            showToast('A live photo is mandatory to post an update.', 'error');
+            return;
+        }
+
         // ── Location is REQUIRED ──
         if (!location) {
-            showToast('Please pin your location before posting an update.', 'error');
+            showToast('Location is required for the update photo.', 'error');
             return;
         }
 
@@ -943,7 +949,9 @@ const ProjectUpdates = () => {
                             {/* Image upload */}
                             <label className="flex-1 group/upload h-12 px-5 rounded-2xl bg-[#faf8f8] border border-gray-100 flex items-center justify-center sm:justify-start gap-3 text-gray-400 hover:text-[#f86a1f] hover:border-[#f86a1f]/20 transition-all cursor-pointer active:scale-95">
                                 <Camera className="w-5 h-5 group-hover/upload:scale-110 transition-transform" />
-                                <span className="text-[10px] py-4 font-bold uppercase tracking-[0.15em]">Capture Photo</span>
+                                <span className="text-[10px] py-4 font-bold uppercase tracking-[0.15em]">
+                                    {imagePreview ? 'Change Photo' : 'Capture Photo (Required)'}
+                                </span>
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -969,7 +977,7 @@ const ProjectUpdates = () => {
                             {/* Post */}
                             <button
                                 onClick={handlePost}
-                                disabled={posting || !message.trim() || stamping || !location}
+                                disabled={posting || !message.trim() || stamping || !location || !imageFile}
                                 className="sm:flex-[0.6] h-12 px-8 accent-gradient text-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all shadow-lg disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-3 active:scale-95"
                             >
                                 {posting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
