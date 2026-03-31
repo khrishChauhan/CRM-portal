@@ -175,23 +175,36 @@ exports.getAllQueries = async (req, res) => {
             filter.projectId = projectId;
         }
 
+        // Find all active (non-deleted) project IDs to filter queries
+        const activeProjects = await Project.find({ isDeleted: false }).select('_id');
+        const activeProjectIds = activeProjects.map(p => p._id);
+
         // Staff can only see queries from their assigned projects
         if (user.role === 'staff') {
             const staffProjects = await Project.find({
+                _id: { $in: activeProjectIds },
                 $or: [
                     { projectManager: user.id },
                     { assignedStaff: user.id }
-                ],
-                isDeleted: false
+                ]
             }).select('_id');
 
-            const projectIds = staffProjects.map(p => p._id);
-            filter.projectId = filter.projectId
-                ? (projectIds.some(id => id.toString() === filter.projectId) ? filter.projectId : null)
-                : { $in: projectIds };
+            const staffProjectIds = staffProjects.map(p => p._id);
+            filter.projectId = projectId
+                ? (staffProjectIds.some(id => id.toString() === projectId) ? projectId : null)
+                : { $in: staffProjectIds };
 
             if (!filter.projectId) {
                 return sendSuccess(res, { queries: [], total: 0, open: 0, answered: 0, closed: 0 }, 'No queries found');
+            }
+        } else {
+            // For Admin: ensure we only show queries from active projects
+            filter.projectId = projectId 
+                ? (activeProjectIds.some(id => id.toString() === projectId) ? projectId : null)
+                : { $in: activeProjectIds };
+                
+            if (!filter.projectId) {
+                 return sendSuccess(res, { queries: [], total: 0, open: 0, answered: 0, closed: 0 }, 'No projects found');
             }
         }
 
@@ -201,13 +214,12 @@ exports.getAllQueries = async (req, res) => {
             .populate('respondedBy', 'name role')
             .sort({ createdAt: -1 });
 
-        // Counts
-        const countFilter = user.role === 'admin' ? {} : { projectId: filter.projectId };
+        // Counts based on the active filter
         const [total, open, answered, closed] = await Promise.all([
-            ProjectQuery.countDocuments(countFilter),
-            ProjectQuery.countDocuments({ ...countFilter, status: 'open' }),
-            ProjectQuery.countDocuments({ ...countFilter, status: 'answered' }),
-            ProjectQuery.countDocuments({ ...countFilter, status: 'closed' }),
+            ProjectQuery.countDocuments(filter),
+            ProjectQuery.countDocuments({ ...filter, status: 'open' }),
+            ProjectQuery.countDocuments({ ...filter, status: 'answered' }),
+            ProjectQuery.countDocuments({ ...filter, status: 'closed' }),
         ]);
 
         return sendSuccess(res, { queries, total, open, answered, closed }, 'All queries fetched');
