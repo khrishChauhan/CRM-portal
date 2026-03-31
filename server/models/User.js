@@ -94,7 +94,7 @@ const userSchema = new mongoose.Schema(
         clientStatus: {
             type: String,
             enum: {
-                values: ['active', 'inactive', 'suspended'],
+                values: ['active', 'suspended'],
                 message: '{VALUE} is not a valid client status',
             },
             default: 'active',

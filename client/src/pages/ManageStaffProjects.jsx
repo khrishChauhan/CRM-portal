@@ -140,7 +140,7 @@ const ManageStaffProjects = () => {
                 {(statusFilter === 'All' ? projects : projects.filter(p => p.projectStatus === statusFilter)).map(project => (
                     <div key={project._id} className="bg-white p-8 rounded-[24px] card-shadow border border-transparent hover:border-blue-500/30 transition-all duration-300 group">
                         <div className="flex justify-between items-start mb-6">
-                            <div className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-bold uppercase tracking-wider">
+                            <div className="px-3 py-1 bg-[#173d9f]/5 text-[#173d9f] rounded-lg text-[10px] font-bold uppercase tracking-wider">
                                 {project.projectCode}
                             </div>
                             <span className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${PROJECT_STATUS_COLORS[project.projectStatus] || 'bg-gray-100 text-gray-600'}`}>

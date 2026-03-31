@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import {
     Loader2, AlertCircle, MessageSquare, CheckCircle,
-    Clock, ChevronDown, FolderOpen, User, ExternalLink
+    Clock, ExternalLink
 } from 'lucide-react';
 
 const STATUS_COLORS = {
@@ -208,7 +208,7 @@ const ManageQueries = () => {
                                                 {query.projectId?.projectName || 'Unknown Project'}
                                             </span>
                                         </div>
-                                        <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-blue-500 transition-colors shrink-0" />
+                                        <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-[#173d9f] transition-colors shrink-0" />
                                     </div>
 
                                     {/* Response indicator */}

@@ -44,13 +44,3 @@ exports.changeClientStatus = async (req, res) => {
         return sendError(res, error.message, error.statusCode || 400);
     }
 };
-
-// DELETE /api/clients/:id — Soft delete
-exports.deleteClient = async (req, res) => {
-    try {
-        const result = await ClientService.softDelete(req.params.id);
-        return sendSuccess(res, result, 'Client deactivated successfully');
-    } catch (error) {
-        return sendError(res, error.message, error.statusCode || 400);
-    }
-};

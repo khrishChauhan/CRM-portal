@@ -5,7 +5,7 @@ import {
     Plus, Search, ChevronLeft, ChevronRight, Loader2, FolderOpen,
     Edit3, Trash2, X, AlertCircle, CheckCircle, Calendar, MapPin,
     Clock, AlertTriangle, Briefcase, TrendingUp, MessageSquare,
-    ChevronDown, Users, User
+    ChevronDown, Users, User, UserPlus
 } from 'lucide-react';
 
 const STATUSES = ['Planned', 'In Progress', 'On Hold', 'Completed', 'Delayed', 'Cancelled'];

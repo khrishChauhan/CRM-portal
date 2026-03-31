@@ -5,7 +5,6 @@ const {
     getClientStats,
     getClientById,
     changeClientStatus,
-    deleteClient,
 } = require('../controllers/clientController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
@@ -16,6 +15,5 @@ router.get('/', getAllClients);
 router.get('/stats', getClientStats);
 router.get('/:id', getClientById);
 router.patch('/:id/status', changeClientStatus);
-router.delete('/:id', deleteClient);
 
 module.exports = router;

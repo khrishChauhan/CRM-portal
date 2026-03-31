@@ -7,12 +7,12 @@ import {
 } from 'lucide-react';
 
 const PROJECT_STATUS_COLORS = {
-    Planned: 'bg-blue-100 text-blue-700',
-    'In Progress': 'bg-emerald-100 text-emerald-700',
-    'On Hold': 'bg-amber-100 text-amber-700',
-    Completed: 'bg-green-100 text-green-700',
-    Delayed: 'bg-red-100 text-red-700',
-    Cancelled: 'bg-slate-100 text-slate-500',
+    Planned: 'bg-[#faf8f8] text-gray-400 border border-gray-100',
+    'In Progress': 'bg-[#173d9f]/5 text-[#173d9f] border border-[#173d9f]/10',
+    'On Hold': 'bg-gray-50 text-gray-500 border border-gray-100',
+    Completed: 'bg-green-50 text-green-600 border border-green-100',
+    Delayed: 'bg-red-50 text-red-600 border border-red-100',
+    Cancelled: 'bg-gray-50 text-gray-400 border border-gray-100',
 };
 
 const MyProjects = () => {
@@ -39,7 +39,7 @@ const MyProjects = () => {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center py-20 md:py-32 min-h-[300px] md:min-h-[400px]">
-                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-blue-600 mb-4" />
+                <Loader2 className="w-8 h-8 md:w-10 md:h-10 animate-spin text-[#173d9f] mb-4" />
                 <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-widest">Loading Projects...</p>
             </div>
         );
@@ -52,16 +52,16 @@ const MyProjects = () => {
                     <h1 className="text-3xl font-display font-bold text-[#1A1A1A]">Project Gallery</h1>
                     <p className="text-gray-500 mt-2 font-medium">Your approved projects and progress tracking.</p>
                 </div>
-                <div className="flex bg-gray-200 p-1 rounded-xl">
+                <div className="flex bg-[#173d9f]/5 p-1 rounded-xl border border-[#173d9f]/10">
                     <button
                         onClick={() => setViewMode('grid')}
-                        className={`p-2.5 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                        className={`p-2.5 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-[#173d9f] text-white shadow-sm' : 'text-[#173d9f] hover:text-[#173d9f]/70'}`}
                     >
                         <LayoutGrid className="w-5 h-5" />
                     </button>
                     <button
                         onClick={() => setViewMode('list')}
-                        className={`p-2.5 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                        className={`p-2.5 rounded-lg transition-all ${viewMode === 'list' ? 'bg-[#173d9f] text-white shadow-sm' : 'text-[#173d9f] hover:text-[#173d9f]/70'}`}
                     >
                         <List className="w-5 h-5" />
                     </button>
@@ -109,15 +109,15 @@ const ProjectItem = ({ project, mode, onSelect }) => {
 
     if (mode === 'list') {
         return (
-            <div className="bg-white p-6 rounded-[20px] card-shadow border border-transparent hover:border-blue-500/20 transition-all cursor-pointer flex items-center justify-between gap-4" onClick={onSelect}>
+            <div className="bg-white p-6 rounded-[20px] card-shadow border border-transparent hover:border-[#173d9f]/20 transition-all cursor-pointer flex items-center justify-between gap-4" onClick={onSelect}>
                 <div className="flex items-center gap-6">
-                    <div className="w-12 h-12 rounded-[14px] bg-gray-50 flex items-center justify-center font-bold text-blue-600 text-xs shadow-inner">
+                    <div className="w-12 h-12 rounded-[14px] bg-[#173d9f]/5 flex items-center justify-center font-bold text-[#173d9f] text-xs">
                         {project.projectCode.slice(-3)}
                     </div>
                     <div>
-                        <h3 className="text-base font-display font-bold text-[#1A1A1A] group-hover:text-blue-600 transition-colors uppercase tracking-tight">{project.projectName}</h3>
+                        <h3 className="text-base font-display font-bold text-[#1A1A1A] group-hover:text-[#173d9f] transition-colors uppercase tracking-tight">{project.projectName}</h3>
                         <div className="flex items-center gap-4 mt-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                            <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-blue-500" /> {project.siteAddress || 'N/A'}</span>
+                            <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-[#173d9f]" /> {project.siteAddress || 'N/A'}</span>
                         </div>
                     </div>
                 </div>
@@ -132,7 +132,7 @@ const ProjectItem = ({ project, mode, onSelect }) => {
     }
 
     return (
-        <div className="bg-white rounded-[24px] card-shadow border border-transparent hover:border-blue-500/20 hover:-translate-y-1 transition-all duration-300 group overflow-hidden cursor-pointer flex flex-col h-full" onClick={onSelect}>
+        <div className="bg-white rounded-[24px] card-shadow border border-transparent hover:border-[#173d9f]/20 hover:-translate-y-1 transition-all duration-300 group overflow-hidden cursor-pointer flex flex-col h-full" onClick={onSelect}>
             <div className="p-8 flex-1">
                 <div className="flex justify-between items-start mb-6">
                     <div className="px-3 py-1 bg-gray-100 text-gray-500 rounded-lg text-[9px] font-bold uppercase tracking-widest">
@@ -143,7 +143,7 @@ const ProjectItem = ({ project, mode, onSelect }) => {
                     </span>
                 </div>
 
-                <h3 className="text-xl font-display font-bold text-[#1A1A1A] mb-4 group-hover:text-blue-600 transition-colors leading-tight">
+                <h3 className="text-xl font-display font-bold text-[#1A1A1A] mb-4 group-hover:text-[#173d9f] transition-colors leading-tight">
                     {project.projectName}
                 </h3>
 
@@ -156,7 +156,7 @@ const ProjectItem = ({ project, mode, onSelect }) => {
             <div className="px-8 py-6 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
                 <button
                     onClick={(e) => { e.stopPropagation(); navigate(`/client/projects/${project._id}/updates`); }}
-                    className="flex items-center gap-2 text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:text-blue-700 transition-colors"
+                    className="flex items-center gap-2 text-[10px] font-bold text-[#173d9f] uppercase tracking-widest hover:text-[#173d9f]/80 transition-colors"
                 >
                     <MessageSquare className="w-4 h-4" />
                     View Updates
@@ -171,7 +171,7 @@ const ProjectItem = ({ project, mode, onSelect }) => {
 
 const DetailRow = ({ icon: Icon, label }) => (
     <div className="flex items-center gap-3 text-gray-500">
-        <Icon className="w-4 h-4 text-blue-500" />
+        <Icon className="w-4 h-4 text-[#173d9f]" />
         <span className="text-sm font-medium tracking-tight truncate">{label}</span>
     </div>
 );
@@ -189,7 +189,7 @@ const ProjectDetailsModal = ({ project, onClose }) => {
                 <div className="flex items-center justify-between p-[22px] pb-3 bg-white shrink-0">
                     <div>
                         <h2 className="text-[20px] font-bold text-[#2C3E50] tracking-tight">{project.projectName}</h2>
-                        <p className="text-[11px] font-bold text-blue-600 uppercase tracking-widest mt-1.5 px-3 py-1 bg-blue-50 rounded-lg inline-block">Ref: {project.projectCode}</p>
+                        <p className="text-[11px] font-bold text-[#173d9f] uppercase tracking-widest mt-1.5 px-3 py-1 bg-[#173d9f]/5 rounded-lg inline-block">Ref: {project.projectCode}</p>
                     </div>
                     <button onClick={onClose} className="p-1.5 text-gray-400 hover:text-red-500 transition-all">
                         <X className="w-5 h-5" />
@@ -210,12 +210,12 @@ const ProjectDetailsModal = ({ project, onClose }) => {
                         </div>
                     </div>
 
-                    <div className="bg-blue-50/50 p-6 rounded-[24px] border border-blue-100 flex items-center gap-5">
-                        <div className="w-12 h-12 rounded-[16px] bg-white border border-blue-50 flex items-center justify-center shadow-sm">
-                            <User className="w-6 h-6 text-blue-500" />
+                    <div className="bg-[#173d9f]/5 p-6 rounded-[24px] border border-[#173d9f]/10 flex items-center gap-5">
+                        <div className="w-12 h-12 rounded-[16px] bg-white border border-[#173d9f]/10 flex items-center justify-center shadow-sm">
+                            <User className="w-6 h-6 text-[#173d9f]" />
                         </div>
                         <div>
-                            <span className="text-[12px] font-bold text-blue-400 block">Project Manager</span>
+                            <span className="text-[12px] font-bold text-[#173d9f]/60 block">Project Manager</span>
                             <span className="text-base font-bold text-[#2C3E50]">{project.assignedManager?.name || 'Unassigned'}</span>
                         </div>
                     </div>
@@ -224,7 +224,7 @@ const ProjectDetailsModal = ({ project, onClose }) => {
                 <div className="p-7 bg-white border-t border-gray-50 flex-shrink-0">
                     <button
                         onClick={onClose}
-                        className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-blue-200 hover:scale-[1.01] active:scale-95 transition-all"
+                        className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-[#173d9f]/10 hover:scale-[1.01] active:scale-[0.98] transition-all"
                     >
                         Close Overview
                     </button>
@@ -236,7 +236,7 @@ const ProjectDetailsModal = ({ project, onClose }) => {
 
 const ModalDetail = ({ icon: Icon, title, value }) => (
     <div className="flex items-center gap-5 py-4 px-4 bg-gray-50 border border-gray-100 rounded-2xl group transition-all">
-        <div className="w-11 h-11 rounded-[14px] bg-white border border-gray-100 flex items-center justify-center text-gray-400 group-hover:text-blue-600 transition-all duration-300 shadow-sm">
+        <div className="w-11 h-11 rounded-[14px] bg-white border border-gray-100 flex items-center justify-center text-gray-400 group-hover:text-[#173d9f] transition-all duration-300 shadow-sm">
             <Icon className="w-5 h-5" />
         </div>
         <div className="flex flex-col">

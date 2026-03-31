@@ -157,7 +157,7 @@ const Login = () => {
                 <div className="w-full max-w-[440px] animate-reveal">
                     {/* TOP SECTION */}
                     <div className="flex flex-col items-center mb-10">
-                        <div className="w-20 h-20 bg-[#f86a1f] rounded-[22px] flex items-center justify-center mb-6 shadow-xl shadow-[#f86a1f]/20">
+                        <div className="w-20 h-20 bg-[#173d9f] rounded-[22px] flex items-center justify-center mb-6 shadow-xl shadow-[#173d9f]/20">
                             <Building2 className="w-10 h-10 text-white" />
                         </div>
                         <h1 className="text-3xl font-display font-bold text-[#1A1A1A] mb-2 text-center">Khushi Technology Application</h1>
@@ -181,7 +181,7 @@ const Login = () => {
                                     className={`flex-1 py-3 px-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${
                                         selectedRole === role.id
                                             ? 'bg-[#173d9f] text-white shadow-sm'
-                                            : 'text-[#173d9f] hover:text-[#f86a1f]'
+                                            : 'text-[#173d9f]/60 hover:text-[#173d9f]'
                                     }`}
                                 >
                                     {role.title}
@@ -273,7 +273,7 @@ const Login = () => {
                         {showOtpField && selectedRole === 'admin' && (
                             <button 
                                 onClick={() => setShowOtpField(false)}
-                                className="w-full mt-4 text-[11px] font-bold text-[#8192c4] uppercase tracking-widest hover:text-[#f86a1f] transition-colors"
+                                className="w-full mt-4 text-[11px] font-bold text-[#173d9f]/50 uppercase tracking-widest hover:text-[#173d9f] transition-colors"
                             >
                                 Change Email
                             </button>
@@ -283,7 +283,7 @@ const Login = () => {
                     <div className="flex justify-center">
                         <button 
                             onClick={() => navigate('/privacy-policy')}
-                            className="text-[12px] text-gray-400 hover:text-[#f86a1f] transition-all font-medium tracking-wide flex items-center gap-1.5"
+                            className="text-[12px] text-gray-400 hover:text-[#173d9f] transition-all font-medium tracking-wide flex items-center gap-1.5"
                         >
                             <ShieldCheck className="w-3.5 h-3.5" />
                             Privacy Policy
