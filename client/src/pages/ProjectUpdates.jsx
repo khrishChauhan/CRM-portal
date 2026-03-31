@@ -674,9 +674,9 @@ const ProjectUpdates = () => {
                                                 <img src={imagePreview} alt="Query Preview" className="h-40 w-full object-cover rounded-2xl border-2 border-white shadow-md" />
                                                 <button
                                                     onClick={clearImage}
-                                                    className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600 transition-colors shadow-lg border-2 border-white"
+                                                    className="absolute -top-2 -right-2 w-8 h-8 bg-red-600 rounded-xl flex items-center justify-center text-white hover:bg-red-700 transition-all shadow-xl border-2 border-white"
                                                 >
-                                                    <X className="w-4 h-4" />
+                                                    <X className="w-5 h-5" strokeWidth={3} />
                                                 </button>
                                             </div>
                                         )}
@@ -910,9 +910,9 @@ const ProjectUpdates = () => {
                             <img src={imagePreview} alt="Preview" className="h-24 sm:h-28 w-auto rounded-2xl border-2 border-white shadow-xl" />
                             <button
                                 onClick={clearImage}
-                                className="absolute -top-2 -right-2 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600 transition-colors shadow-lg border-2 border-white"
+                                className="absolute -top-2 -right-2 w-8 h-8 bg-red-600 rounded-xl flex items-center justify-center text-white hover:bg-red-700 transition-all shadow-xl border-2 border-white"
                             >
-                                <X className="w-4 h-4" />
+                                <X className="w-5 h-5" strokeWidth={3} />
                             </button>
                         </div>
                     )}
