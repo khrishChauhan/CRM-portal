@@ -44,11 +44,14 @@ const createProjectUpdate = async (req, res) => {
             role: user.role,
         };
 
-        // ── Attach image if uploaded (NOW REQUIRED) ──
-        if (!req.file) {
-            return sendError(res, 'A live photo is mandatory to post an update.', 400);
+        // ── Proof Validation (Image OR Location) ──
+        if (!req.file && (!latitude || !longitude)) {
+            return sendError(res, 'Proof required: image or location is mandatory', 400);
         }
-        updateData.imageUrl = req.file.path || req.file.secure_url;
+
+        if (req.file) {
+            updateData.imageUrl = req.file.path || req.file.secure_url;
+        }
 
         // ── Attach location if provided ──
         if (latitude && longitude) {

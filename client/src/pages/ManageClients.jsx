@@ -59,14 +59,23 @@ const ManageClients = () => {
         setTimeout(() => setToast(null), 4000);
     };
 
-    const handleStatusChange = async (id, status) => {
+    const [suspendConfirm, setSuspendConfirm] = useState(null); // { id, name, status }
+
+    const openSuspendModal = (id, name, status) => {
+        setSuspendConfirm({ id, name, status });
+    };
+
+    const confirmStatusChange = async () => {
+        if (!suspendConfirm) return;
         try {
-            const { data } = await api.patch(`/clients/${id}/status`, { status });
+            const { data } = await api.patch(`/clients/${suspendConfirm.id}/status`, { status: suspendConfirm.status });
             showToast(data.message);
             fetchClients(pagination.page);
             fetchStats();
         } catch (err) {
-            showToast(err.response?.data?.message || 'Failed', 'error');
+            showToast(err.response?.data?.message || 'Failed to update client', 'error');
+        } finally {
+            setSuspendConfirm(null);
         }
     };
 
@@ -224,7 +233,7 @@ const ManageClients = () => {
                                 <ClientCard
                                     client={c}
                                     onView={() => viewClient(c._id)}
-                                    onStatusChange={handleStatusChange}
+                                    openSuspendModal={openSuspendModal}
                                 />
                             </div>
                         ))}
@@ -326,6 +335,19 @@ const ManageClients = () => {
                     </div>
                 </div>
             )}
+
+            {suspendConfirm && (
+                <ConfirmationModal
+                    title={suspendConfirm.status === 'suspended' ? 'Suspend Client' : 'Activate Client'}
+                    message={suspendConfirm.status === 'suspended' 
+                        ? `Are you sure you want to suspend ${suspendConfirm.name}? They will not be able to log in or post updates.` 
+                        : `Are you sure you want to activate ${suspendConfirm.name}?`}
+                    onConfirm={confirmStatusChange}
+                    onCancel={() => setSuspendConfirm(null)}
+                    confirmText={suspendConfirm.status === 'suspended' ? 'Suspend' : 'Activate'}
+                    isDestructive={suspendConfirm.status === 'suspended'}
+                />
+            )}
         </div>
     );
 };
@@ -333,7 +355,7 @@ const ManageClients = () => {
 /* ═══════════════════════════════════════════════════
    CLIENT CARD — Premium, Minimal, Centered
    ═══════════════════════════════════════════════════ */
-const ClientCard = ({ client, onView, onStatusChange }) => {
+const ClientCard = ({ client, onView, openSuspendModal }) => {
     const c = client;
     const statusLabel = c.clientStatus || 'active';
 
@@ -373,21 +395,30 @@ const ClientCard = ({ client, onView, onStatusChange }) => {
                 )}
             </div>
 
-            {/* Bottom: Actions instead of suspending, we put Total Projects / Active Projects and View button */}
-            <div className="mt-auto w-full pt-4 border-t border-gray-50 flex items-center justify-between" onClick={(e) => e.stopPropagation()}>
-                <div className="flex gap-4">
-                    <div className="flex flex-col items-start">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">Total</span>
-                        <span className="text-[14px] font-bold text-[#1A1A1A] leading-none">{c.projectCount || 0}</span>
-                    </div>
-                </div>
-                
+            {/* Bottom Actions */}
+            <div className="mt-auto w-full pt-4 border-t border-gray-50 flex flex-wrap items-center justify-center gap-2" onClick={(e) => e.stopPropagation()}>
                 <button
                     onClick={(e) => { e.stopPropagation(); onView(); }}
-                    className="py-2.5 px-6 rounded-xl bg-gray-50 border border-gray-100 text-[#173d9f] hover:text-white hover:bg-[#173d9f] font-bold text-[10px] uppercase tracking-wider transition-all"
+                    className="flex-1 min-w-[30%] py-2.5 px-3 rounded-xl bg-gray-50 border border-gray-100 text-[#173d9f] hover:text-white hover:bg-[#173d9f] font-bold text-[10px] uppercase tracking-wider transition-all"
                 >
                     View Detials
                 </button>
+
+                {statusLabel === 'active' ? (
+                    <button
+                        onClick={(e) => { e.stopPropagation(); openSuspendModal(c._id, c.name, 'suspended'); }}
+                        className="flex-1 py-2.5 px-3 rounded-xl bg-orange-50 border border-orange-100 text-orange-600 hover:bg-orange-600 hover:text-white font-bold text-[10px] uppercase tracking-wider transition-all min-w-[40%]"
+                    >
+                        Suspend
+                    </button>
+                ) : (
+                    <button
+                        onClick={(e) => { e.stopPropagation(); openSuspendModal(c._id, c.name, 'active'); }}
+                        className="flex-1 py-2.5 px-3 rounded-xl bg-green-50/50 border border-green-100 text-green-600 hover:bg-green-600 hover:text-white font-bold text-[10px] uppercase tracking-wider transition-all min-w-[40%]"
+                    >
+                        Activate
+                    </button>
+                )}
             </div>
         </div>
     );
@@ -445,6 +476,33 @@ const InfoRow = ({ icon: Icon, label, value }) => (
         <div className="flex flex-col">
             <span className="text-[13px] font-bold text-[#7F8C8D]">{label}</span>
             <span className="font-bold text-[#2C3E50] text-[15px] mt-0.5 tracking-tight">{value}</span>
+        </div>
+    </div>
+);
+
+const ConfirmationModal = ({ title, message, onConfirm, onCancel, confirmText, isDestructive }) => (
+    <div className="fixed inset-0 z-[300] flex justify-center items-start p-4">
+        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={onCancel}></div>
+        <div className="bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] w-[94%] max-w-[420px] relative z-[310] animate-in slide-in-from-top-4 duration-300 p-8 text-center">
+            <div className={`w-16 h-16 rounded-2xl ${isDestructive ? 'bg-red-50 text-red-500' : 'bg-[#173d9f]/5 text-[#173d9f]'} flex items-center justify-center mx-auto mb-6`}>
+                {isDestructive ? <AlertTriangle className="w-8 h-8" /> : <CheckCircle className="w-8 h-8" />}
+            </div>
+            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">{title}</h3>
+            <p className="text-sm text-gray-500 mb-8 leading-relaxed">{message}</p>
+            <div className="flex flex-col gap-3">
+                <button
+                    onClick={onConfirm}
+                    className={`w-full py-4 ${isDestructive ? 'bg-red-500 shadow-red-100 hover:bg-red-600' : 'blue-gradient shadow-[#173d9f]/10 hover:opacity-90'} text-white font-bold rounded-[16px] shadow-lg active:scale-[0.98] transition-all`}
+                >
+                    {confirmText || 'Confirm'}
+                </button>
+                <button
+                    onClick={onCancel}
+                    className="w-full py-4 text-gray-400 font-bold text-[10px] uppercase tracking-widest hover:text-gray-600 transition-all"
+                >
+                    Cancel
+                </button>
+            </div>
         </div>
     </div>
 );

@@ -3,10 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import {
     UserPlus, Search, ChevronLeft, ChevronRight, Plus,
-    Edit3, Trash2, ToggleLeft, ToggleRight, X, Loader2,
+    Edit3, ToggleLeft, ToggleRight, X, Loader2,
     Users, UserCheck, UserX, Building2, Phone,
-    Calendar, Briefcase, DollarSign, AlertCircle, CheckCircle, Mail,
-    ChevronDown
+    Briefcase, AlertCircle, CheckCircle, ChevronDown
 } from 'lucide-react';
 
 // ── Constants ──
@@ -82,33 +81,23 @@ const ManageStaff = () => {
     };
 
     // ── Toggle status ──
-    const handleToggleStatus = async (id, name) => {
+    const [suspendConfirm, setSuspendConfirm] = useState(null); // { id, name, intent }
+
+    const openSuspendModal = (id, name, intent) => {
+        setSuspendConfirm({ id, name, intent });
+    };
+
+    const confirmToggleStatus = async () => {
+        if (!suspendConfirm) return;
         try {
-            const { data } = await api.patch(`/staff/${id}/toggle-status`);
-            showToast(data.message);
+            const { data } = await api.patch(`/staff/${suspendConfirm.id}/toggle-status`);
+            showToast(`Staff ${suspendConfirm.intent === 'suspend' ? 'suspended' : 'activated'} successfully`);
             fetchStaff(pagination.page);
             fetchMeta();
         } catch (err) {
             showToast(err.response?.data?.message || 'Failed to toggle status', 'error');
-        }
-    };
-
-    // ── Delete (soft) ──
-    const handleDelete = async (id, name) => {
-        setDeleteConfirm({ id, name });
-    };
-
-    const confirmDelete = async () => {
-        if (!deleteConfirm) return;
-        try {
-            const { data } = await api.delete(`/staff/${deleteConfirm.id}`);
-            showToast(data.message);
-            fetchStaff(pagination.page);
-            fetchMeta();
-        } catch (err) {
-            showToast(err.response?.data?.message || 'Failed to delete staff', 'error');
         } finally {
-            setDeleteConfirm(null);
+            setSuspendConfirm(null);
         }
     };
 
@@ -157,7 +146,7 @@ const ManageStaff = () => {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
                 <StatCard icon={Users} label="Total Assets" value={stats.total} color="secondary" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
                 <StatCard icon={UserCheck} label="Operational" value={stats.active} color="secondary" onClick={() => { setStatusFilter('active'); setSearchParams({ status: 'active' }); }} />
-                <StatCard icon={UserX} label="Deactivated" value={stats.inactive} color="neutral" onClick={() => { setStatusFilter('inactive'); setSearchParams({ status: 'inactive' }); }} />
+                <StatCard icon={UserX} label="Suspended" value={stats.inactive} color="neutral" onClick={() => { setStatusFilter('suspended'); setSearchParams({ status: 'suspended' }); }} />
             </div>
 
             {/* ── Filters Bar ── */}
@@ -181,7 +170,7 @@ const ManageStaff = () => {
                         >
                             <option value="">All States</option>
                             <option value="active">Active Assets</option>
-                            <option value="inactive">Inactive Assets</option>
+                            <option value="suspended">Suspended Assets</option>
                         </select>
                         <select
                             value={deptFilter}
@@ -227,7 +216,7 @@ const ManageStaff = () => {
                             <div className="w-[calc(50vw-42.5vw-16px)] sm:w-[calc(50vw-170px-24px)] md:hidden shrink-0 pointer-events-none" />
                             
                             {staff.map((s) => (
-                                <div key={s._id} className="bg-white rounded-[24px] shrink-0 w-[85vw] sm:w-[340px] md:w-[350px] snap-center flex flex-col shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-gray-100 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-400 group overflow-hidden">
+                                <div key={s._id} className={`bg-white rounded-[24px] shrink-0 w-[85vw] sm:w-[340px] md:w-[350px] snap-center flex flex-col shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-gray-100 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-400 group overflow-hidden ${!s.isActive ? 'opacity-60' : ''}`}>
                                     
                                     {/* Top Section Header (Off-white) */}
                                     <div className="bg-[#faf8f8] px-6 pt-6 pb-5 flex justify-between items-start gap-4 border-b border-gray-100/60">
@@ -235,9 +224,9 @@ const ManageStaff = () => {
                                             <h3 className="font-display font-bold text-[#1A1A1A] text-[18px] sm:text-[20px] truncate leading-tight tracking-tight">{s.name}</h3>
                                             <p className="text-[13px] text-gray-500 font-medium truncate mt-0.5">{s.email}</p>
                                         </div>
-                                        <span className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-widest ${s.isActive ? 'bg-[#173d9f]/10 text-[#173d9f] border border-[#173d9f]/20' : 'bg-[#faf8f8] text-gray-400 border border-gray-200'}`}>
-                                            <div className={`w-1.5 h-1.5 rounded-full ${s.isActive ? 'bg-[#173d9f] animate-pulse' : 'bg-gray-400'}`}></div>
-                                            {s.isActive ? 'Active' : 'Inactive'}
+                                        <span className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-widest ${s.isActive ? 'bg-[#173d9f]/10 text-[#173d9f] border border-[#173d9f]/20' : 'bg-orange-50 text-orange-600 border border-orange-200'}`}>
+                                            <div className={`w-1.5 h-1.5 rounded-full ${s.isActive ? 'bg-[#173d9f] animate-pulse' : 'bg-orange-500'}`}></div>
+                                            {s.isActive ? 'Active' : 'Suspended'}
                                         </span>
                                     </div>
 
@@ -267,16 +256,20 @@ const ManageStaff = () => {
                                         </div>
 
                                         {/* Footer Actions */}
-                                        <div className="flex items-center gap-2 pt-2 border-t border-gray-50">
-                                            <button onClick={() => openModal(s)} className="flex-1 py-3 text-gray-500 hover:text-[#173d9f] rounded-[12px] text-[11px] sm:text-[12px] font-bold transition-all duration-300 flex justify-center items-center gap-2 bg-white border border-gray-100 hover:border-[#173d9f]/20 hover:bg-[#faf8f8] shadow-sm">
-                                                <Edit3 className="w-4 h-4" /> Edit Profile
+                                        <div className="flex items-center justify-center gap-2 pt-4 border-t border-gray-50 flex-wrap">
+                                            <button onClick={() => openModal(s)} className="flex-1 py-2.5 px-3 rounded-xl bg-gray-50 border border-gray-100 text-gray-500 hover:text-[#173d9f] font-bold text-[10px] uppercase tracking-wider transition-all min-w-[30%]">
+                                                View Details
                                             </button>
-                                            <button onClick={() => handleToggleStatus(s._id, s.name)} className={`p-3 rounded-[12px] transition-all duration-300 shadow-sm border ${s.isActive ? 'bg-gray-50 text-gray-400 hover:bg-gray-100 border-gray-200' : 'bg-[#173d9f]/10 text-[#173d9f] hover:bg-[#173d9f]/20 border-[#173d9f]/20'}`} title={s.isActive ? 'Deactivate' : 'Restore'}>
-                                                {s.isActive ? <ToggleRight className="w-5 h-5" /> : <ToggleLeft className="w-5 h-5" />}
-                                            </button>
-                                            <button onClick={() => handleDelete(s._id, s.name)} className="p-3 bg-white hover:bg-red-50 text-red-600 rounded-[12px] transition-all duration-300 border border-red-100 hover:border-red-200 shadow-sm" title="Delete">
-                                                <Trash2 className="w-5 h-5" />
-                                            </button>
+                                            
+                                            {s.isActive ? (
+                                                <button onClick={() => openSuspendModal(s._id, s.name, 'suspend')} className="flex-1 py-2.5 px-3 rounded-xl bg-orange-50 border border-orange-100 text-orange-600 hover:bg-orange-600 hover:text-white font-bold text-[10px] uppercase tracking-wider transition-all min-w-[40%]">
+                                                    Suspend
+                                                </button>
+                                            ) : (
+                                                <button onClick={() => confirmToggleStatus(s._id, s.name)} className="flex-1 py-2.5 px-3 rounded-xl bg-green-50/50 border border-green-100 text-green-600 hover:bg-green-600 hover:text-white font-bold text-[10px] uppercase tracking-wider transition-all min-w-[40%]">
+                                                    Activate
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -325,14 +318,16 @@ const ManageStaff = () => {
                 />
             )}
 
-            {deleteConfirm && (
+            {suspendConfirm && (
                 <ConfirmationModal
-                    title="Deactivate Staff"
-                    message={`Are you sure you want to deactivate ${deleteConfirm.name}? This will revoke their access.`}
-                    onConfirm={confirmDelete}
-                    onCancel={() => setDeleteConfirm(null)}
-                    confirmText="Deactivate"
-                    isDestructive
+                    title={suspendConfirm.intent === 'suspend' ? 'Suspend Staff' : 'Activate Staff'}
+                    message={suspendConfirm.intent === 'suspend' 
+                        ? `Are you sure you want to suspend ${suspendConfirm.name}? They will lose access to the system.` 
+                        : `Are you sure you want to activate ${suspendConfirm.name}?`}
+                    onConfirm={confirmToggleStatus}
+                    onCancel={() => setSuspendConfirm(null)}
+                    confirmText={suspendConfirm.intent === 'suspend' ? 'Suspend' : 'Activate'}
+                    isDestructive={suspendConfirm.intent === 'suspend'}
                 />
             )}
         </div>

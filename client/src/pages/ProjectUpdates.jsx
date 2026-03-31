@@ -274,15 +274,17 @@ const ProjectUpdates = () => {
             return;
         }
 
-        // ── Photo is REQUIRED ──
-        if (!imageFile) {
-            showToast('A live photo is mandatory to post an update.', 'error');
+        const hasImage = !!imageFile;
+        const hasLocation = !!location;
+
+        if (!hasImage && !hasLocation) {
+            showToast('Please upload a photo or enable location to continue', 'error');
             return;
         }
 
-        // ── Location is REQUIRED ──
-        if (!location) {
-            showToast('Location is required for the update photo.', 'error');
+        // Additional catch for empty messages (strictly enforcing no blank text)
+        if (message.trim() === '' || message.trim() === '.') {
+            showToast('Please write a valid message', 'error');
             return;
         }
 
@@ -324,15 +326,17 @@ const ProjectUpdates = () => {
             return;
         }
 
-        // Photo is now MANDATORY for queries
-        if (!imageFile) {
-            showToast('A live photo is mandatory to submit a query.', 'error');
+        const hasImage = !!imageFile;
+        const hasLocation = !!location;
+
+        if (!hasImage && !hasLocation) {
+            showToast('Please upload a photo or enable location to continue', 'error');
             return;
         }
 
-        // Location is REQUIRED if image is attached
-        if (imageFile && !location) {
-            showToast('Location is required for the query photo.', 'error');
+        // Additional catch for empty queries (strictly enforcing no blank text)
+        if (newQuery.message.trim() === '' || newQuery.message.trim() === '.') {
+            showToast('Please write a valid message', 'error');
             return;
         }
 
@@ -684,7 +688,7 @@ const ProjectUpdates = () => {
                                                 <div className="flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border-2 border-dashed transition-all cursor-pointer border-gray-200 hover:border-[#173d9f]/30 hover:bg-[#faf8f8]">
                                                     <Camera className="w-5 h-5 text-[#173d9f]" />
                                                     <span className="text-xs font-bold uppercase tracking-widest text-[#1A1A1A]">
-                                                        {imagePreview ? 'Change Photo' : 'Add Photo (Required)'}
+                                                        {imagePreview ? 'Change Photo' : 'Add Photo'}
                                                     </span>
                                                 </div>
                                                 <input
@@ -703,15 +707,7 @@ const ProjectUpdates = () => {
                                             )}
                                         </div>
 
-                                        {imagePreview && !location && !locLoading && (
-                                            <button
-                                                onClick={captureLocation}
-                                                className="text-[10px] font-bold text-amber-600 uppercase tracking-widest flex items-center gap-2 px-1"
-                                            >
-                                                <AlertCircle className="w-3.5 h-3.5" />
-                                                Location required with image — Tap to capture
-                                            </button>
-                                        )}
+
 
                                         {stamping && (
                                             <div className="flex items-center gap-2.5 text-[#173d9f] text-[10px] font-bold uppercase tracking-widest px-1">
@@ -723,7 +719,7 @@ const ProjectUpdates = () => {
 
                                     <button
                                         onClick={handleQuerySubmit}
-                                        disabled={submitQueryLoading || stamping || !newQuery.title.trim() || !newQuery.message.trim() || !imageFile}
+                                        disabled={submitQueryLoading || stamping || (!imageFile && !location)}
                                         className="w-full h-12 accent-gradient text-white rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-lg disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                                     >
                                         {submitQueryLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-4.5 h-4.5" />}
@@ -950,7 +946,7 @@ const ProjectUpdates = () => {
                             <label className="flex-1 group/upload h-12 px-5 rounded-2xl bg-[#faf8f8] border border-gray-100 flex items-center justify-center sm:justify-start gap-3 text-gray-400 hover:text-[#f86a1f] hover:border-[#f86a1f]/20 transition-all cursor-pointer active:scale-95">
                                 <Camera className="w-5 h-5 group-hover/upload:scale-110 transition-transform" />
                                 <span className="text-[10px] py-4 font-bold uppercase tracking-[0.15em]">
-                                    {imagePreview ? 'Change Photo' : 'Capture Photo (Required)'}
+                                    {imagePreview ? 'Change Photo' : 'Capture Photo'}
                                 </span>
                                 <input
                                     type="file"
@@ -970,14 +966,14 @@ const ProjectUpdates = () => {
                             >
                                 {locLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
                                 <span className="text-[10px] font-bold uppercase tracking-[0.15em]">
-                                    {location ? `Located` : 'Pin Location'}
+                                    {location ? `Location added ✓` : 'Pin Location'}
                                 </span>
                             </button>
 
                             {/* Post */}
                             <button
                                 onClick={handlePost}
-                                disabled={posting || !message.trim() || stamping || !location || !imageFile}
+                                disabled={posting || stamping || (!location && !imageFile)}
                                 className="sm:flex-[0.6] h-12 px-8 accent-gradient text-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] transition-all shadow-lg disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-3 active:scale-95"
                             >
                                 {posting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
