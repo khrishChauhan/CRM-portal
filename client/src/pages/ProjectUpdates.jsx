@@ -576,66 +576,66 @@ const ProjectUpdates = () => {
                         updates.map((update, idx) => (
                             <div
                                 key={update._id}
-                                className="bg-white p-6 rounded-[24px] card-shadow border border-gray-50 group hover:border-blue-500/10 transition-all duration-300 relative overflow-hidden"
+                                className="bg-white rounded-[24px] card-shadow border border-gray-50 group hover:border-blue-500/10 transition-all duration-300 relative overflow-hidden"
                                 style={{ animationDelay: `${idx * 0.04}s` }}
                             >
-                                {/* Decorative glow */}
-                                <div className="absolute top-0 right-0 w-28 h-28 bg-[#f86a1f]/5 blur-[50px] -mr-14 -mt-14 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-
-                                <div className="relative z-10">
-                                    {/* ── Author row ── */}
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <div className="w-10 h-10 rounded-full bg-[#173d9f] flex items-center justify-center text-white font-display font-bold text-sm flex-shrink-0 shadow-sm transition-transform group-hover:scale-105">
-                                            {update.createdBy?.name?.charAt(0)?.toUpperCase() || '?'}
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 flex-wrap">
-                                                <span className="font-display font-bold text-[#1A1A1A] text-sm sm:text-base tracking-tight group-hover:text-[#173d9f] transition-colors">
-                                                    {update.createdBy?.name || 'Unknown'}
-                                                </span>
-                                                <span className={`inline-flex px-2 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-widest border ${roleBadge(update.role)}`}>
-                                                    {update.role}
-                                                </span>
-                                            </div>
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.12em] mt-0.5 flex items-center gap-1.5">
-                                                <Clock className="w-3 h-3" />
-                                                {formatTime(update.createdAt)}
-                                            </p>
+                                {/* ── Image Section (Top) ── */}
+                                {update.imageUrl && (
+                                    <div className="relative group/img cursor-pointer w-full" onClick={() => setLightbox(update)}>
+                                        <img
+                                            src={update.imageUrl}
+                                            alt="Update attachment"
+                                            className="w-full h-auto max-h-[400px] object-cover display-block"
+                                        />
+                                        <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/20 transition-all flex items-center justify-center">
+                                            <Maximize2 className="w-6 h-6 text-white opacity-0 group-hover/img:opacity-100 transition-opacity drop-shadow-lg" />
                                         </div>
 
-                                        {/* Location badge */}
+                                        {/* ── Location Overlay (Inside Image) ── */}
                                         {update.location?.latitude && update.location?.longitude && (
                                             <a
                                                 href={`https://www.google.com/maps?q=${update.location.latitude},${update.location.longitude}`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-1.5 px-3 py-2 bg-[#faf8f8] border border-gray-100 rounded-xl text-[9px] font-bold uppercase tracking-widest text-[#173d9f] hover:text-[#173d9f]/70 transition-all flex-shrink-0 shadow-sm"
+                                                className="absolute bottom-3 left-3 right-3 flex items-center gap-2 px-3 py-2 bg-white/80 backdrop-blur-md rounded-xl text-[9px] font-bold uppercase tracking-widest text-[#173d9f] border border-white/20 shadow-lg active:scale-95 transition-all w-fit"
+                                                onClick={(e) => e.stopPropagation()}
                                             >
-                                                <MapPin className="w-3 h-3" />
-                                                <span className="hidden sm:inline">Location</span>
-                                                <ExternalLink className="w-2.5 h-2.5" />
+                                                <MapPin className="w-3.5 h-3.5" />
+                                                <span>Live Site Location</span>
+                                                <ExternalLink className="w-2.5 h-2.5 opacity-50" />
                                             </a>
                                         )}
                                     </div>
+                                )}
 
+                                <div className="p-5">
                                     {/* ── Message ── */}
-                                    <p className="text-[#333333] text-sm sm:text-[15px] font-medium leading-relaxed whitespace-pre-wrap">
+                                    <p className="text-[#333333] text-sm sm:text-[15px] font-medium leading-relaxed whitespace-pre-wrap mb-4">
                                         {update.message}
                                     </p>
 
-                                    {/* ── Image ── */}
-                                    {update.imageUrl && (
-                                        <div className="mt-3 relative group/img cursor-pointer" onClick={() => setLightbox(update)}>
-                                            <img
-                                                src={update.imageUrl}
-                                                alt="Update attachment"
-                                                className="w-full max-h-[220px] sm:max-h-[280px] object-cover rounded-xl border border-white/10 shadow-lg group-hover/img:border-indigo-500/30 transition-all"
-                                            />
-                                            <div className="absolute inset-0 bg-slate-950/0 group-hover/img:bg-slate-950/40 rounded-xl flex items-center justify-center transition-all">
-                                                <Maximize2 className="w-6 h-6 text-white opacity-0 group-hover/img:opacity-100 transition-opacity" />
+                                    {/* ── Author Footer ── */}
+                                    <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-full bg-[#173d9f] flex items-center justify-center text-white font-bold text-[10px] flex-shrink-0 shadow-sm">
+                                                {update.createdBy?.name?.charAt(0)?.toUpperCase() || '?'}
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-bold text-[#1A1A1A] text-xs">
+                                                        {update.createdBy?.name || 'Unknown'}
+                                                    </span>
+                                                    <span className={`px-1.5 py-0.5 rounded-lg text-[7px] font-bold uppercase tracking-widest border ${roleBadge(update.role)}`}>
+                                                        {update.role}
+                                                    </span>
+                                                </div>
+                                                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                                                    <Clock className="w-2.5 h-2.5" />
+                                                    {formatTime(update.createdAt)}
+                                                </p>
                                             </div>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                             </div>
                         ))
