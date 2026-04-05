@@ -4,7 +4,7 @@ import api from '../services/api';
 import {
     Search, ChevronLeft, ChevronRight, Loader2, Users, UserCheck,
     AlertTriangle, Mail, Building2, Calendar, FolderOpen, AlertCircle,
-    CheckCircle, Eye, ShieldOff, ShieldCheck, UserPlus, ChevronDown
+    CheckCircle, Eye, ShieldOff, ShieldCheck, UserPlus, ChevronDown, Trash2
 } from 'lucide-react';
 
 const STATUS_COLORS = {
@@ -485,7 +485,7 @@ const ConfirmationModal = ({ title, message, onConfirm, onCancel, confirmText, i
         <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300" onClick={onCancel}></div>
         <div className="bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] w-[94%] max-w-[420px] relative z-[310] animate-in slide-in-from-top-4 duration-300 p-8 text-center">
             <div className={`w-16 h-16 rounded-2xl ${isDestructive ? 'bg-red-50 text-red-500' : 'bg-[#173d9f]/5 text-[#173d9f]'} flex items-center justify-center mx-auto mb-6`}>
-                {isDestructive ? <AlertTriangle className="w-8 h-8" /> : <CheckCircle className="w-8 h-8" />}
+                {isDestructive ? <Trash2 className="w-8 h-8" /> : <CheckCircle className="w-8 h-8" />}
             </div>
             <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">{title}</h3>
             <p className="text-sm text-gray-500 mb-8 leading-relaxed">{message}</p>

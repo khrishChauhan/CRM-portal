@@ -5,7 +5,7 @@ import {
     UserPlus, Search, ChevronLeft, ChevronRight, Plus,
     Edit3, ToggleLeft, ToggleRight, X, Loader2,
     Users, UserCheck, UserX, Building2, Phone,
-    Briefcase, AlertCircle, CheckCircle, ChevronDown
+    Briefcase, AlertCircle, CheckCircle, ChevronDown, Trash2
 } from 'lucide-react';
 
 // ── Constants ──
