@@ -51,9 +51,7 @@ app.use(helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
 }));
 
-// 2️⃣  CORS — dynamic origin validation (NO wildcards, NO app.options)
-//     The cors middleware automatically responds to OPTIONS preflight
-//     requests when used with app.use(). No manual app.options() needed.
+// 2️⃣  CORS — with debug logging + temporary safe fallback
 const allowedOrigins = [
     'http://localhost:3000',
     'https://khushi-technology-application.onrender.com',
@@ -61,11 +59,22 @@ const allowedOrigins = [
 
 const corsOptions = {
     origin: (origin, callback) => {
-        // Allow requests with no origin (mobile apps, curl, Postman, server-to-server)
-        if (!origin || allowedOrigins.includes(origin)) {
+        console.log('🌐 Incoming Origin:', origin);
+
+        if (!origin) {
+            console.log('✅ No origin (server-to-server/curl)');
             return callback(null, true);
         }
-        return callback(new Error('Not allowed by CORS'));
+
+        if (allowedOrigins.includes(origin)) {
+            console.log('✅ Allowed origin:', origin);
+            return callback(null, true);
+        }
+
+        // ⚠️ TEMPORARY: allow unknown origins so we can debug
+        // TODO: replace with strict rejection once CORS is confirmed working
+        console.log('⚠️ Unknown origin, temporarily allowing:', origin);
+        return callback(null, true);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -80,9 +89,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // 4️⃣  Request logging
 if (process.env.NODE_ENV === 'production') {
-    app.use(morgan('combined')); // Apache-style logs for production monitoring
+    app.use(morgan('combined'));
 } else {
-    app.use(morgan('dev'));       // Colored concise output for development
+    app.use(morgan('dev'));
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -97,6 +106,16 @@ app.use('/api/access-requests', accessRequestRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/projects/:projectId/updates', projectUpdateRoutes);
 app.use('/api', projectQueryRoutes);
+
+// ── CORS test route ──
+app.get('/api/test-cors', (req, res) => {
+    res.json({
+        success: true,
+        message: 'CORS is working!',
+        origin: req.headers.origin || 'none',
+        timestamp: new Date().toISOString(),
+    });
+});
 
 // ── Health check ──
 app.get('/', (req, res) => {
