@@ -46,12 +46,12 @@ app.use(helmet({
 }));
 // ── CORS: allow both localhost (dev) and deployed frontend ──
 const allowedOrigins = [
-    process.env.CLIENT_URL, // e.g. https://your-app.vercel.app
-    'http://localhost:5173',
+    process.env.CLIENT_URL, // In Render, set this to https://khushi-technology-application.onrender.com
+    'https://khushi-technology-application.onrender.com',
     'http://localhost:3000',
 ].filter(Boolean);
 
-// Handle preflight requests
+// Handle preflight requests explicitly
 app.options('*', cors({
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
@@ -62,7 +62,7 @@ app.options('*', cors({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin', 'Access-Control-Allow-Headers', 'Access-Control-Allow-Methods'],
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+    optionsSuccessStatus: 200 // some legacy browsers choke on 204
 }));
 
 app.use(cors({
