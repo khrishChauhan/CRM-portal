@@ -266,7 +266,7 @@ const ManageStaff = () => {
                                                     Suspend
                                                 </button>
                                             ) : (
-                                                <button onClick={() => confirmToggleStatus(s._id, s.name)} className="flex-1 py-2.5 px-3 rounded-xl bg-green-50/50 border border-green-100 text-green-600 hover:bg-green-600 hover:text-white font-bold text-[10px] uppercase tracking-wider transition-all min-w-[40%]">
+                                                <button onClick={() => openSuspendModal(s._id, s.name, 'activate')} className="flex-1 py-2.5 px-3 rounded-xl bg-green-50/50 border border-green-100 text-green-600 hover:bg-green-600 hover:text-white font-bold text-[10px] uppercase tracking-wider transition-all min-w-[40%]">
                                                     Activate
                                                 </button>
                                             )}
