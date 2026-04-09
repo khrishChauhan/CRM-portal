@@ -40,6 +40,10 @@ const ProjectUpdates = () => {
     const [responseMap, setResponseMap] = useState({}); // { queryId: responseText }
     const [submittingResponse, setSubmittingResponse] = useState(null); // queryId
 
+    // ── Client Image Gallery ──
+    const [projectImages, setProjectImages] = useState([]);
+    const [imagesLoading, setImagesLoading] = useState(false);
+
     // ── Fetch updates ──
     const fetchUpdates = useCallback(async () => {
         if (isClient) return; // Don't fetch updates for clients
@@ -65,6 +69,21 @@ const ProjectUpdates = () => {
         }
     }, [id, isClient]);
 
+    // ── Fetch images for client carousel ──
+    const fetchProjectImages = useCallback(async () => {
+        setImagesLoading(true);
+        try {
+            const { data } = await api.get(`/projects/${id}/updates`);
+            const imgs = (data.data.updates || [])
+                .filter(u => u.imageUrl)
+                .map(u => ({ url: u.imageUrl, date: u.createdAt }));
+            setProjectImages(imgs);
+        } catch (err) {
+            console.error('Failed to fetch project images', err);
+        } finally {
+            setImagesLoading(false);
+        }
+    }, [id]);
 
     const fetchQueries = useCallback(async () => {
         setQueriesLoading(true);
@@ -82,11 +101,13 @@ const ProjectUpdates = () => {
         fetchProjectDetails();
         if (!isClient) {
             fetchUpdates();
+        } else {
+            fetchProjectImages();
         }
         if (activeTab === 'queries') {
             fetchQueries();
         }
-    }, [fetchUpdates, fetchQueries, fetchProjectDetails, activeTab, isClient]);
+    }, [fetchUpdates, fetchQueries, fetchProjectDetails, fetchProjectImages, activeTab, isClient]);
 
     // ── Toast ──
     const showToast = (msg, type = 'success') => {
@@ -552,6 +573,36 @@ const ProjectUpdates = () => {
                                 <p className="text-sm text-white/50 font-medium mt-1 opacity-80">Overseeing progress and ensuring quality standards.</p>
                             </div>
                         </div>
+
+                        {/* ── Image Gallery Carousel ── */}
+                        {isClient && (
+                            <div className="mt-2">
+                                <div className="flex items-center gap-3 mb-5">
+                                    <div className="w-10 h-10 rounded-[14px] bg-[#173d9f]/5 flex items-center justify-center border border-[#173d9f]/10">
+                                        <ImageIcon className="w-5 h-5 text-[#173d9f]" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-display font-bold text-[#1A1A1A] tracking-tight">Progress Gallery</h3>
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{projectImages.length} Photo{projectImages.length !== 1 ? 's' : ''}</p>
+                                    </div>
+                                </div>
+                                {imagesLoading ? (
+                                    <div className="flex items-center justify-center py-16">
+                                        <Loader2 className="w-8 h-8 animate-spin text-[#173d9f]" />
+                                    </div>
+                                ) : projectImages.length === 0 ? (
+                                    <div className="flex flex-col items-center justify-center py-12 text-center bg-[#faf8f8] border border-gray-100 rounded-[24px]">
+                                        <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
+                                            <Camera className="w-7 h-7 text-gray-300" />
+                                        </div>
+                                        <p className="text-sm font-display font-bold text-gray-400">No updates yet</p>
+                                        <p className="text-xs text-gray-300 font-medium mt-1">Photos will appear here as the project progresses.</p>
+                                    </div>
+                                ) : (
+                                    <ImageCarousel images={projectImages} onImageClick={(url) => navigate('/image-view', { state: { imageUrl: url } })} />
+                                )}
+                            </div>
+                        )}
                     </div>
                 ) : activeTab === 'updates' ? (
                     updates.length === 0 ? (
@@ -973,6 +1024,85 @@ const ProjectUpdates = () => {
                 </div>
             )}
 
+        </div>
+    );
+};
+
+/* ════════════════════════════════════════════════════
+   IMAGE CAROUSEL — Instagram-style swipe gallery
+   ════════════════════════════════════════════════════ */
+const ImageCarousel = ({ images, onImageClick }) => {
+    const scrollRef = useRef(null);
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const handleScroll = () => {
+        const container = scrollRef.current;
+        if (!container || images.length === 0) return;
+        const cardWidth = container.offsetWidth;
+        const index = Math.round(container.scrollLeft / cardWidth);
+        setActiveIndex(Math.min(index, images.length - 1));
+    };
+
+    const scrollToIndex = (index) => {
+        const container = scrollRef.current;
+        if (!container) return;
+        container.scrollTo({ left: index * container.offsetWidth, behavior: 'smooth' });
+    };
+
+    return (
+        <div className="relative select-none">
+            {/* Carousel Container */}
+            <div
+                ref={scrollRef}
+                onScroll={handleScroll}
+                className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide rounded-[20px] border border-gray-100 shadow-sm bg-black"
+                style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}
+            >
+                {images.map((img, idx) => (
+                    <div
+                        key={idx}
+                        className="flex-shrink-0 w-full snap-start relative cursor-pointer"
+                        style={{ aspectRatio: '4 / 3' }}
+                        onClick={() => onImageClick(img.url)}
+                    >
+                        <img
+                            src={img.url}
+                            alt={`Update ${idx + 1}`}
+                            loading={idx === 0 ? 'eager' : 'lazy'}
+                            className="w-full h-full object-cover block"
+                        />
+
+                        {/* Hover overlay */}
+                        <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-all flex items-center justify-center">
+                            <Maximize2 className="w-6 h-6 text-white opacity-0 hover:opacity-100 transition-opacity drop-shadow-lg pointer-events-none" />
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Image Counter Pill (top-right) */}
+            {images.length > 1 && (
+                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold tracking-wider px-3 py-1.5 rounded-full shadow-lg pointer-events-none">
+                    {activeIndex + 1} / {images.length}
+                </div>
+            )}
+
+            {/* Dot Indicators */}
+            {images.length > 1 && images.length <= 20 && (
+                <div className="flex items-center justify-center gap-1.5 mt-4">
+                    {images.map((_, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => scrollToIndex(idx)}
+                            className={`rounded-full transition-all duration-300 ${
+                                idx === activeIndex
+                                    ? 'w-6 h-1.5 bg-[#173d9f]'
+                                    : 'w-1.5 h-1.5 bg-gray-200 hover:bg-gray-300'
+                            }`}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
     );
 };
