@@ -463,7 +463,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         <FormField label="Professional Title" name="designation" value={form.designation} onChange={handleChange} placeholder="e.g. Project Manager" />
 
                         <div className="space-y-1.5 mb-5">
-                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Department</label>
+                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Organisation Unit</label>
                             <div className="relative">
                                 <select name="department" value={form.department} onChange={handleChange} className="w-full px-4 py-3.5 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all cursor-pointer appearance-none">
                                     <option value="">Select department</option>
@@ -490,7 +490,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         </div>
 
                         <div className="space-y-1.5 mb-5">
-                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Reporting Manager</label>
+                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Job Type</label>
                             <div className="relative">
                                 <select name="reportingManager" value={form.reportingManager} onChange={handleChange} className="w-full px-4 py-3.5 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all cursor-pointer appearance-none">
                                     <option value="">Direct to Board</option>
