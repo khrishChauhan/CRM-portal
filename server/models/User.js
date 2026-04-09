@@ -74,11 +74,7 @@ const userSchema = new mongoose.Schema(
             },
             default: 'full-time',
         },
-        salaryBand: {
-            type: String,
-            trim: true,
-            maxlength: [50, 'Salary band cannot exceed 50 characters'],
-        },
+
         reportingManager: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',

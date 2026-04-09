@@ -120,7 +120,6 @@ class StaffService {
             department: data.department,
             joiningDate: data.joiningDate || new Date(),
             employmentType: data.employmentType || 'full-time',
-            salaryBand: data.salaryBand?.trim(),
             reportingManager: data.reportingManager || null,
             role: 'staff',
             isActive: true,
@@ -193,7 +192,7 @@ class StaffService {
         // Update allowed fields
         const allowedFields = [
             'name', 'phone', 'alternatePhone', 'designation',
-            'department', 'joiningDate', 'employmentType', 'salaryBand',
+            'department', 'joiningDate', 'employmentType',
         ];
         for (const field of allowedFields) {
             if (data[field] !== undefined) {

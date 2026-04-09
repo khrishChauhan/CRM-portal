@@ -371,7 +371,6 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
         department: staff?.department || '',
         joiningDate: staff?.joiningDate ? new Date(staff.joiningDate).toISOString().split('T')[0] : '',
         employmentType: staff?.employmentType || 'full-time',
-        salaryBand: staff?.salaryBand || '',
         reportingManager: staff?.reportingManager?._id || '',
     });
     const [saving, setSaving] = useState(false);
@@ -480,8 +479,6 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                                 </div>
                             </div>
                         </div>
-
-                        <FormField label="Compensation Scale" name="salaryBand" value={form.salaryBand} onChange={handleChange} placeholder="e.g. Band A-1" />
 
                         <div className="space-y-1.5 mb-5">
                             <label className="text-[15px] font-bold text-[#34495E] ml-1">Hierarchy Lead</label>
