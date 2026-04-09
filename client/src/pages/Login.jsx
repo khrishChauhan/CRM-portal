@@ -11,7 +11,8 @@ import {
     AlertCircle,
     KeyRound,
     ArrowRight,
-    Building2
+    Building2,
+    Timer
 } from 'lucide-react';
 
 import Footer from '../components/Footer';
@@ -23,6 +24,7 @@ const Login = () => {
     const [staffEmail, setStaffEmail] = useState('');
     const [otp, setOtp] = useState('');
     const [showOtpField, setShowOtpField] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(0);
 
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -36,6 +38,16 @@ const Login = () => {
             redirectBasedOnRole(user.role);
         }
     }, [user, redirectBasedOnRole]);
+
+    // OTP Timer countdown logic
+    useEffect(() => {
+        if (showOtpField && timeLeft > 0) {
+            const timerId = setInterval(() => {
+                setTimeLeft((prev) => prev - 1);
+            }, 1000);
+            return () => clearInterval(timerId);
+        }
+    }, [showOtpField, timeLeft]);
 
     const roles = [
         { id: 'admin', title: 'Admin', icon: ShieldCheck },
@@ -105,6 +117,7 @@ const Login = () => {
             const result = await sendAdminOTP(email);
             if (result.success) {
                 setShowOtpField(true);
+                setTimeLeft(300); // 5 minutes (Matches backend EXPIRY_MINUTES = 5)
             } else {
                 setError(result.message);
             }
@@ -177,6 +190,7 @@ const Login = () => {
                                         setSelectedRole(role.id);
                                         setError('');
                                         setShowOtpField(false);
+                                        setTimeLeft(0);
                                     }}
                                     className={`flex-1 py-3 px-2 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all duration-300 ${
                                         selectedRole === role.id
@@ -240,6 +254,27 @@ const Login = () => {
                                             className="w-full bg-[#faf8f8] border-2 border-gray-100 text-[#1A1A1A] pl-14 pr-5 py-4.5 rounded-[18px] focus:ring-2 focus:ring-[#173d9f]/20 focus:border-[#173d9f] transition-all outline-none placeholder:text-gray-400 font-medium"
                                         />
                                     </div>
+                                    {showOtpField && selectedRole === 'admin' && (
+                                        <div className="flex justify-between items-center mt-2 px-2">
+                                            <span className="text-xs text-gray-500 font-medium flex items-center gap-1.5">
+                                                <Timer className={`w-3.5 h-3.5 ${timeLeft < 60 ? 'text-red-500' : 'text-[#173d9f]'}`} />
+                                                Expires in: 
+                                                <span className={`font-bold ${timeLeft < 60 ? 'text-red-500' : 'text-[#173d9f]'}`}>
+                                                    {Math.floor(timeLeft / 60).toString().padStart(2, '0')}:{(timeLeft % 60).toString().padStart(2, '0')}
+                                                </span>
+                                            </span>
+                                            {timeLeft === 0 && (
+                                                <button 
+                                                    type="button"
+                                                    onClick={handleAdminStep1}
+                                                    disabled={loading}
+                                                    className="text-[10px] font-bold text-[#173d9f] hover:underline uppercase tracking-widest disabled:opacity-50"
+                                                >
+                                                    Resend Code
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
