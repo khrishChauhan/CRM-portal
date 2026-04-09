@@ -1089,15 +1089,15 @@ const ImageCarousel = ({ images, onImageClick }) => {
 
             {/* Dot Indicators */}
             {images.length > 1 && images.length <= 20 && (
-                <div className="flex items-center justify-center gap-1.5 mt-4">
+                <div className="flex items-center justify-center gap-2 mt-4">
                     {images.map((_, idx) => (
-                        <button
+                        <div
                             key={idx}
                             onClick={() => scrollToIndex(idx)}
-                            className={`rounded-full transition-all duration-300 ${
+                            className={`rounded-full transition-all duration-300 cursor-pointer ${
                                 idx === activeIndex
-                                    ? 'w-6 h-1.5 bg-[#173d9f]'
-                                    : 'w-1.5 h-1.5 bg-gray-200 hover:bg-gray-300'
+                                    ? 'w-2 h-2 bg-[#173d9f]'
+                                    : 'w-1.5 h-1.5 bg-gray-300 hover:bg-gray-400'
                             }`}
                         />
                     ))}
