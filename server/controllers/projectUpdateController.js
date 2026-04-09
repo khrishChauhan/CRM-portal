@@ -98,12 +98,40 @@ const getProjectUpdates = async (req, res) => {
                 return sendError(res, 'You are not assigned to this project', 403);
             }
         } else if (user.role === 'client') {
-            return sendError(res, 'Internal updates are not visible to clients', 403);
+            // Clients can only view if they have an approved access request
+            const AccessRequest = require('../models/AccessRequest');
+            const approved = await AccessRequest.findOne({
+                clientId: user.id,
+                projectId,
+                status: 'approved'
+            });
+            if (!approved) {
+                return sendError(res, 'You do not have approved access to this project', 403);
+            }
         }
 
         const updates = await ProjectUpdate.find({ projectId })
             .populate('createdBy', 'name role')
             .sort({ createdAt: -1 });
+
+        // For clients: return only image URLs and timestamps (no internal data)
+        if (user.role === 'client') {
+            const clientUpdates = updates.map(u => ({
+                _id: u._id,
+                imageUrl: u.imageUrl || null,
+                createdAt: u.createdAt,
+            }));
+
+            return sendSuccess(res, {
+                updates: clientUpdates,
+                total: clientUpdates.length,
+                project: {
+                    _id: project._id,
+                    projectName: project.projectName,
+                    projectCode: project.projectCode,
+                },
+            });
+        }
 
         return sendSuccess(res, {
             updates,
