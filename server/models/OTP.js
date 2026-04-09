@@ -51,6 +51,6 @@ otpSchema.methods.incrementAttempts = async function () {
 // ── Static Constants ──
 otpSchema.statics.MAX_ATTEMPTS = 5;
 otpSchema.statics.COOLDOWN_SECONDS = 60;
-otpSchema.statics.EXPIRY_MINUTES = 5;
+otpSchema.statics.EXPIRY_MINUTES = 2;
 
 module.exports = mongoose.model('OTP', otpSchema);

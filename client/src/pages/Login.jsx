@@ -117,7 +117,7 @@ const Login = () => {
             const result = await sendAdminOTP(email);
             if (result.success) {
                 setShowOtpField(true);
-                setTimeLeft(300); // 5 minutes (Matches backend EXPIRY_MINUTES = 5)
+                setTimeLeft(120); // 2 minutes (Matches backend EXPIRY_MINUTES = 2)
             } else {
                 setError(result.message);
             }
