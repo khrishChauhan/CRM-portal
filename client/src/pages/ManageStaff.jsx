@@ -444,7 +444,16 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         <FormField label="Full Name" name="name" value={form.name} onChange={handleChange} required placeholder="Enter name" />
                         <FormField label="Email" name="email" type="email" value={form.email} onChange={handleChange} required placeholder="Enter email" disabled={isEdit} />
 
-                        <FormField label={isEdit ? 'New Password' : 'Password'} name="password" type="password" value={form.password} onChange={handleChange} required={!isEdit} placeholder={isEdit ? '••••••••' : 'Create a password'} />
+                        <FormField 
+                            label={isEdit ? 'New Password' : 'Password'} 
+                            name="password" 
+                            type="password" 
+                            value={form.password} 
+                            onChange={handleChange} 
+                            required={!isEdit} 
+                            placeholder={isEdit ? '••••••••' : 'Create a password'} 
+                            hint="Minimum 6 characters required"
+                        />
 
                         <div className="grid grid-cols-2 gap-4">
                             <FormField label="Phone" name="phone" type="number" inputMode="numeric" value={form.phone} onChange={handleChange} placeholder="+1 234 567 890" />
@@ -514,7 +523,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
 // ════════════════════════════════════════
 //  Reusable Form Field
 // ════════════════════════════════════════
-const FormField = ({ label, name, type = 'text', value, onChange, placeholder, required, disabled, inputMode, pattern }) => (
+const FormField = ({ label, name, type = 'text', value, onChange, placeholder, required, disabled, inputMode, pattern, hint }) => (
     <div className="space-y-1.5 mb-5 relative">
         <label className="text-[15px] font-bold text-[#34495E] ml-1">{label}</label>
         <div className="relative">
@@ -536,6 +545,7 @@ const FormField = ({ label, name, type = 'text', value, onChange, placeholder, r
                 </div>
             )}
         </div>
+        {hint && <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1 mt-1 opacity-70">{hint}</p>}
     </div>
 );
 
