@@ -239,7 +239,7 @@ const ManageStaff = () => {
                                                     <Briefcase className="w-4 h-4" />
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Role</p>
+                                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Assign Manager</label>
                                                     <p className="text-sm font-bold text-[#1A1A1A] truncate">{s.designation || 'Staff Member'}</p>
                                                 </div>
                                             </div>
@@ -249,7 +249,7 @@ const ManageStaff = () => {
                                                     <Building2 className="w-4 h-4" />
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Department</p>
+                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Project Manager</p>
                                                     <p className="text-sm font-bold text-gray-600 truncate">{s.department || 'General'}</p>
                                                 </div>
                                             </div>
@@ -460,10 +460,10 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                             <FormField label="Alt. Phone" name="alternatePhone" type="number" inputMode="numeric" value={form.alternatePhone} onChange={handleChange} placeholder="Optional" />
                         </div>
 
-                        <FormField label="Professional Title" name="designation" value={form.designation} onChange={handleChange} placeholder="e.g. Lead Engineer" />
+                        <FormField label="Professional Title" name="designation" value={form.designation} onChange={handleChange} placeholder="e.g. Project Manager" />
 
                         <div className="space-y-1.5 mb-5">
-                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Organisation Unit</label>
+                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Department</label>
                             <div className="relative">
                                 <select name="department" value={form.department} onChange={handleChange} className="w-full px-4 py-3.5 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all cursor-pointer appearance-none">
                                     <option value="">Select department</option>
@@ -475,10 +475,10 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                             </div>
                         </div>
 
-                        <FormField label="Induction Date" name="joiningDate" type="date" value={form.joiningDate} onChange={handleChange} />
+                        <FormField label="Joining Date" name="joiningDate" type="date" value={form.joiningDate} onChange={handleChange} />
 
                         <div className="space-y-1.5 mb-5">
-                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Engagement Type</label>
+                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Employment Type</label>
                             <div className="relative">
                                 <select name="employmentType" value={form.employmentType} onChange={handleChange} className="w-full px-4 py-3.5 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all cursor-pointer appearance-none">
                                     {EMPLOYMENT_TYPES.map(t => <option key={t} value={t} className="capitalize">{t}</option>)}
@@ -490,7 +490,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         </div>
 
                         <div className="space-y-1.5 mb-5">
-                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Hierarchy Lead</label>
+                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Reporting Manager</label>
                             <div className="relative">
                                 <select name="reportingManager" value={form.reportingManager} onChange={handleChange} className="w-full px-4 py-3.5 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all cursor-pointer appearance-none">
                                     <option value="">Direct to Board</option>

@@ -234,7 +234,7 @@ const ManageProjects = () => {
                                                         <User className="w-4 h-4" />
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Lead Manager</p>
+                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Project Manager</p>
                                                         <p className="text-[13px] font-bold text-[#1A1A1A] truncate">{p.projectManager?.name || 'Unassigned'}</p>
                                                     </div>
                                                 </div>
@@ -492,7 +492,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                             </div>
 
                             <div className="space-y-1.5 mb-4">
-                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Project Lead</label>
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Assign Manager</label>
                                 <div className="relative">
                                     <select
                                         name="projectManager"
