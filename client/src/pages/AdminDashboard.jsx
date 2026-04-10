@@ -40,7 +40,7 @@ const AdminDashboard = () => {
         return (
             <div className="flex flex-col items-center justify-center py-20 md:py-32 min-h-[300px] md:min-h-[500px]">
                 <Loader2 className="w-10 h-10 md:w-12 md:h-12 animate-spin text-[#173d9f] mb-4" />
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compiling Analytics...</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Loading...</p>
             </div>
         );
     }
@@ -52,7 +52,7 @@ const AdminDashboard = () => {
                     <AlertCircle className="w-6 h-6" />
                 </div>
                 <div>
-                    <h3 className="text-lg font-bold">Initialisation Error</h3>
+                    <h3 className="text-lg font-bold">Something went wrong</h3>
                     <p className="text-sm font-medium opacity-80">{error}</p>
                 </div>
             </div>
@@ -70,8 +70,8 @@ const AdminDashboard = () => {
         <div className="space-y-10 animate-reveal pb-20">
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl sm:text-4xl font-display font-bold text-[#1A1A1A] tracking-tight leading-none">Administrative Overview</h1>
-                    <p className="text-gray-500 mt-2 font-medium text-base leading-relaxed">Cross-platform metrics and operational intelligence.</p>
+                    <h1 className="text-3xl sm:text-4xl font-display font-bold text-[#1A1A1A] tracking-tight leading-none">Admin Dashboard</h1>
+                    <p className="text-gray-500 mt-2 font-medium text-base leading-relaxed">View system stats and activity here.</p>
                 </div>
                 <div className="self-start md:self-end px-4 py-2 bg-white border border-gray-100 rounded-xl flex items-center gap-3 shadow-sm">
                     <div className="w-2 h-2 bg-[#173d9f] rounded-full animate-pulse shadow-[0_0_8px_rgba(23,61,159,0.4)]"></div>
@@ -101,7 +101,7 @@ const AdminDashboard = () => {
                         <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center border border-[#173d9f]/10 shadow-sm">
                             <Activity className="w-6 h-6 text-[#173d9f]" />
                         </div>
-                        <h2 className="text-2xl font-display font-bold text-[#1A1A1A] tracking-tight">Intelligence Feed</h2>
+                        <h2 className="text-2xl font-display font-bold text-[#1A1A1A] tracking-tight">Recent Activity</h2>
                     </div>
                 </div>
 
@@ -116,7 +116,7 @@ const AdminDashboard = () => {
                                 <Clock className="w-8 h-8 md:w-10 md:h-10 text-gray-300" />
                             </div>
                             <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">No Events Recorded</h3>
-                            <p className="text-gray-400/80 mt-1 md:mt-2 text-[13px] md:text-sm font-medium italic">System events and intelligence logs will appear here.</p>
+                            <p className="text-gray-400/80 mt-1 md:mt-2 text-[13px] md:text-sm font-medium italic">No events to show yet.</p>
                         </div>
                     )}
                 </div>

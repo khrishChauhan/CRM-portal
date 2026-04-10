@@ -121,8 +121,8 @@ const ManageClients = () => {
             {/* ── Header ── */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl sm:text-4xl font-display font-bold text-[#1A1A1A] tracking-tight leading-none">Client Registry</h1>
-                    <p className="text-gray-500 mt-2 font-medium text-base leading-relaxed">System-wide client management and project access control.</p>
+                    <h1 className="text-3xl sm:text-4xl font-display font-bold text-[#1A1A1A] tracking-tight leading-none">Clients</h1>
+                    <p className="text-gray-500 mt-2 font-medium text-base leading-relaxed">Manage your clients and their projects.</p>
                 </div>
             </div>
 
@@ -188,7 +188,7 @@ const ManageClients = () => {
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-20 sm:py-32">
                     <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-[#173d9f] mb-4" />
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Loading Clients...</p>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Loading...</p>
                 </div>
             ) : clients.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 sm:py-24 px-4 text-center">
@@ -329,7 +329,7 @@ const ManageClients = () => {
 
                         <div className="p-7 bg-white border-t border-gray-50 flex-shrink-0">
                             <button onClick={() => setSelectedClient(null)} className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-[#173d9f]/20 hover:scale-[1.01] active:scale-[0.98] transition-all">
-                                Close Viewer
+                                Close
                             </button>
                         </div>
                     </div>
@@ -401,7 +401,7 @@ const ClientCard = ({ client, onView, openSuspendModal }) => {
                     onClick={(e) => { e.stopPropagation(); onView(); }}
                     className="flex-1 min-w-[30%] py-2.5 px-3 rounded-xl bg-gray-50 border border-gray-100 text-[#173d9f] hover:text-white hover:bg-[#173d9f] font-bold text-[10px] uppercase tracking-wider transition-all"
                 >
-                    View Detials
+                    View Details
                 </button>
 
                 {statusLabel === 'active' ? (

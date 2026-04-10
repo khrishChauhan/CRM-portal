@@ -24,7 +24,7 @@ const Sidebar = ({ role, user, logout }) => {
         { name: 'Clients', path: '/admin/clients', icon: Briefcase },
         { name: 'Projects', path: '/admin/projects', icon: FolderOpen },
         { name: 'Queries', path: '/admin/queries', icon: MessageSquare },
-        { name: 'Access Requests', path: '/admin/access-requests', icon: FileText },
+        { name: 'Requests', path: '/admin/access-requests', icon: FileText },
     ];
 
     const staffLinks = [
@@ -34,8 +34,8 @@ const Sidebar = ({ role, user, logout }) => {
     ];
 
     const clientLinks = [
-        { name: 'Live Projects', path: '/client/dashboard', icon: Briefcase },
-        { name: 'Project Gallery', path: '/client/projects', icon: FolderOpen },
+        { name: 'Projects', path: '/client/dashboard', icon: Briefcase },
+        { name: 'All Projects', path: '/client/projects', icon: FolderOpen },
     ];
 
     const links = role === 'admin' ? adminLinks : role === 'staff' ? staffLinks : clientLinks;
@@ -154,16 +154,16 @@ export const DashboardLayout = ({ children }) => {
     // Map path to title
     const titles = {
         '/admin/dashboard': 'Admin Dashboard',
-        '/admin/staff': 'Manage Staff',
-        '/admin/clients': 'Manage Clients',
-        '/admin/projects': 'Manage Projects',
-        '/admin/access-requests': 'Access Requests',
-        '/admin/queries': 'Query Inbox',
+        '/admin/staff': 'Staff',
+        '/admin/clients': 'Clients',
+        '/admin/projects': 'Projects',
+        '/admin/access-requests': 'Requests',
+        '/admin/queries': 'Questions',
         '/staff/dashboard': 'Staff Dashboard',
-        '/staff/projects': 'My Assignments',
-        '/staff/queries': 'Query Inbox',
-        '/client/dashboard': 'Overview',
-        '/client/projects': 'Project Gallery',
+        '/staff/projects': 'My Projects',
+        '/staff/queries': 'Questions',
+        '/client/dashboard': 'Dashboard',
+        '/client/projects': 'All Projects',
     };
 
     const currentTitle = titles[location.pathname] || 'Dashboard';

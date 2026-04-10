@@ -122,8 +122,8 @@ const ManageProjects = () => {
             {/* ── Header ── */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl sm:text-4xl font-display font-bold text-[#1A1A1A] tracking-tight leading-none">Manage Projects</h1>
-                    <p className="text-gray-500 mt-2 font-medium text-sm sm:text-base leading-relaxed">Central hub for project oversight and resource allocation.</p>
+                    <h1 className="text-3xl sm:text-4xl font-display font-bold text-[#1A1A1A] tracking-tight leading-none">Projects</h1>
+                    <p className="text-gray-500 mt-2 font-medium text-sm sm:text-base leading-relaxed">Manage your projects and resources here.</p>
                 </div>
                 <button
                     onClick={() => { setEditingProject(null); setShowModal(true); }}
@@ -181,7 +181,7 @@ const ManageProjects = () => {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20 sm:py-40 bg-white rounded-[32px] border border-gray-100 shadow-2xl min-h-[300px]">
                         <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-[#173d9f] mb-4" />
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Initialising Database...</p>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Loading...</p>
                     </div>
                 ) : projects.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-16 sm:py-32 md:py-40 px-4 text-center text-gray-400 bg-white rounded-[32px] border border-gray-100 shadow-2xl min-h-[300px]">
@@ -189,7 +189,7 @@ const ManageProjects = () => {
                             <FolderOpen className="w-8 h-8 md:w-10 md:h-10 opacity-20" />
                         </div>
                         <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A] opacity-30 tracking-tight">{statusFilter || priorityFilter || search ? 'No results found for this filter' : 'No Projects Found'}</h3>
-                        <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic mb-6">{statusFilter || priorityFilter || search ? 'Try adjusting your search or filters.' : 'Create your first operational project.'}</p>
+                        <p className="text-[13px] md:text-sm mt-1 md:mt-2 font-medium italic mb-6">{statusFilter || priorityFilter || search ? 'Try adjusting your search or filters.' : 'Create your first project.'}</p>
                         {statusFilter || priorityFilter || search ? (
                             <button onClick={() => { setStatusFilter(''); setPriorityFilter(''); setSearch(''); setSearchParams({}); }} className="px-6 py-3 bg-[#faf8f8] text-gray-600 rounded-[14px] font-bold text-[10px] uppercase tracking-[0.15em] transition-all active:scale-95 flex items-center gap-2 border border-gray-100">
                                 Clear Filters
@@ -233,10 +233,10 @@ const ManageProjects = () => {
                                                     <div className="w-10 h-10 rounded-[12px] bg-white flex flex-shrink-0 items-center justify-center text-[#173d9f] border border-gray-100 shadow-sm">
                                                         <User className="w-4 h-4" />
                                                     </div>
-                                                    <div className="min-w-0">
-                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Project Manager</p>
-                                                        <p className="text-[13px] font-bold text-[#1A1A1A] truncate">{p.projectManager?.name || 'Unassigned'}</p>
-                                                    </div>
+                                                <div className="min-w-0">
+                                                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Manager</p>
+                                                    <p className="text-[13px] font-bold text-[#1A1A1A] truncate">{p.projectManager?.name || 'Unassigned'}</p>
+                                                </div>
                                                 </div>
                                                 <span className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] text-[9px] font-bold uppercase tracking-widest border ${p.priority === 'High' ? 'bg-[#f86a1f]/5 text-[#f86a1f] border-[#f86a1f]/10' : p.priority === 'Medium' ? 'bg-[#173d9f]/5 text-[#173d9f] border-[#173d9f]/10' : 'bg-[#faf8f8] text-gray-400 border-gray-100'}`}>
                                                     <TrendingUp className="w-3 h-3" />
@@ -423,7 +423,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                 {/* Header */}
                 <div className="flex items-center justify-between p-[22px] pb-3 bg-white shrink-0">
                     <h2 className="text-[20px] font-bold text-[#2C3E50] tracking-tight">
-                        {isEdit ? 'Update Project' : 'Create New Project'}
+                        {isEdit ? 'Edit Project' : 'Add Project'}
                     </h2>
                     <button
                         onClick={onClose}
@@ -542,7 +542,7 @@ const ProjectFormModal = ({ project, onClose, onSaved, showToast }) => {
                             disabled={saving}
                             className="w-full py-4.5 accent-gradient text-white font-bold rounded-[16px] shadow-lg shadow-[#f86a1f]/20 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50"
                         >
-                            {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : (isEdit ? 'Update Project' : 'Create Project')}
+                            {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : (isEdit ? 'Save Changes' : 'Create Project')}
                         </button>
                     </div>
                 </form>

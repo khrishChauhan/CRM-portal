@@ -130,23 +130,23 @@ const ManageStaff = () => {
             {/* ── Header ── */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl sm:text-4xl font-display font-bold text-[#1A1A1A] tracking-tight leading-none">Operational Staff</h1>
-                    <p className="text-gray-500 mt-2 font-medium text-base leading-relaxed">System-wide personnel registry and permissions hub.</p>
+                    <h1 className="text-3xl sm:text-4xl font-display font-bold text-[#1A1A1A] tracking-tight leading-none">Staff Management</h1>
+                    <p className="text-gray-500 mt-2 font-medium text-base leading-relaxed">Manage all staff members and their details here.</p>
                 </div>
                 <button
                     onClick={() => openModal()}
                     className="w-full md:w-auto px-8 py-4 accent-gradient text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-[#f86a1f]/20 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3"
                 >
                     <UserPlus className="w-5 h-5" />
-                    <span>Onboard Staff</span>
+                    <span>Add Member</span>
                 </button>
             </div>
 
             {/* ── Stats Cards ── */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
-                <StatCard icon={Users} label="Total Assets" value={stats.total} color="secondary" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
-                <StatCard icon={UserCheck} label="Operational" value={stats.active} color="secondary" onClick={() => { setStatusFilter('active'); setSearchParams({ status: 'active' }); }} />
-                <StatCard icon={UserX} label="Suspended" value={stats.inactive} color="neutral" onClick={() => { setStatusFilter('suspended'); setSearchParams({ status: 'suspended' }); }} />
+                <StatCard icon={Users} label="Total Members" value={stats.total} color="secondary" onClick={() => { setStatusFilter(''); setSearchParams({}); }} />
+                <StatCard icon={UserCheck} label="Active" value={stats.active} color="secondary" onClick={() => { setStatusFilter('active'); setSearchParams({ status: 'active' }); }} />
+                <StatCard icon={UserX} label="Inactive" value={stats.inactive} color="neutral" onClick={() => { setStatusFilter('suspended'); setSearchParams({ status: 'suspended' }); }} />
             </div>
 
             {/* ── Filters Bar ── */}
@@ -158,7 +158,7 @@ const ManageStaff = () => {
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Search by name, email or designation..."
+                            placeholder="Search by name, email or job title..."
                             className="w-full bg-[#faf8f8] border border-transparent focus:bg-white focus:ring-4 focus:ring-[#173d9f]/10 focus:border-[#173d9f]/30 pl-14 pr-6 py-4.5 text-[#1A1A1A] placeholder-gray-400 rounded-2xl transition-all text-sm font-medium"
                         />
                     </div>
@@ -168,16 +168,16 @@ const ManageStaff = () => {
                             onChange={(e) => setStatusFilter(e.target.value)}
                             className="w-full sm:w-auto px-6 py-4 bg-gray-50/80 border border-gray-100 rounded-[18px] text-[10px] font-bold uppercase tracking-widest text-[#2C3E50] focus:outline-none focus:bg-white transition-all cursor-pointer appearance-none"
                         >
-                            <option value="">All States</option>
-                            <option value="active">Active Assets</option>
-                            <option value="suspended">Suspended Assets</option>
+                            <option value="">All Staff</option>
+                            <option value="active">Active Members</option>
+                            <option value="suspended">Inactive Members</option>
                         </select>
                         <select
                             value={deptFilter}
                             onChange={(e) => setDeptFilter(e.target.value)}
                             className="w-full sm:w-auto px-6 py-4 bg-gray-50/80 border border-gray-100 rounded-[18px] text-[10px] font-bold uppercase tracking-widest text-[#2C3E50] focus:outline-none focus:bg-white transition-all cursor-pointer appearance-none"
                         >
-                            <option value="">All Units</option>
+                            <option value="">All Departments</option>
                             {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
                         </select>
                     </div>
@@ -189,7 +189,7 @@ const ManageStaff = () => {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20 sm:py-40 bg-white rounded-[32px] border border-gray-100 shadow-2xl min-h-[300px]">
                         <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-[#173d9f] mb-4" />
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Compiling Personnel...</p>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Loading...</p>
                     </div>
                 ) : staff.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-16 sm:py-32 md:py-40 px-4 text-center text-gray-400 bg-white rounded-[32px] border border-gray-100 shadow-2xl min-h-[300px]">
@@ -239,7 +239,7 @@ const ManageStaff = () => {
                                                     <Briefcase className="w-4 h-4" />
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Assign Manager</label>
+                                                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Job Title</p>
                                                     <p className="text-sm font-bold text-[#1A1A1A] truncate">{s.designation || 'Staff Member'}</p>
                                                 </div>
                                             </div>
@@ -249,7 +249,7 @@ const ManageStaff = () => {
                                                     <Building2 className="w-4 h-4" />
                                                 </div>
                                                 <div className="min-w-0">
-                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Project Manager</p>
+                                                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Department</p>
                                                     <p className="text-sm font-bold text-gray-600 truncate">{s.department || 'General'}</p>
                                                 </div>
                                             </div>
@@ -420,7 +420,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
             <div className="bg-white w-[94%] max-w-[460px] h-auto max-h-[92vh] rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col relative z-[160] animate-in slide-in-from-top-4 duration-300 overflow-hidden">
                 <div className="flex items-center justify-between p-[22px] pb-3 shrink-0 bg-white">
                     <h2 className="text-[20px] font-bold text-[#2C3E50] tracking-tight">
-                        {isEdit ? 'Modify Profile' : 'Add Staff'}
+                        {isEdit ? 'Edit Staff' : 'Add Staff'}
                     </h2>
                     <button 
                         type="button" 
@@ -460,7 +460,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                             <FormField label="Alt. Phone" name="alternatePhone" type="number" inputMode="numeric" value={form.alternatePhone} onChange={handleChange} placeholder="Optional" />
                         </div>
 
-                        <FormField label="Professional Title" name="designation" value={form.designation} onChange={handleChange} placeholder="e.g. Project Manager" />
+                        <FormField label="Job Title" name="designation" value={form.designation} onChange={handleChange} placeholder="e.g. Project Manager" />
 
                         <div className="space-y-1.5 mb-5">
                             <label className="text-[15px] font-bold text-[#34495E] ml-1">Department</label>
@@ -490,10 +490,10 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                         </div>
 
                         <div className="space-y-1.5 mb-5">
-                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Job Type</label>
+                            <label className="text-[15px] font-bold text-[#34495E] ml-1">Reporting To</label>
                             <div className="relative">
                                 <select name="reportingManager" value={form.reportingManager} onChange={handleChange} className="w-full px-4 py-3.5 bg-[#faf8f8] border border-gray-100 rounded-[14px] text-sm font-medium text-[#1A1A1A] focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all cursor-pointer appearance-none">
-                                    <option value="">Direct to Board</option>
+                                    <option value="">Direct to Admin</option>
                                     {managers.filter(m => m._id !== staff?._id).map(m => (
                                         <option key={m._id} value={m._id}>{m.name}</option>
                                     ))}
@@ -511,7 +511,7 @@ const StaffFormModal = ({ staff, managers, onClose, onSaved, showToast }) => {
                             disabled={saving}
                             className="w-full py-4.5 accent-gradient text-white font-bold rounded-[16px] shadow-lg shadow-[#f86a1f]/20 hover:scale-[1.01] active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                         >
-                            {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : (isEdit ? 'Update Staff Profile' : 'Confirm & Add Staff')}
+                            {saving ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : (isEdit ? 'Save Changes' : 'Add Staff')}
                         </button>
                     </div>
                 </form>
