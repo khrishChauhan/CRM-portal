@@ -9,7 +9,8 @@ import {
     FolderOpen,
     FileText,
     Building2,
-    MessageSquare
+    MessageSquare,
+    ArrowLeft
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
@@ -101,16 +102,26 @@ const Sidebar = ({ role, user, logout }) => {
     );
 };
 
-const Navbar = ({ user, toggleSidebar, title }) => {
+const Navbar = ({ user, toggleSidebar, title, isDashboard, onBack }) => {
     return (
         <header className="sticky top-0 z-[100] w-full bg-[#faf8f8]/80 backdrop-blur-xl py-4 px-6 flex items-center justify-between transition-all duration-300 border-b border-gray-100">
-            <button
-                onClick={toggleSidebar}
-                className="p-3 rounded-xl bg-white border border-gray-100 text-[#173d9f] hover:text-[#f86a1f] transition-all active:scale-95 lg:hidden shadow-sm"
-                aria-label="Toggle Menu"
-            >
-                <Menu className="w-6 h-6 stroke-[2.5]" />
-            </button>
+            {isDashboard ? (
+                <button
+                    onClick={toggleSidebar}
+                    className="p-3 rounded-xl bg-white border border-gray-100 text-[#173d9f] hover:text-[#f86a1f] transition-all active:scale-95 shadow-sm"
+                    aria-label="Toggle Menu"
+                >
+                    <Menu className="w-6 h-6 stroke-[2.5]" />
+                </button>
+            ) : (
+                <button
+                    onClick={onBack}
+                    className="p-3 rounded-xl bg-white border border-gray-100 text-[#173d9f] hover:text-[#f86a1f] transition-all active:scale-95 shadow-sm"
+                    aria-label="Go Back"
+                >
+                    <ArrowLeft className="w-6 h-6 stroke-[2.5]" />
+                </button>
+            )}
 
             <div className="flex-1 flex justify-center lg:justify-start lg:ml-6">
                 <h1 className="text-lg font-display font-bold text-[#1A1A1A] tracking-tight">
@@ -157,6 +168,17 @@ export const DashboardLayout = ({ children }) => {
 
     const currentTitle = titles[location.pathname] || 'Dashboard';
 
+    const isDashboard = location.pathname.endsWith('/dashboard');
+    const navigate = useNavigate();
+
+    const handleBack = () => {
+        const role = user?.role;
+        if (role === 'admin') navigate('/admin/dashboard');
+        else if (role === 'staff') navigate('/staff/dashboard');
+        else if (role === 'client') navigate('/client/dashboard');
+        else navigate('/'); // Fallback
+    };
+
     // Close sidebar on route change (for mobile)
     useEffect(() => {
         setSidebarOpen(false);
@@ -165,18 +187,19 @@ export const DashboardLayout = ({ children }) => {
     return (
         <div className="flex h-screen bg-[#faf8f8] overflow-hidden font-body selection:bg-[#f86a1f]/20 relative text-[#1A1A1A]">
             
-            {/* Mobile Sidebar Overlay */}
+            {/* Sidebar Overlay (Mobile & Desktop) */}
             {sidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] lg:hidden transition-opacity duration-300"
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] transition-opacity duration-300"
                     onClick={() => setSidebarOpen(false)}
                 />
             )}
 
             {/* Sidebar Container */}
             <aside className={`
-                fixed inset-y-0 left-0 z-[120] w-[80%] max-w-[300px] transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
+                fixed inset-y-0 left-0 z-[120] w-[80%] max-w-[300px] transform transition-transform duration-300 ease-in-out
                 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+                ${!isDashboard ? 'hidden' : ''}
             `}>
                 <Sidebar role={user?.role} user={user} logout={logout} />
             </aside>
@@ -186,7 +209,9 @@ export const DashboardLayout = ({ children }) => {
                 <Navbar
                     user={user}
                     title={currentTitle}
+                    isDashboard={isDashboard}
                     toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+                    onBack={handleBack}
                 />
 
                 <main className="flex-1 overflow-y-auto flex flex-col scrollbar-hide">
