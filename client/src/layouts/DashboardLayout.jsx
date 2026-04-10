@@ -158,10 +158,10 @@ export const DashboardLayout = ({ children }) => {
         '/admin/clients': 'Clients',
         '/admin/projects': 'Projects',
         '/admin/access-requests': 'Requests',
-        '/admin/queries': 'Questions',
+        '/admin/queries': 'Queries',
         '/staff/dashboard': 'Staff Dashboard',
         '/staff/projects': 'My Projects',
-        '/staff/queries': 'Questions',
+        '/staff/queries': 'Queries',
         '/client/dashboard': 'Dashboard',
         '/client/projects': 'All Projects',
     };
