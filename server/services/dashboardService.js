@@ -1,6 +1,5 @@
 const User = require('../models/User');
 const { Project } = require('../models/Project');
-const AccessRequest = require('../models/AccessRequest');
 const ActivityLogService = require('./activityLogService');
 const mongoose = require('mongoose');
 
@@ -67,37 +66,13 @@ class DashboardService {
     }
 
     /**
-     * Client: Access request and project access metrics
+     * Client: Simple project metrics (all projects visible)
      */
     static async getClientStats(clientId) {
-        const [user, requestStats] = await Promise.all([
-            User.findById(clientId).select('approvedProjects'),
-            AccessRequest.aggregate([
-                { $match: { clientId: new mongoose.Types.ObjectId(clientId) } },
-                {
-                    $group: {
-                        _id: null,
-                        pending: { $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] } },
-                        rejected: { $sum: { $cond: [{ $eq: ['$status', 'rejected'] }, 1, 0] } },
-                        totalRequests: { $sum: 1 }
-                    }
-                }
-            ])
-        ]);
-
-        if (!user) {
-            const error = new Error('Client not found');
-            error.statusCode = 404;
-            throw error;
-        }
-
-        const rStats = requestStats[0] || { pending: 0, rejected: 0, totalRequests: 0 };
+        const totalProjects = await Project.countDocuments({ isDeleted: false });
 
         return {
-            totalApprovedProjects: user.approvedProjects?.length || 0,
-            totalPendingRequests: rStats.pending,
-            totalRejectedRequests: rStats.rejected,
-            totalRequests: rStats.totalRequests
+            totalProjects,
         };
     }
 }

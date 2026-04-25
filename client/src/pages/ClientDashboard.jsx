@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import {
     Search, ChevronLeft, ChevronRight, Loader2,
-    AlertCircle, CheckCircle, Clock, MapPin, Send, MessageSquare, X
+    AlertCircle, CheckCircle, MapPin, ChevronRight as GoIcon
 } from 'lucide-react';
 
 const PROJECT_STATUS_COLORS = {
@@ -16,85 +16,48 @@ const PROJECT_STATUS_COLORS = {
 };
 
 const ClientDashboard = () => {
-    const [myRequests, setMyRequests] = useState([]);
     const [projects, setProjects] = useState([]);
-    const [pagination, setPagination] = useState({ total: 0, page: 1, limit: 10, totalPages: 1 });
+    const [allProjects, setAllProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [toast, setToast] = useState(null);
-    const [requestModal, setRequestModal] = useState(null);
-    const [requestMessage, setRequestMessage] = useState('');
-    const [requesting, setRequesting] = useState(false);
     const navigate = useNavigate();
 
-    const fetchMyRequests = useCallback(async () => {
-        try {
-            const { data } = await api.get('/access-requests/my');
-            setMyRequests(data.data || []);
-        } catch (err) { console.error(err); }
-    }, []);
-
-    const fetchBrowseProjects = useCallback(async (page = 1) => {
+    const fetchProjects = useCallback(async () => {
         setLoading(true);
         try {
-            const params = new URLSearchParams({ page, limit: 10 });
-            if (search) params.append('search', search);
-            const { data } = await api.get(`/access-requests/projects?${params}`);
-            setProjects(data.data.projects);
-            setPagination(data.data.pagination);
+            const { data } = await api.get('/projects/client-all');
+            setAllProjects(data.data || []);
         } catch (err) {
             showToast('Failed to fetch projects', 'error');
         } finally {
             setLoading(false);
         }
-    }, [search]);
+    }, []);
 
     useEffect(() => {
-        fetchMyRequests();
-    }, [fetchMyRequests]);
+        fetchProjects();
+    }, [fetchProjects]);
 
+    // Client-side search filtering
     useEffect(() => {
-        const t = setTimeout(() => fetchBrowseProjects(1), 400);
-        return () => clearTimeout(t);
-    }, [search, fetchBrowseProjects]);
+        if (!search.trim()) {
+            setProjects(allProjects);
+            return;
+        }
+        const re = new RegExp(search, 'i');
+        setProjects(allProjects.filter(p =>
+            re.test(p.projectName) ||
+            re.test(p.projectCode) ||
+            re.test(p.siteAddress || '') ||
+            re.test(p.projectCategory || '')
+        ));
+    }, [search, allProjects]);
 
     const showToast = (message, type = 'success') => {
         setToast({ message, type });
         setTimeout(() => setToast(null), 4000);
     };
-
-    useEffect(() => {
-        if (requestModal) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-        return () => { document.body.style.overflow = 'unset'; };
-    }, [requestModal]);
-
-    const handleRequestAccess = async () => {
-        if (!requestModal) return;
-        setRequesting(true);
-        try {
-            await api.post('/access-requests', {
-                projectId: requestModal._id,
-                message: requestMessage
-            });
-            showToast('Access request submitted!');
-            setRequestModal(null);
-            setRequestMessage('');
-            fetchMyRequests();
-        } catch (err) {
-            showToast(err.response?.data?.message || 'Failed to request access', 'error');
-        } finally {
-            setRequesting(false);
-        }
-    };
-
-    const requestMap = {};
-    myRequests.forEach(r => {
-        if (r.projectId?._id) requestMap[r.projectId._id] = r;
-    });
 
     return (
         <div className="space-y-8 animate-reveal pb-20 font-body">
@@ -115,6 +78,13 @@ const ClientDashboard = () => {
                             <h2 className="text-3xl font-display font-bold text-[#1A1A1A] tracking-tight">Project Directory</h2>
                             <p className="text-gray-500 font-medium text-sm mt-1">Browse and monitor infrastructure development.</p>
                         </div>
+                        {!loading && (
+                            <div className="px-5 py-2.5 bg-[#173d9f]/5 border border-[#173d9f]/10 rounded-xl">
+                                <span className="text-[10px] font-bold text-[#173d9f] uppercase tracking-widest">
+                                    {allProjects.length} Project{allProjects.length !== 1 ? 's' : ''}
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     {/* SEARCH BAR */}
@@ -146,141 +116,56 @@ const ClientDashboard = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 gap-6">
-                        {projects.map(p => {
-                            const req = requestMap[p._id];
-                            const reqStatus = req?.status;
-                            const isApproved = reqStatus === 'approved';
-
-                            return (
-                                <div key={p._id} className="bg-white border border-gray-100 rounded-[24px] p-6 sm:p-8 hover:border-[#173d9f]/20 hover:shadow-xl transition-all duration-500 group">
-                                    <div className="flex justify-between items-start gap-4 mb-5">
-                                        <h3 className="text-xl font-display font-bold text-[#1A1A1A] leading-tight group-hover:text-[#173d9f] transition-colors">
-                                            {p.projectName}
-                                        </h3>
-                                        <span className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest flex-shrink-0 border ${PROJECT_STATUS_COLORS[p.projectStatus] || 'bg-[#faf8f8] text-gray-400 border-gray-100'
-                                            }`}>
-                                            {p.projectStatus}
-                                        </span>
-                                    </div>
-
-                                    <div className="flex items-center gap-3 mb-5">
-                                        <div className="w-8 h-8 rounded-lg bg-[#173d9f]/5 flex items-center justify-center">
-                                            <MapPin className="w-4 h-4 text-[#173d9f]" />
-                                        </div>
-                                        <span className="text-sm font-bold text-gray-500">{p.siteAddress || 'Location Undefined'}</span>
-                                    </div>
-
-                                    <p className="text-sm text-gray-400 font-medium line-clamp-2 mb-8 leading-relaxed">
-                                        {p.description || 'Information regarding this specific project initiative is currently being curated for the portal.'}
-                                    </p>
-
-                                    <div className="h-px bg-gray-50 w-full mb-8"></div>
-
-                                    <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-                                        <div className="flex items-center gap-4">
-                                            <div className="flex flex-col">
-                                                <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Commencement</span>
-                                                <span className="text-sm font-bold text-gray-500">{p.startDate ? new Date(p.startDate).toLocaleDateString() : '---'}</span>
-                                            </div>
-                                            <div className="w-px h-8 bg-gray-100"></div>
-                                            <div className="flex flex-col">
-                                                <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Category</span>
-                                                <span className="text-sm font-bold text-gray-500">{p.projectCategory || 'General'}</span>
-                                            </div>
-                                        </div>
-
-                                        {isApproved ? (
-                                            <button
-                                                onClick={() => navigate(`/client/projects/${p._id}/updates`)}
-                                                className="w-full sm:w-auto px-8 py-3.5 blue-gradient text-white font-bold text-xs uppercase tracking-widest rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all btn-shadow flex items-center justify-center gap-2"
-                                            >
-                                                Intelligence Portal <ChevronRight className="w-4 h-4" />
-                                            </button>
-                                        ) : (
-                                            <button
-                                                onClick={() => setRequestModal(p)}
-                                                disabled={reqStatus === 'pending'}
-                                                className={`w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest border transition-all flex items-center justify-center gap-2 shadow-sm ${reqStatus === 'pending'
-                                                        ? 'bg-amber-50 border-amber-100 text-amber-600 opacity-80'
-                                                        : 'bg-white border-[#173d9f] text-[#173d9f] hover:bg-[#173d9f]/5'
-                                                    }`}
-                                            >
-                                                {reqStatus === 'pending' ? <Clock className="w-4 h-4" /> : <Send className="w-4 h-4" />}
-                                                {reqStatus === 'pending' ? 'Verification Pending' : 'Request Protocols'}
-                                            </button>
-                                        )}
-                                    </div>
+                        {projects.map(p => (
+                            <div key={p._id} className="bg-white border border-gray-100 rounded-[24px] p-6 sm:p-8 hover:border-[#173d9f]/20 hover:shadow-xl transition-all duration-500 group">
+                                <div className="flex justify-between items-start gap-4 mb-5">
+                                    <h3 className="text-xl font-display font-bold text-[#1A1A1A] leading-tight group-hover:text-[#173d9f] transition-colors">
+                                        {p.projectName}
+                                    </h3>
+                                    <span className={`px-4 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-widest flex-shrink-0 border ${PROJECT_STATUS_COLORS[p.projectStatus] || 'bg-[#faf8f8] text-gray-400 border-gray-100'
+                                        }`}>
+                                        {p.projectStatus}
+                                    </span>
                                 </div>
-                            );
-                        })}
-                    </div>
-                )}
 
-                {/* PAGINATION */}
-                {pagination.totalPages > 1 && (
-                    <div className="mt-12 flex items-center justify-center gap-4">
-                        <button
-                            onClick={() => fetchBrowseProjects(pagination.page - 1)}
-                            disabled={!pagination.hasPrev}
-                            className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-[#173d9f] transition-all shadow-sm"
-                        >
-                            <ChevronLeft className="w-6 h-6" />
-                        </button>
-                        <div className="px-6 py-3 bg-gray-50 rounded-xl border border-gray-100">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                                Page <span className="text-[#1A1A1A] mx-1">{pagination.page}</span> of {pagination.totalPages}
-                            </span>
-                        </div>
-                        <button
-                            onClick={() => fetchBrowseProjects(pagination.page + 1)}
-                            disabled={!pagination.hasNext}
-                            className="w-12 h-12 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 disabled:opacity-30 hover:text-[#173d9f] transition-all shadow-sm"
-                        >
-                            <ChevronRight className="w-6 h-6" />
-                        </button>
+                                <div className="flex items-center gap-3 mb-5">
+                                    <div className="w-8 h-8 rounded-lg bg-[#173d9f]/5 flex items-center justify-center">
+                                        <MapPin className="w-4 h-4 text-[#173d9f]" />
+                                    </div>
+                                    <span className="text-sm font-bold text-gray-500">{p.siteAddress || 'Location Undefined'}</span>
+                                </div>
+
+                                <p className="text-sm text-gray-400 font-medium line-clamp-2 mb-8 leading-relaxed">
+                                    {p.description || 'Information regarding this specific project initiative is currently being curated for the portal.'}
+                                </p>
+
+                                <div className="h-px bg-gray-50 w-full mb-8"></div>
+
+                                <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Commencement</span>
+                                            <span className="text-sm font-bold text-gray-500">{p.startDate ? new Date(p.startDate).toLocaleDateString() : '---'}</span>
+                                        </div>
+                                        <div className="w-px h-8 bg-gray-100"></div>
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Category</span>
+                                            <span className="text-sm font-bold text-gray-500">{p.projectCategory || 'General'}</span>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        onClick={() => navigate(`/client/projects/${p._id}/updates`)}
+                                        className="w-full sm:w-auto px-8 py-3.5 blue-gradient text-white font-bold text-xs uppercase tracking-widest rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all btn-shadow flex items-center justify-center gap-2"
+                                    >
+                                        Intelligence Portal <ChevronRight className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
             </div>
-
-            {/* Request Modal */}
-            {requestModal && (
-                <div className="fixed inset-0 z-[200] flex justify-center items-start p-4">
-                    <div className="absolute inset-0 bg-black/45 backdrop-blur-sm transition-opacity" onClick={() => { setRequestModal(null); setRequestMessage(''); }}></div>
-                    <div className="bg-white w-[94%] max-w-[460px] h-auto max-h-[92vh] rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col relative z-[210] animate-in slide-in-from-top-4 duration-300 overflow-hidden">
-                        <div className="flex items-center justify-between p-[22px] pb-3 bg-white shrink-0">
-                            <h2 className="text-[20px] font-bold text-[#2C3E50] tracking-tight">Request Protocols</h2>
-                            <button onClick={() => { setRequestModal(null); setRequestMessage(''); }} className="p-1.5 text-gray-400 hover:text-red-500 transition-all">
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
-
-                        <div className="flex-1 overflow-y-auto scrollbar-hide px-[22px] pt-2 pb-8">
-                            <p className="text-[11px] font-bold text-[#173d9f] uppercase tracking-widest mb-6 inline-block px-3 py-1 bg-[#173d9f]/5 rounded-lg">{requestModal.projectName}</p>
-                            <div className="space-y-1.5 mb-8">
-                                <label className="text-[15px] font-bold text-[#34495E] ml-1">Optional Context</label>
-                                <textarea
-                                    value={requestMessage}
-                                    onChange={(e) => setRequestMessage(e.target.value)}
-                                    placeholder="Explain your interest in this project..."
-                                    style={{ minHeight: '110px' }}
-                                    className="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-[14px] text-sm font-medium text-[#1A1A1A] placeholder-gray-400 resize-none focus:outline-none focus:border-[#173d9f] focus:ring-4 focus:ring-[#173d9f]/5 transition-all"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="p-[22px] pt-3 bg-white border-t border-gray-50 flex-shrink-0">
-                            <button
-                                onClick={handleRequestAccess}
-                                disabled={requesting}
-                                className="w-full py-4.5 blue-gradient text-white font-bold rounded-[16px] shadow-lg shadow-[#173d9f]/10 hover:scale-[1.01] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                            >
-                                {requesting ? <Loader2 className="w-5 h-5 animate-spin mx-auto text-white" /> : <Send className="w-5 h-5" />}
-                                Submit Request
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

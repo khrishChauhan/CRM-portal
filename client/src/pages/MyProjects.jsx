@@ -25,10 +25,10 @@ const MyProjects = () => {
     useEffect(() => {
         const fetchMyProjects = async () => {
             try {
-                const res = await api.get('/projects/my-approved');
+                const res = await api.get('/projects/client-all');
                 setProjects(res.data.data);
             } catch (err) {
-                setError(err.response?.data?.message || 'Failed to fetch your projects');
+                setError(err.response?.data?.message || 'Failed to fetch projects');
             } finally {
                 setLoading(false);
             }
@@ -50,7 +50,7 @@ const MyProjects = () => {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 px-2">
                 <div>
                     <h1 className="text-3xl font-display font-bold text-[#1A1A1A]">Project Gallery</h1>
-                    <p className="text-gray-500 mt-2 font-medium">Your approved projects and progress tracking.</p>
+                    <p className="text-gray-500 mt-2 font-medium">All projects and progress tracking.</p>
                 </div>
                 <div className="flex bg-[#173d9f]/5 p-1 rounded-xl border border-[#173d9f]/10">
                     <button
@@ -79,7 +79,7 @@ const MyProjects = () => {
                         <FolderOpen className="w-8 h-8 md:w-10 md:h-10 text-gray-300" />
                     </div>
                     <h3 className="text-lg md:text-xl font-display font-bold text-[#1A1A1A]">No Projects Yet</h3>
-                    <p className="text-gray-500 text-[13px] md:text-sm max-w-sm mt-1 md:mt-2">You don't have access to any projects. Request access from the dashboard.</p>
+                    <p className="text-gray-500 text-[13px] md:text-sm max-w-sm mt-1 md:mt-2">No projects are available at the moment. Check back soon.</p>
                 </div>
             ) : (
                 <div className={viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>

@@ -97,17 +97,6 @@ const getProjectUpdates = async (req, res) => {
             if (!isManager && !isAssigned) {
                 return sendError(res, 'You are not assigned to this project', 403);
             }
-        } else if (user.role === 'client') {
-            // Clients can only view if they have an approved access request
-            const AccessRequest = require('../models/AccessRequest');
-            const approved = await AccessRequest.findOne({
-                clientId: user.id,
-                projectId,
-                status: 'approved'
-            });
-            if (!approved) {
-                return sendError(res, 'You do not have approved access to this project', 403);
-            }
         }
 
         const updates = await ProjectUpdate.find({ projectId })

@@ -14,7 +14,7 @@ import StaffDashboard from './pages/StaffDashboard';
 import ManageStaffProjects from './pages/ManageStaffProjects';
 import ClientDashboard from './pages/ClientDashboard';
 import MyProjects from './pages/MyProjects';
-import ManageAccessRequests from './pages/ManageAccessRequests';
+
 import ProjectUpdates from './pages/ProjectUpdates';
 import ManageQueries from './pages/ManageQueries';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -49,9 +49,7 @@ function App() {
                 <Route path="/admin/projects" element={
                   <DashboardLayout><ManageProjects /></DashboardLayout>
                 } />
-                <Route path="/admin/access-requests" element={
-                  <DashboardLayout><ManageAccessRequests /></DashboardLayout>
-                } />
+
                 <Route path="/admin/queries" element={
                   <DashboardLayout><ManageQueries /></DashboardLayout>
                 } />

@@ -24,7 +24,6 @@ const Sidebar = ({ role, user, logout }) => {
         { name: 'Clients', path: '/admin/clients', icon: Briefcase },
         { name: 'Projects', path: '/admin/projects', icon: FolderOpen },
         { name: 'Queries', path: '/admin/queries', icon: MessageSquare },
-        { name: 'Requests', path: '/admin/access-requests', icon: FileText },
     ];
 
     const staffLinks = [
@@ -157,7 +156,6 @@ export const DashboardLayout = ({ children }) => {
         '/admin/staff': 'Staff',
         '/admin/clients': 'Clients',
         '/admin/projects': 'Projects',
-        '/admin/access-requests': 'Requests',
         '/admin/queries': 'Queries',
         '/staff/dashboard': 'Staff Dashboard',
         '/staff/projects': 'My Projects',

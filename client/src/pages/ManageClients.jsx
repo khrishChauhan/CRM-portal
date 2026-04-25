@@ -305,26 +305,6 @@ const ManageClients = () => {
                                 <InfoRow icon={Building2} label="Company Name" value={selectedClient.company || '—'} />
                                 <InfoRow icon={ShieldCheck} label="Account Status" value={selectedClient.clientStatus.charAt(0).toUpperCase() + selectedClient.clientStatus.slice(1)} />
                                 <InfoRow icon={Calendar} label="Date Joined" value={new Date(selectedClient.createdAt).toLocaleDateString()} />
-                            </div>
-
-                            {selectedClient.approvedProjects?.length > 0 && (
-                                <div className="mt-8">
-                                    <h3 className="text-sm font-bold text-[#34495E] mb-4 flex items-center gap-2">
-                                        Approved Projects ({selectedClient.approvedProjects.length})
-                                    </h3>
-                                    <div className="space-y-3">
-                                        {selectedClient.approvedProjects.map(p => (
-                                            <div key={p._id} className="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-[20px] group transition-all">
-                                                <div>
-                                                    <p className="font-bold text-[#1A1A1A] text-sm">{p.projectName}</p>
-                                                    <p className="text-[10px] font-bold text-gray-400 uppercase mt-1 tracking-widest">{p.projectCode}</p>
-                                                </div>
-                                                <span className="shrink-0 text-[10px] font-bold text-[#173d9f] bg-[#173d9f]/5 px-3 py-1.5 rounded-xl uppercase tracking-widest border border-[#173d9f]/10">{p.projectStatus}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
                         </div>
 
                         <div className="p-7 bg-white border-t border-gray-50 flex-shrink-0">

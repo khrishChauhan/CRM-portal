@@ -7,7 +7,7 @@ const ActivityLogService = require('./activityLogService');
  *
  * Architecture:
  *   - Project creation does NOT include client assignment
- *   - Client access is managed via AccessRequest model
+ *   - All logged-in clients can view all projects
  *   - Staff access is managed via assignedStaff array
  */
 class ProjectService {
@@ -84,9 +84,6 @@ class ProjectService {
 
     /**
      * Create a new project (Admin only)
-     *
-     * NO client assignment at creation.
-     * Clients request access separately via AccessRequest.
      */
     static async create(data, createdById) {
         // Validate project manager
@@ -294,24 +291,10 @@ class ProjectService {
     }
 
     /**
-     * Get projects approved for a specific client
+     * Get all projects for clients (no approval filtering)
      */
-    static async getClientProjects(clientId) {
-        const client = await User.findOne({ _id: clientId, role: 'client', isDeleted: false })
-            .select('approvedProjects');
-
-        if (!client) {
-            const error = new Error('Client not found');
-            error.statusCode = 404;
-            throw error;
-        }
-
-        const approvedIds = client.approvedProjects || [];
-
-        return Project.find({
-            _id: { $in: approvedIds },
-            isDeleted: false
-        })
+    static async getClientProjects() {
+        return Project.find({ isDeleted: false })
             .populate('projectManager', 'name email designation')
             .sort('-updatedAt')
             .lean();

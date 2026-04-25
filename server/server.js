@@ -17,7 +17,7 @@ const authRoutes = require('./routes/authRoutes');
 const staffRoutes = require('./routes/staffRoutes');
 const clientRoutes = require('./routes/clientRoutes');
 const projectRoutes = require('./routes/projectRoutes');
-const accessRequestRoutes = require('./routes/accessRequestRoutes');
+
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const projectUpdateRoutes = require('./routes/projectUpdateRoutes');
 const projectQueryRoutes = require('./routes/projectQueryRoutes');
@@ -102,7 +102,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/projects', projectRoutes);
-app.use('/api/access-requests', accessRequestRoutes);
+
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/projects/:projectId/updates', projectUpdateRoutes);
 app.use('/api', projectQueryRoutes);

@@ -9,7 +9,7 @@ const {
     updateProject,
     deleteProject,
     getMyProjects,
-    getMyApprovedProjects,
+    getClientAllProjects,
     staffUpdateProject,
 } = require('../controllers/projectController');
 const { protect, authorize } = require('../middleware/authMiddleware');
@@ -19,7 +19,7 @@ router.use(protect);
 
 // ── Staff-specific routes (before :id to avoid param conflict) ──
 router.get('/my', authorize('staff'), getMyProjects);
-router.get('/my-approved', authorize('client'), getMyApprovedProjects);
+router.get('/client-all', authorize('client'), getClientAllProjects);
 router.patch('/:id/staff-update', authorize('staff'), staffUpdateProject);
 
 // ── Admin-only routes ──

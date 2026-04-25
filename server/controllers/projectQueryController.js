@@ -30,12 +30,6 @@ exports.submitQuery = async (req, res) => {
             return sendError(res, 'Project not found', 404);
         }
 
-        // Verify client is approved for this project
-        const user = await User.findById(userId);
-        if (!user.approvedProjects.includes(projectId)) {
-            return sendError(res, 'You are not approved for this project', 403);
-        }
-
         const query = await ProjectQuery.create({
             projectId,
             clientId: userId,

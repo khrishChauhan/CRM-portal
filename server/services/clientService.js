@@ -1,5 +1,4 @@
 const User = require('../models/User');
-const AccessRequest = require('../models/AccessRequest');
 const ActivityLogService = require('./activityLogService');
 
 /**
@@ -39,7 +38,7 @@ class ClientService {
 
         const [clients, total] = await Promise.all([
             User.find(filters)
-                .select('name email clientStatus lastLogin company isActive approvedProjects createdAt')
+                .select('name email clientStatus lastLogin company isActive createdAt')
                 .sort(sort)
                 .skip(skip)
                 .limit(Number(limit))
@@ -47,14 +46,8 @@ class ClientService {
             User.countDocuments(filters),
         ]);
 
-        // Enrich with project count from approvedProjects array
-        const enriched = clients.map(c => ({
-            ...c,
-            projectCount: c.approvedProjects?.length || 0,
-        }));
-
         return {
-            clients: enriched,
+            clients,
             pagination: {
                 total,
                 page: Number(page),
@@ -67,12 +60,11 @@ class ClientService {
     }
 
     /**
-     * Get single client by ID with approved projects populated
+     * Get single client by ID
      */
     static async getById(id) {
         const client = await User.findOne({ _id: id, role: 'client' })
             .select('-password -__v')
-            .populate('approvedProjects', 'projectCode projectName projectStatus priority startDate expectedCompletion')
             .lean();
 
         if (!client) {
@@ -81,10 +73,7 @@ class ClientService {
             throw error;
         }
 
-        // Also fetch pending access requests for this client
-        const pendingRequests = await AccessRequest.countDocuments({ clientId: id, status: 'pending' });
-
-        return { ...client, pendingRequests };
+        return client;
     }
 
     /**
