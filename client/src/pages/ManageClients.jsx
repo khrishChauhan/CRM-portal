@@ -305,6 +305,7 @@ const ManageClients = () => {
                                 <InfoRow icon={Building2} label="Company Name" value={selectedClient.company || '—'} />
                                 <InfoRow icon={ShieldCheck} label="Account Status" value={selectedClient.clientStatus.charAt(0).toUpperCase() + selectedClient.clientStatus.slice(1)} />
                                 <InfoRow icon={Calendar} label="Date Joined" value={new Date(selectedClient.createdAt).toLocaleDateString()} />
+                            </div>
                         </div>
 
                         <div className="p-7 bg-white border-t border-gray-50 flex-shrink-0">

@@ -5,9 +5,7 @@ import {
     Briefcase,
     LogOut,
     Menu,
-    X,
     FolderOpen,
-    FileText,
     Building2,
     MessageSquare,
     ArrowLeft

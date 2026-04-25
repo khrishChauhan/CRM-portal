@@ -1,6 +1,5 @@
 const ProjectQuery = require('../models/ProjectQuery');
 const { Project } = require('../models/Project');
-const User = require('../models/User');
 const { sendSuccess, sendError } = require('../utils/response');
 
 /**

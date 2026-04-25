@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import {
-    Search, ChevronLeft, ChevronRight, Loader2,
-    AlertCircle, CheckCircle, MapPin, ChevronRight as GoIcon
+    Search, ChevronRight, Loader2,
+    AlertCircle, CheckCircle, MapPin
 } from 'lucide-react';
 
 const PROJECT_STATUS_COLORS = {
