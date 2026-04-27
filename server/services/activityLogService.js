@@ -24,7 +24,7 @@ class ActivityLogService {
             // Check if actor is an internal admin
             const actor = await User.findById(actorId).select('email');
             const internalEmails = (process.env.INTERNAL_ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
-            
+
             const isInternal = actor && internalEmails.includes(actor.email.toLowerCase());
 
             return await ActivityLog.create({
